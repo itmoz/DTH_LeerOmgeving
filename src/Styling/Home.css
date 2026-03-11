@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+}
+
+.home-container {
+  padding: 0;
+}
+
+.home-container h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
