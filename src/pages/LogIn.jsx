@@ -1,13 +1,23 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Make sure React Router is installed
 
 export default function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignIn = (e) => {
     e.preventDefault();
-    console.log('Sign in with:', { email, password, rememberMe });
+    
+    // Check if both email and password have input
+    if (email.trim() && password.trim()) {
+      console.log('Sign in with:', { email, password, rememberMe });
+      // Navigate to dashboard or home page (adjust the route as needed)
+      navigate('/LearningDashboard');
+    } else {
+      console.log('Please fill in both email and password');
+    }
   };
 
   return (
