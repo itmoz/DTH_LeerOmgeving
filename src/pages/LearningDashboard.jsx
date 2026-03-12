@@ -13,8 +13,8 @@ const LearningDashboard = () => {
         {/* Card 5: Curriculum Progress */}
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
-            title="Visual Card"
-            text="Roblox Game Makers: Obby!"
+            title="Beginner Roblox Game Maken!"
+            text="Een introductie tot het maken van je eigen Roblox game met als eind resultaat een Obby!"
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={1} // In the future get this number from backend
             buttonText="Continue Lesson"
@@ -25,8 +25,8 @@ const LearningDashboard = () => {
         {/* Card 5: Curriculum Progress */}
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
-            title="Visual Card"
-            text="Roblox Game Makers: Obby!"
+            title="Gevorderd Roblox Game Maken!"
+            text="Maak een spannende avontuur game met gevechten, puzzels en meer!"
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={50} // In the future get this number from backend
             buttonText="Continue Lesson"
@@ -37,7 +37,7 @@ const LearningDashboard = () => {
         {/* Card 5: Curriculum Progress */}
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
-            title="Visual Card"
+            title="Game Design principes met Roblox!"
             text="Roblox Game Makers: Obby!"
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={30} // In the future get this number from backend
