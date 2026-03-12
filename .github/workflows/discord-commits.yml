@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Send commit to Discord
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B)
