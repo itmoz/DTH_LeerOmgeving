@@ -21,6 +21,7 @@ export default function Avatar() {
     shape: [
       { id: "s1", name: "Round", img: ReactImage },
       { id: "s2", name: "Square", img: ReactImage },
+      { id: "s3", name: "Triangle", img: ReactImage },
     ],
     color: [
       { id: "c1", name: "Red", img: ReactImage },
@@ -55,7 +56,7 @@ export default function Avatar() {
       <div className="row">
         {/* === LEFT PANE: PREVIEW === */}
         <div className="col-md-4 mb-4">
-          <div className="card shadow-sm h-100">
+          <div className="card shadow-sm position-sticky" style={{ top: "1rem" }}>
             <div className="card-header bg-primary text-white text-center">
               <h5 className="mb-0">Preview</h5>
             </div>
@@ -99,7 +100,7 @@ export default function Avatar() {
 
             {/* Tab Content (The Buttons) */}
             <div className="card-body">
-              <div className="d-flex flex-wrap justify-content-start">
+              <div className="d-flex flex-wrap justify-content-center">
                 {options[activeTab].map((item) => {
                   // Check if this specific item is currently selected to apply a highlight
                   
