@@ -2,6 +2,8 @@ import React from 'react';
 import CustomCard from '../WebsiteElements/Card/CustomCard.jsx';
 import CurriculumCard from '../WebsiteElements/Card/CurriculumCard.jsx';
 
+// this file is in src/pages/LearningDashboard.jsx
+
 const LearningDashboard = () => {
   return (
     <div className="container py-5">

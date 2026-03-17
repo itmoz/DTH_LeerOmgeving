@@ -14,7 +14,7 @@ const Sidebar = () => {
         <li className="nav-item">
           <a href="#" className="nav-link active" aria-current="page">
             <i className="bi bi-house me-2"></i>
-            Home
+            Thuis
           </a>
         </li>
         <li>
