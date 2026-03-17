@@ -12,9 +12,40 @@ jobs:
     steps:
       - name: Send commit to Discord
         run: |
+          # Short SHA
           SHORT_SHA=${GITHUB_SHA::7}
-          REPO_NAME=${GITHUB_REPOSITORY#*/}  # remove 'itmoz/'
+          REPO_NAME=${GITHUB_REPOSITORY#*/}  # removes 'itmoz/'
 
+          # Random quotes list
+          QUOTES=(
+            "I’ve been playing piano since I was six or seven and I was lucky enough my first piano teacher thought I was a complete and utter disaster. After a while he just quit."
+            "Radiatie? Het heet uitstraling."
+            "het is niet een kamerlid die, het is een kamerlid dát! DAT DAT DAT!!! Potdomme."
+            "Who is the REAL protagonist of Skyrim? I don't think it's the Dragonborn..."
+            "De publisher zei dat als ik de game een jaar eerder of later had geplubished was ik nu miljoenair"
+            "Heb niet vaak iets positiefs te melden over het geschrijf van Nederlandse gamejournalisten, maar deze column is raak. Chapeau."
+            "Wat een onzin ook. Ik vind het amateuristisch. Stel mensen dat nooit een bedrijf heeft gerund beoordeeld hierover."
+            "Ik wil hem echt in het water gooien"
+            "Cadeautip 😊 🎅 Voor jongvolwassenen (én volwassenen) die van échte fantasy houden: 'Het verdwenen woud' (14+, 480 pagina's, paperback & ebook)."
+            "Ach, een beetje reclame voor mijn eigen boek, dat vergeven jullie me vast. 😉"
+            "Val dood."
+            "Ik snap sowieso niet wat dit in hemelsnaam met iets als 'metaverse' te maken heeft. Dit is ook geen AI. Ver gezocht om zoiets te koppelen aan het metaverse, beetje gezwets zelfs."
+            "MIJN EERSTE BOEK! Ja, hier ben ik ongelooflijk trots op. Onder het pseudoniem Matthew X. Dyer verschijnt in oktober 'Het verdwenen woud'. Mijn eerste fantasyroman, jaren aan gewerkt, vier keer volledig herschreven."
+            "Eh, nee, Vincent, absoluut niet. Jij staat bij Playful. Anders zijn we geen vriendjes meer."
+            "Kies een taal, en stick with it"
+            "Begroting is met één o."
+            "Mijn klasgenoten ZIJN ermee eens."
+            "Ga naar de kapper."
+            "Ben je nou nog steeds niet gestopt met roken."
+            "Mo is dood gegaan door het roken"
+            "I write books. In Dutch. 😊"
+          )
+
+          # Pick a random quote
+          RANDOM_INDEX=$((RANDOM % ${#QUOTES[@]}))
+          RANDOM_QUOTE="${QUOTES[$RANDOM_INDEX]}"
+
+          # Send to Discord
           curl -H "Content-Type: application/json" \
           -d "{
             \"embeds\": [{
@@ -24,8 +55,15 @@ jobs:
               },
               \"title\": \"[${REPO_NAME}:${{ github.ref_name }}] 1 new commit\",
               \"url\": \"${{ github.event.head_commit.url }}\",
-              \"description\": \"[\`\`${SHORT_SHA}\`\`](${{ github.event.head_commit.url }}) ${{ github.event.head_commit.message }}\",
-              \"color\": 5814783
+              \"description\": \"[[\`\`${SHORT_SHA}\`\`]](${{ github.event.head_commit.url }}) ${{ github.event.head_commit.message }}\",
+              \"color\": 12733002,
+              \"fields\": [
+                {
+                  \"name\": \"\u200b\",
+                  \"value\": \"Matthew X. Quote: *${RANDOM_QUOTE}*\",
+                  \"inline\": false
+                }
+              ]
             }]
           }" \
           ${{ secrets.DISCORD_WEBHOOK }}
