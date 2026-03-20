@@ -56,8 +56,7 @@ jobs:
           )
 
           # Pick a random quote
-          RANDOM_INDEX=$((RANDOM % ${#QUOTES[@]}))
-          RANDOM_QUOTE="${QUOTES[$RANDOM_INDEX]}"
+          RANDOM_QUOTE=$(printf "%s\n" "${QUOTES[@]}" | shuf -n 1)
 
           # Send to Discord
           curl -H "Content-Type: application/json" \
