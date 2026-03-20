@@ -18,7 +18,7 @@ const LearningDashboard = () => {
             title="Beginner Roblox Game Maken!"
             text="Een introductie tot het maken van je eigen Roblox game met als eind resultaat een Obby!"
             imageUrl="https://picsum.photos/300/200?random=3"
-            progress={1} // In the future get this number from backend
+            progress={0} // In the future get this number from backend
             buttonText="Continue Lesson"
             buttonAction={() => console.log("Lesson opened")}
           />
