@@ -23,12 +23,15 @@ const CurriculumCard = ({
 
   const progressColor = getProgressColor();
 
+  // Centralized button label logic
+  const resolvedButtonText = progress === 0 ? "Begin" : (buttonText ?? "Continue Lesson");
+
   return (
     <CustomCard
       title={title}
       text={text}
       imageUrl={imageUrl}
-      buttonText={buttonText}
+      buttonText={resolvedButtonText}
       buttonAction={buttonAction}
     >
       {/* Progress Section */}
