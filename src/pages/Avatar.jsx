@@ -17,59 +17,68 @@ export default function Avatar() {
 
   // 3. Mock data for the customization options
   // You can eventually replace this with real data from your backend or assets
-  const options = {
+  const [options, setOptions] = useState({
     shape: [
-      { id: "s1", name: "Round", img: ReactImage },
-      { id: "s2", name: "Square", img: ReactImage },
-      { id: "s3", name: "Triangle", img: ReactImage },
-      { id: "s4", name: "Hexagon", img: ReactImage },
-      { id: "s5", name: "Octagon", img: ReactImage },
-      { id: "s6", name: "Diamond", img: ReactImage },
-      { id: "s7", name: "Heart", img: ReactImage },
+      { id: "s1", name: "Round", img: ReactImage, locked: false, price: 0 },
+      { id: "s2", name: "Square", img: ReactImage, locked: false, price: 0 },
+      { id: "s3", name: "Triangle", img: ReactImage, locked: false, price: 0 },
+      { id: "s4", name: "Hexagon", img: ReactImage, locked: true, price: 30 },
+      { id: "s5", name: "Octagon", img: ReactImage, locked: true, price: 45 },
+      { id: "s6", name: "Diamond", img: ReactImage, locked: true, price: 55 },
+      { id: "s7", name: "Heart", img: ReactImage, locked: true, price: 70 },
     ],
     color: [
-      { id: "c1", name: "Red", img: ReactImage },
-      { id: "c2", name: "Blue", img: ReactImage },
-      { id: "c3", name: "Green", img: ReactImage },
-      { id: "c4", name: "Yellow", img: ReactImage },
-      { id: "c5", name: "Purple", img: ReactImage },
-      { id: "c6", name: "Orange", img: ReactImage },
-      { id: "c7", name: "Pink", img: ReactImage },
+      { id: "c1", name: "Red", img: ReactImage, locked: false, price: 0 },
+      { id: "c2", name: "Blue", img: ReactImage, locked: false, price: 0 },
+      { id: "c3", name: "Green", img: ReactImage, locked: false, price: 0 },
+      { id: "c4", name: "Yellow", img: ReactImage, locked: true, price: 20 },
+      { id: "c5", name: "Purple", img: ReactImage, locked: true, price: 30 },
+      { id: "c6", name: "Orange", img: ReactImage, locked: true, price: 35 },
+      { id: "c7", name: "Pink", img: ReactImage, locked: true, price: 40 },
     ],
     face: [
-      { id: "f1", name: "Happy", img: ReactImage },
-      { id: "f2", name: "Grumpy", img: ReactImage },
-      { id: "f3", name: "Surprised", img: ReactImage },
-      { id: "f4", name: "Sad", img: ReactImage },
-      { id: "f5", name: "Angry", img: ReactImage },
-      { id: "f6", name: "Neutral", img: ReactImage },
-      { id: "f7", name: "Winking", img: ReactImage },
+      { id: "f1", name: "Happy", img: ReactImage, locked: false, price: 0 },
+      { id: "f2", name: "Grumpy", img: ReactImage, locked: false, price: 0 },
+      { id: "f3", name: "Surprised", img: ReactImage, locked: false, price: 0 },
+      { id: "f4", name: "Sad", img: ReactImage, locked: true, price: 25 },
+      { id: "f5", name: "Angry", img: ReactImage, locked: true, price: 35 },
+      { id: "f6", name: "Neutral", img: ReactImage, locked: true, price: 45 },
+      { id: "f7", name: "Winking", img: ReactImage, locked: true, price: 60 },
     ],
     accessory: [
-      { id: "a1", name: "Glasses", img: ReactImage },
-      { id: "a2", name: "Hat", img: ReactImage },
-      { id: "a3", name: "Bowtie", img: ReactImage },
-      { id: "a4", name: "Earrings", img: ReactImage },
-      { id: "a5", name: "Necklace", img: ReactImage },
-      { id: "a6", name: "Scarf", img: ReactImage },
-      { id: "a7", name: "Headphones", img: ReactImage },
+      { id: "a1", name: "Glasses", img: ReactImage, locked: false, price: 0 },
+      { id: "a2", name: "Hat", img: ReactImage, locked: false, price: 0 },
+      { id: "a3", name: "Bowtie", img: ReactImage, locked: false, price: 0 },
+      { id: "a4", name: "Earrings", img: ReactImage, locked: true, price: 30 },
+      { id: "a5", name: "Necklace", img: ReactImage, locked: true, price: 45 },
+      { id: "a6", name: "Scarf", img: ReactImage, locked: true, price: 50 },
+      { id: "a7", name: "Headphones", img: ReactImage, locked: true, price: 65 },
     ],
     title: [
-      { id: "t1", name: "The Brave", img: ReactImage },
-      { id: "t2", name: "The Wise", img: ReactImage },
-      { id: "t3", name: "The Swift", img: ReactImage },
-      { id: "t4", name: "The Cunning", img: ReactImage },
-      { id: "t5", name: "The Bold", img: ReactImage },
-      { id: "t6", name: "The Mysterious", img: ReactImage },
-      { id: "t7", name: "The Fearless", img: ReactImage },
+      { id: "t1", name: "The Brave", img: ReactImage, locked: false, price: 0 },
+      { id: "t2", name: "The Wise", img: ReactImage, locked: false, price: 0 },
+      { id: "t3", name: "The Swift", img: ReactImage, locked: false, price: 0 },
+      { id: "t4", name: "The Cunning", img: ReactImage, locked: true, price: 35 },
+      { id: "t5", name: "The Bold", img: ReactImage, locked: true, price: 45 },
+      { id: "t6", name: "The Mysterious", img: ReactImage, locked: true, price: 60 },
+      { id: "t7", name: "The Fearless", img: ReactImage, locked: true, price: 80 },
     ],
-  };
+  });
 
   // 4. Function to handle clicking an option
   const handleSelect = (category, item) => {
+    if (item.locked) {
+      setOptions((prev) => ({
+        ...prev,
+        [category]: prev[category].map((optionItem) =>
+          optionItem.id === item.id ? { ...optionItem, locked: false } : optionItem
+        ),
+      }));
+    }
+
     setSelections((prev) => ({
       ...prev,
-      [category]: item, // Overwrites the specific category with the newly selected item
+      [category]: item.locked ? { ...item, locked: false } : item,
     }));
   };
 
@@ -136,9 +145,10 @@ export default function Avatar() {
                         imageSrc={item.img}
                         onClick={() => handleSelect(activeTab, item)}
                         selected={selections[activeTab]?.id === item.id}
+                        locked={item.locked}
+                        price={item.price}
                       >
                         {item.name}
-                        <i class="bi bi-airplane-fill"></i>
                       </AvatarButton>
                     </div>
                   );
