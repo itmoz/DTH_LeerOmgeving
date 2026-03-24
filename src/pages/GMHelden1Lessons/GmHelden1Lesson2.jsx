@@ -1,11 +1,50 @@
 import React from "react";
-
+// FIXED: Changed the capital 'M' to a lowercase 'm' to match the component below
+import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkCard.jsx"; 
 
 export default function GmHelden1Lesson2() {
+  const lessonChecklist = [
+    { id: 1, text: "Wat is Roblox?", checked: false },
+    { id: 2, text: "Hoe speel je Roblox op computer?", checked: false },
+    { id: 3, text: "Hoe maak je een game in Roblox?", checked: false },
+  ];
+
   return (
-    <div>
-      <h1>GmHelden1Lesson2</h1>
-      <p>This is the content of GmHelden1Lesson2.</p>
+    <div
+      className="d-flex justify-content-center align-items-center flex-column"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #2728e5 0%, #fffefe 100%)",
+        padding: "2rem",
+      }}
+    >
+      <h1 className="text-center mb-4" style={{ color: "#d7d7d7" }}>
+        Jouw Missie van Vandaag!
+      </h1>
+
+      <div className="mb-5 w-100">
+        <ProgressCheckmarkCard 
+          title="Wat we gaan leren"
+          items={lessonChecklist}
+          iconSize="2rem" 
+          itemPadding="1.5rem 0" 
+        />
+      </div>
+
+      <div className="w-100">
+        <ProgressCheckmarkCard 
+          title="Heb je dit al gedaan?"
+          items={[
+            { id: 1, text: "Computer opgestart", checked: true },
+            { id: 2, text: "Roblox Studio gedownload", checked: false },
+          ]}
+          iconPosition="end"
+          bgColor="#fff9c4" 
+          headingColor="#f57f17" 
+          itemPadding="0.75rem 0"
+        />
+      </div>
+
     </div>
   );
 }
