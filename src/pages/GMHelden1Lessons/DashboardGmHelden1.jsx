@@ -2,8 +2,12 @@ import React from 'react';
 import LessonCard from '../../WebsiteElements/Card/LessonCard.jsx'; // Make sure this path is correct
 import { useNavigate } from 'react-router-dom';
 
+import Les1Banner from '../../Images/Les1BannerImage.png';
+
 const DashboardGmHelden1 = () => {
   const navigate = useNavigate();
+
+  
 
   return (
     <div className="container py-5">
@@ -18,7 +22,7 @@ const DashboardGmHelden1 = () => {
           <LessonCard
             title="Les 1 GMHelden1: Introductie tot Roblox Game Maken!"
             text="Een introductie tot het maken van je eigen Roblox game met als eind resultaat een Obby!"
-            imageUrl="https://picsum.photos/800/300?random=3" // A wider image placeholder
+            imageUrl={Les1Banner}
             completed={true}
             buttonAction={() => navigate("/GMHelden1/les-1")}
           />
