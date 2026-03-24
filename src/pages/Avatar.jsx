@@ -22,22 +22,46 @@ export default function Avatar() {
       { id: "s1", name: "Round", img: ReactImage },
       { id: "s2", name: "Square", img: ReactImage },
       { id: "s3", name: "Triangle", img: ReactImage },
+      { id: "s4", name: "Hexagon", img: ReactImage },
+      { id: "s5", name: "Octagon", img: ReactImage },
+      { id: "s6", name: "Diamond", img: ReactImage },
+      { id: "s7", name: "Heart", img: ReactImage },
     ],
     color: [
       { id: "c1", name: "Red", img: ReactImage },
       { id: "c2", name: "Blue", img: ReactImage },
+      { id: "c3", name: "Green", img: ReactImage },
+      { id: "c4", name: "Yellow", img: ReactImage },
+      { id: "c5", name: "Purple", img: ReactImage },
+      { id: "c6", name: "Orange", img: ReactImage },
+      { id: "c7", name: "Pink", img: ReactImage },
     ],
     face: [
       { id: "f1", name: "Happy", img: ReactImage },
       { id: "f2", name: "Grumpy", img: ReactImage },
+      { id: "f3", name: "Surprised", img: ReactImage },
+      { id: "f4", name: "Sad", img: ReactImage },
+      { id: "f5", name: "Angry", img: ReactImage },
+      { id: "f6", name: "Neutral", img: ReactImage },
+      { id: "f7", name: "Winking", img: ReactImage },
     ],
     accessory: [
       { id: "a1", name: "Glasses", img: ReactImage },
       { id: "a2", name: "Hat", img: ReactImage },
+      { id: "a3", name: "Bowtie", img: ReactImage },
+      { id: "a4", name: "Earrings", img: ReactImage },
+      { id: "a5", name: "Necklace", img: ReactImage },
+      { id: "a6", name: "Scarf", img: ReactImage },
+      { id: "a7", name: "Headphones", img: ReactImage },
     ],
     title: [
       { id: "t1", name: "The Brave", img: ReactImage },
       { id: "t2", name: "The Wise", img: ReactImage },
+      { id: "t3", name: "The Swift", img: ReactImage },
+      { id: "t4", name: "The Cunning", img: ReactImage },
+      { id: "t5", name: "The Bold", img: ReactImage },
+      { id: "t6", name: "The Mysterious", img: ReactImage },
+      { id: "t7", name: "The Fearless", img: ReactImage },
     ],
   };
 
@@ -114,6 +138,7 @@ export default function Avatar() {
                         selected={selections[activeTab]?.id === item.id}
                       >
                         {item.name}
+                        <i class="bi bi-airplane-fill"></i>
                       </AvatarButton>
                     </div>
                   );
