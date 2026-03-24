@@ -7,10 +7,12 @@ const CustomCard = ({
   imageAlt = "Card image", 
   buttonText, 
   buttonAction, 
-  children 
+  children,
+  width = '18rem' // Default width added here
 }) => {
   return (
-    <div className="card" style={{ width: '18rem' }}>
+    // Replaced the hardcoded '18rem' with the width prop
+    <div className="card" style={{ width: width }}>
       {/* Conditionally render the image if a URL is provided */}
       {imageUrl && (
         <img src={imageUrl} className="card-img-top" alt={imageAlt} />

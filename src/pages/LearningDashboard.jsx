@@ -1,8 +1,13 @@
 import React from 'react';
 import CustomCard from '../WebsiteElements/Card/CustomCard.jsx';
 import CurriculumCard from '../WebsiteElements/Card/CurriculumCard.jsx';
+import { useNavigate } from 'react-router-dom';
+
+// this file is in src/pages/LearningDashboard.jsx
 
 const LearningDashboard = () => {
+  const navigate = useNavigate();
+  const continueLessonButtonText = "Continue Lesson";
   return (
     <div className="container py-5">
       <h2 className="text-center mb-5">Curriculums</h2>
@@ -13,23 +18,23 @@ const LearningDashboard = () => {
         {/* Card 5: Curriculum Progress */}
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
-            title="Visual Card"
-            text="Roblox Game Makers: Obby!"
+            title="Beginner Roblox Game Maken!"
+            text="Een introductie tot het maken van je eigen Roblox game met als eind resultaat een Obby!"
             imageUrl="https://picsum.photos/300/200?random=3"
-            progress={1} // In the future get this number from backend
-            buttonText="Continue Lesson"
-            buttonAction={() => console.log("Lesson opened")}
+            progress={0} // In the future get this number from backend
+            buttonText= {continueLessonButtonText}
+            buttonAction={() => navigate("/GMHelden1")}
           />
         </div>
 
         {/* Card 5: Curriculum Progress */}
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
-            title="Visual Card"
-            text="Roblox Game Makers: Obby!"
+            title="Gevorderd Roblox Game Maken!"
+            text="Maak een spannende avontuur game met gevechten, puzzels en meer!"
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={50} // In the future get this number from backend
-            buttonText="Continue Lesson"
+            buttonText= {continueLessonButtonText}
             buttonAction={() => console.log("Lesson opened")}
           />
         </div>
@@ -37,11 +42,11 @@ const LearningDashboard = () => {
         {/* Card 5: Curriculum Progress */}
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
-            title="Visual Card"
+            title="Game Design principes met Roblox!"
             text="Roblox Game Makers: Obby!"
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={30} // In the future get this number from backend
-            buttonText="Continue Lesson"
+            buttonText= {continueLessonButtonText}
             buttonAction={() => console.log("Lesson opened")}
           />
         </div>
@@ -53,7 +58,7 @@ const LearningDashboard = () => {
             text="Roblox Game Makers: Obby!"
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={60} // In the future get this number from backend
-            buttonText="Continue Lesson"
+            buttonText= {continueLessonButtonText}
             buttonAction={() => console.log("Lesson opened")}
           />
         </div>

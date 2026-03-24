@@ -1,8 +1,6 @@
-import { Routes, Route, Link } from "react-router-dom";
-import Home from "./pages/Home";
-import LogIn from "./pages/LogIn";
-import LearningDashboard from "./pages/LearningDashboard"; 
-import Avatar from "./pages/Avatar";
+import { Link } from "react-router-dom";
+import AppRoutes from "./AppRoutes/AppRoutes";
+
 function App() {
   return (
     <>
@@ -11,13 +9,7 @@ function App() {
         <Link to="/LogIn">Log In</Link> |{" "}
         <Link to="/Avatar">My Avatar</Link>
       </nav>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/LogIn" element={<LogIn />} />
-        <Route path="/LearningDashboard" element={<LearningDashboard />} />
-        <Route path="/Avatar" element={<Avatar />} />
-      </Routes>
+      <AppRoutes />
     </>
   );
 }

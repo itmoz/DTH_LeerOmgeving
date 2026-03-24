@@ -1,0 +1,18 @@
+import { Routes, Route } from "react-router-dom";
+import Home from "../pages/Home";
+import LogIn from "../pages/LogIn";
+import LearningDashboard from "../pages/LearningDashboard";
+import AppRoutesGMHelden1 from "./AppRoutesGMHelden1";
+
+const AppRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/LogIn" element={<LogIn />} />
+      <Route path="/LearningDashboard" element={<LearningDashboard />} />
+      <Route path="/GMHelden1/*" element={<AppRoutesGMHelden1 />} />
+    </Routes>
+  );
+};
+
+export default AppRoutes;
