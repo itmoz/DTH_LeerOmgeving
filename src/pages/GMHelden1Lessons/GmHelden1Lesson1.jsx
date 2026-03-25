@@ -8,7 +8,7 @@ export default function GmHelden1Lesson1() {
       style={{
         minHeight: "100vh",
         // Soft gradient background suitable for children
-        background: "linear-gradient(135deg, #2728e5 0%, #fffefe 100%)",
+        background: "linear-gradient(135deg, #2728e6 0%, #fffefe 100%)",
         padding: "2rem",
       }}
     >
