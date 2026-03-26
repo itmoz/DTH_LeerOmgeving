@@ -35,6 +35,49 @@ const DashboardGmHelden1 = () => {
             buttonAction={() => navigate("/GMHelden1/les-2")}
           />
 
+          <LessonCard
+            title="Les 3 GMHelden1: Obby Design!"
+            text="Leer hoe je je Obby er geweldig uit laat zien met decoraties en thema's."
+            imageUrl="https://picsum.photos/800/300?random=5"
+            completed={false}
+            buttonAction={() => navigate("/GMHelden1/les-3")}
+          />
+          <LessonCard
+            title="Les 4 GMHelden1: Obby Uitbreiden!"
+            text="Leer hoe je je Obby uitdagender maakt met bewegende platforms en vijanden."
+            imageUrl="https://picsum.photos/800/300?random=6"
+            completed={false}
+            buttonAction={() => navigate("/GMHelden1/les-4")}
+          />
+          <LessonCard
+            title="Les 5 GMHelden1: Obby Publiceren!"
+            text="Leer hoe je je Obby publiceert en deelt met vrienden."
+            imageUrl="https://picsum.photos/800/300?random=7"
+            completed={false}
+            buttonAction={() => navigate("/GMHelden1/les-5")}
+          />
+          <LessonCard
+            title="Les 6 GMHelden1: Obby Verbeteren!"
+            text="Leer hoe je feedback krijgt en je Obby verbetert."
+            imageUrl="https://picsum.photos/800/300?random=8"
+            completed={false}
+            buttonAction={() => navigate("/GMHelden1/les-6")}
+          />
+          <LessonCard
+            title="Les 7 GMHelden1: Obby Uitbreiden!"
+            text="Leer hoe je je Obby nog uitdagender maakt met bewegende platforms en vijanden."
+            imageUrl="https://picsum.photos/800/300?random=9"
+            completed={false}
+            buttonAction={() => navigate("/GMHelden1/les-7")}
+          />
+          <LessonCard
+            title="Les 8 GMHelden1: Obby Publiceren!"
+            text="Leer hoe je je Obby publiceert en deelt met vrienden."
+            imageUrl="https://picsum.photos/800/300?random=10"
+            completed={false}
+            buttonAction={() => navigate("/GMHelden1/les-8")}
+          />
+
         </div>
       </div>
     </div>
