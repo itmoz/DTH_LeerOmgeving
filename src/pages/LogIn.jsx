@@ -1,95 +1,232 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Make sure React Router is installed
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const USERS_KEY = 'dth_users';
+const LOCK_KEY = 'dth_login_lockouts';
+
+const normalizeEmail = (email) => email.trim().toLowerCase();
+
+const validateEmail = (email) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
+
+const toHex = (buffer) =>
+  Array.from(new Uint8Array(buffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+
+const hashPassword = async (password, salt) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(`${salt}:${password}`);
+  const digest = await window.crypto.subtle.digest('SHA-256', data);
+  return toHex(digest);
+};
+
+const getUsers = () => {
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+
+const setUsers = (users) => {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+};
+
+const getLockouts = () => {
+  try {
+    return JSON.parse(localStorage.getItem(LOCK_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+
+const setLockouts = (data) => {
+  localStorage.setItem(LOCK_KEY, JSON.stringify(data));
+};
 
 export default function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [attempts, setAttempts] = useState(3);
+  const [lockedUntil, setLockedUntil] = useState(0);
+  const [lockSeconds, setLockSeconds] = useState(0);
+
   const navigate = useNavigate();
 
-  const handleSignIn = (e) => {
-    e.preventDefault();
-    
-    // Check if both email and password have input
-    if (email.trim() && password.trim()) {
-      console.log('Sign in with:', { email, password, rememberMe });
-      // Navigate to dashboard or home page (adjust the route as needed)
-      navigate('/LearningDashboard');
-    } else {
-      console.log('Please fill in both email and password');
+  useEffect(() => {
+    if (!email) {
+      setAttempts(3);
+      setLockedUntil(0);
+      setLockSeconds(0);
+      return;
     }
+
+    const locks = getLockouts();
+    const key = normalizeEmail(email);
+    const record = locks[key];
+
+    if (record && record.lockedUntil && record.lockedUntil > Date.now()) {
+      setLockedUntil(record.lockedUntil);
+      setAttempts(record.attemptsLeft ?? 0);
+      setMessage(`Te vaak fout ingevoerd. Probeer opnieuw over ...`);
+    } else {
+      setLockedUntil(0);
+      setAttempts(3);
+      if (record) {
+        delete locks[key];
+        setLockouts(locks);
+      }
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (!lockedUntil || lockedUntil <= Date.now()) {
+      setLockSeconds(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const remaining = Math.ceil((lockedUntil - Date.now()) / 1000);
+      if (remaining <= 0) {
+        setLockedUntil(0);
+        setAttempts(3);
+        setMessage('Je kunt opnieuw inloggen.');
+        clearInterval(interval);
+      } else {
+        setLockSeconds(remaining);
+      }
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [lockedUntil]);
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+
+    const normalizedEmail = normalizeEmail(email);
+
+    if (!validateEmail(email)) {
+      setError('Voer een geldig e-mailadres in.');
+      return;
+    }
+
+    if (lockedUntil > Date.now()) {
+      setError(`Account gelocked. Wacht ${lockSeconds} seconden.`);
+      return;
+    }
+
+    const users = getUsers();
+    const user = users[normalizedEmail];
+
+    if (!user) {
+      setError('Onbekend e-mailadres. Registreer eerst.');
+      return;
+    }
+
+    const providedHash = await hashPassword(password, user.salt);
+    if (providedHash !== user.passwordHash) {
+      const lockouts = getLockouts();
+      const current = lockouts[normalizedEmail] || { attemptsLeft: 3, lockedUntil: 0 };
+      const nextAttempts = Math.max(0, current.attemptsLeft - 1);
+
+      if (nextAttempts <= 0) {
+        const newLockedUntil = Date.now() + 60 * 1000;
+        lockouts[normalizedEmail] = {
+          attemptsLeft: 0,
+          lockedUntil: newLockedUntil,
+        };
+        setLockouts(lockouts);
+        setLockedUntil(newLockedUntil);
+        setAttempts(0);
+        setLockSeconds(60);
+        setError('Fout wachtwoord. Te veel keren fout. 1 minuut blokkering.');
+        return;
+      }
+
+      lockouts[normalizedEmail] = {
+        attemptsLeft: nextAttempts,
+        lockedUntil: 0,
+      };
+      setLockouts(lockouts);
+      setAttempts(nextAttempts);
+      setError(`Fout wachtwoord. Nog ${nextAttempts} poging(en).`);
+      return;
+    }
+
+    // Succesvolle login
+    const lockouts = getLockouts();
+    delete lockouts[normalizedEmail];
+    setLockouts(lockouts);
+    setAttempts(3);
+    setError('');
+    setMessage('Inloggen geslaagd!');
+
+    // voeg authenticatie context/logica toe als nodig
+    navigate('/LearningDashboard');
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
       <form onSubmit={handleSignIn} className="w-100" style={{ maxWidth: '500px' }}>
-        {/* Email input */}
+        <h2 className="mb-4">Inloggen</h2>
+
+        {message && <div className="alert alert-info">{message}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+
         <div className="form-outline mb-4">
           <input
             type="email"
-            id="form2Example1"
+            id="loginEmail"
             className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={Boolean(lockedUntil > Date.now())}
           />
-          <label className="form-label" htmlFor="form2Example1">
-            Email adres
+          <label className="form-label" htmlFor="loginEmail">
+            E-mail adres
           </label>
         </div>
 
-        {/* Password input */}
         <div className="form-outline mb-4">
           <input
             type="password"
-            id="form2Example2"
+            id="loginPassword"
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={Boolean(lockedUntil > Date.now())}
+            style={{ backgroundColor: lockedUntil > Date.now() ? '#e9ecef' : 'inherit' }}
           />
-          <label className="form-label" htmlFor="form2Example2">
+          <label className="form-label" htmlFor="loginPassword">
             Wachtwoord
           </label>
         </div>
 
-        {/* 2 column grid layout for inline styling */}
-        <div className="row mb-4">
-          <div className="col d-flex justify-content-center">
-            {/* Checkbox */}
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="form2Example31"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              <label className="form-check-label" htmlFor="form2Example31">
-                {' '}
-                Onthoud mij{' '}
-              </label>
-            </div>
-          </div>
+        {lockedUntil > Date.now() && (
+          <p className="text-warning">Probeer over {lockSeconds} seconden opnieuw.</p>
+        )}
 
-          <div className="col">
-            {/* Simple link */}
-            <a href="#!">Wachtwoord vergeten?</a>
-          </div>
-        </div>
-
-        {/* Submit button */}
         <button
           type="submit"
           className="btn btn-primary btn-block mb-4 w-100"
+          disabled={Boolean(lockedUntil > Date.now())}
         >
           Log in
         </button>
 
-        {/* Register buttons */}
         <div className="text-center">
           <p>
-            Nog geen lid? <a href="#!">Registreer!</a>
+            Nog geen lid?{' '}
+            <button type="button" className="btn btn-link p-0" onClick={() => navigate('/register')}>
+              Registreer hier
+            </button>
           </p>
         </div>
       </form>
