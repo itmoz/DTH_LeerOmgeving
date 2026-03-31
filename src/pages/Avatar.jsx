@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AvatarButton from "../WebsiteElements/Buttons/AvatarButton";
+import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import ReactImage from "../assets/react.svg";
 
 export default function Avatar() {
@@ -14,6 +15,10 @@ export default function Avatar() {
 
   // 2. State to manage which category tab is currently open
   const [activeTab, setActiveTab] = useState("shape");
+
+  // --- NEW STATE FOR MODAL ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingPurchase, setPendingPurchase] = useState(null); // Stores { category, item }
 
   // 3. Mock data for the customization options
   // You can eventually replace this with real data from your backend or assets
@@ -66,20 +71,46 @@ export default function Avatar() {
   });
 
   // 4. Function to handle clicking an option
-  const handleSelect = (category, item) => {
+const handleSelect = (category, item) => {
     if (item.locked) {
-      setOptions((prev) => ({
+      // 1. If it's locked, stage the purchase and open the modal
+      setPendingPurchase({ category, item });
+      setIsModalOpen(true);
+    } else {
+      // 2. If it's already unlocked, just select it normally
+      setSelections((prev) => ({
         ...prev,
-        [category]: prev[category].map((optionItem) =>
-          optionItem.id === item.id ? { ...optionItem, locked: false } : optionItem
-        ),
+        [category]: item,
       }));
     }
+  };
 
+  // --- NEW HANDLERS FOR THE MODAL ---
+  const handleConfirmPurchase = () => {
+    if (!pendingPurchase) return;
+    const { category, item } = pendingPurchase;
+
+    // 1. Unlock the item in the options array
+    setOptions((prev) => ({
+      ...prev,
+      [category]: prev[category].map((optionItem) =>
+        optionItem.id === item.id ? { ...optionItem, locked: false } : optionItem
+      ),
+    }));
+
+    // 2. Automatically equip (select) the newly unlocked item
     setSelections((prev) => ({
       ...prev,
-      [category]: item.locked ? { ...item, locked: false } : item,
+      [category]: { ...item, locked: false },
     }));
+
+    // 3. Close the modal
+    handleCloseModal();
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setPendingPurchase(null);
   };
 
   return (
@@ -159,6 +190,12 @@ export default function Avatar() {
           </div>
         </div>
       </div>
+      <PurchaseModal 
+        isOpen={isModalOpen}
+        item={pendingPurchase?.item}
+        onConfirm={handleConfirmPurchase}
+        onCancel={handleCloseModal}
+      />
     </div>
   );
 }
