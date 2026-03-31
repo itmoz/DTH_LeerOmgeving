@@ -29,6 +29,8 @@ function App() {
         <nav className="fs-5">
           <Link to="/" className="text-decoration-none me-2">Home</Link> 
           |{" "}
+          <Link to="/Avatar" className="text-decoration-none ms-2 me-2">Avatar</Link>
+          |{" "}
           <Link to="/LogIn" className="text-decoration-none ms-2">Log In</Link>
         </nav>
         

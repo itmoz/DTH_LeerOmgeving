@@ -10,7 +10,7 @@ export default function PurchaseModal({ isOpen, item, onConfirm, onCancel }) {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content shadow">
           
-          <div className="modal-header bg-light">
+          <div className="modal-header">
             <h5 className="modal-title">Confirm Purchase</h5>
             <button
               type="button"

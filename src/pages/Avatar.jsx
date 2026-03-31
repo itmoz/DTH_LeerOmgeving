@@ -126,7 +126,7 @@ const handleSelect = (category, item) => {
             </div>
             <div 
               className="card-body d-flex flex-column align-items-center justify-content-center" 
-              style={{ backgroundColor: "#f8f9fa", minHeight: "350px" }}
+              style={{ minHeight: "350px" }}
             >
               {/* This is a text-based placeholder for your future visual preview */}
               <div className="text-muted mb-3">Visual preview goes here!</div>
