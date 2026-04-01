@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AppRoutes from './AppRoutes/AppRoutes';
 
-// Import Bootstrap CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 function App() {
   // 1. Theme State & LocalStorage
   const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
