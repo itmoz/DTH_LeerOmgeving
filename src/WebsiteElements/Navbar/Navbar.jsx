@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
 import DTHLogoSVGBlue from '../../Images/logo-blue.svg';
+import DTHLogoSVGWhite from '../../Images/logo-white.svg';
 
 // theme and toggletheme are passed as props from App.jsx 
 // they are used to determine the current theme and toggle it when the button is clicked
 function Navbar({ theme, toggleTheme }) {
   return (
-    <div className="d-flex justify-content-between align-items-center py-2 px-4 mt-3 sticky-top bg-body z-3 shadow-lg rounded-pill mx-2">
+    <div className="d-flex justify-content-between align-items-center py-3 px-5 my-3 sticky-top bg-body z-3 shadow-lg rounded-pill mx-2">
       
       {/* 1. Logo aan de linkerkant */}
       <img 
-        src={DTHLogoSVGBlue} 
+        // AANGEPAST: Hier controleren we het thema om het juiste logo te kiezen
+        src={theme === 'light' ? DTHLogoSVGBlue : DTHLogoSVGWhite} 
         alt="DTH Logo" 
         style={{ height: '40px' }} // Pas dit getal aan om het logo groter of kleiner te maken
       />
