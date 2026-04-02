@@ -1,6 +1,7 @@
+// App.js
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import AppRoutes from './AppRoutes/AppRoutes';
+import Navbar from './WebsiteElements/Navbar/Navbar';
 
 function App() {
   // 1. Theme State & LocalStorage
@@ -19,30 +20,10 @@ function App() {
 
   return (
     <div className="container">
-      {/* Top Navigation & Theme Toggle Area */}
-      <div className="d-flex justify-content-between align-items-center py-2">
-        
-        {/* React Router Links */}
-        <nav className="fs-5">
-          <Link to="/" className="text-decoration-none me-2">Home</Link> 
-          |{" "}
-          <Link to="/Avatar" className="text-decoration-none ms-2 me-2">Avatar</Link>
-          |{" "}
-          <Link to="/LogIn" className="text-decoration-none ms-2">Log In</Link>
-        </nav>
-        
-        {/* Theme Toggle Button */}
-        <button 
-          className={`btn ${theme === 'light' ? 'btn-dark' : 'btn-light'} rounded-pill`} 
-          onClick={toggleTheme}
-        >
-          <i className={`bi bi-${theme === 'light' ? 'moon' : 'sun'}-fill`}></i>
-        </button>
-      </div>
-
-      <hr className="mb-4 mt-0" />
-
-      {/* Main Content Area (Where your pages will render) */}
+      
+      {/* Roep de Navbar aan en geef de props door */}
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      {/* Main Content Area */}
       <main>
         <AppRoutes />
       </main>
