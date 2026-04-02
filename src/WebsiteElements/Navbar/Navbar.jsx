@@ -6,7 +6,7 @@ import DTHLogoSVGWhite from '../../Images/logo-white.svg';
 // they are used to determine the current theme and toggle it when the button is clicked
 function Navbar({ theme, toggleTheme }) {
   return (
-    <div className="d-flex justify-content-between align-items-center py-3 px-5 mt-3 sticky-top bg-body z-3 shadow-lg rounded-pill mx-2">
+    <div className="d-flex justify-content-between align-items-center py-3 px-5 my-3 sticky-top bg-body z-3 shadow-lg rounded-pill mx-2">
       
       {/* 1. Logo aan de linkerkant */}
       <img 
