@@ -34,7 +34,7 @@ export default function PurchaseModal({ isOpen, item, onConfirm, onCancel }) {
                 className="btn btn-primary btn-lg d-flex justify-content-center align-items-center gap-2 px-4 fw-bold"
                 onClick={onConfirm}
               >
-                <i className="bi bi-coin"></i>
+                <i className="dth-coin"></i>
                 <span>{item.price}</span>
               </button>
               

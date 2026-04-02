@@ -14,3 +14,9 @@ $theme-colors: map-merge($theme-colors, ("primary": $primary));
 // 4. Import the rest of Bootstrap to generate the CSS with new color included
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons";
+
+// Make the tabs and pills use the primary color for active state
+.nav-pills .nav-link.active, 
+.nav-pills .show > .nav-link {
+    background-color: var(--bs-primary) !important;
+}
