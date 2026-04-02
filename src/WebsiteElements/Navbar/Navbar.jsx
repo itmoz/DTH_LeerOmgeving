@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import DTHLogoSVGBlue from '../../Images/logo-blue.svg'
+import DTHLogoSVGBlue from '../../Images/logo-blue.svg';
 
 // theme and toggletheme are passed as props from App.jsx 
 // they are used to determine the current theme and toggle it when the button is clicked
