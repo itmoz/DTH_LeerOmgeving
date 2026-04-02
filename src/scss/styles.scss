@@ -5,13 +5,11 @@ $bootstrap-icons-font-dir: "../../node_modules/bootstrap-icons/font/fonts";
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/variables-dark";
 
-// 2. Define custom colors
-$custom-colors: (
-  "theme": #2727E6
-);
+// 2. Replace Bootstrap's primary color with the custom theme color
+$primary: #2727E6;
 
-// 3. Merge custom colors into Bootstrap's theme map
-$theme-colors: map-merge($theme-colors, $custom-colors);
+// 3. Keep Bootstrap's theme map in sync with the new primary color
+$theme-colors: map-merge($theme-colors, ("primary": $primary));
 
 // 4. Import the rest of Bootstrap to generate the CSS with new color included
 @import "bootstrap/scss/bootstrap";
