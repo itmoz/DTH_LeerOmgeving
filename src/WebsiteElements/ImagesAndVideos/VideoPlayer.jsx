@@ -13,7 +13,10 @@ import { useState, useRef, useEffect, useCallback } from "react";
  *   muted       {boolean}  – Start muted (default: false)
  *   loop        {boolean}  – Loop the video (default: false)
  *   title       {string}   – Accessible title for the player (optional)
+ * 
+ * 
  */
+
 export default function VideoPlayer({
   src = "https://www.w3schools.com/html/mov_bbb.mp4",
   poster,
@@ -166,7 +169,8 @@ export default function VideoPlayer({
     overflow: "hidden",
     fontFamily: "'DM Mono', 'Courier New', monospace",
     boxShadow: "0 8px 40px rgba(0,0,0,0.55)",
-    cursor: "none",
+    // Update this line below:
+    cursor: showControls ? "auto" : "none", 
   };
 
   const videoStyle = {
@@ -273,7 +277,7 @@ export default function VideoPlayer({
             position: "absolute", top: "50%", left: `${progressPct}%`,
             transform: "translate(-50%, -50%)",
             width: 13, height: 13, borderRadius: "50%",
-            background: "#2727E6", boxShadow: "0 0 0 3px #242498",
+            background: 'var(--bs-primary)', boxShadow: "0 0 0 3px #242498",
           }} />
         </div>
 

@@ -8,7 +8,7 @@ export default function GmHelden1Lesson1() {
       style={{
         minHeight: "100vh",
         // Soft gradient background suitable for children
-        background: "linear-gradient(135deg, #2728e6 0%, #fffefe 100%)",
+        background: "linear-gradient(135deg, primary, #ffffff 100%)",
         padding: "2rem",
       }}
     >
@@ -29,7 +29,7 @@ export default function GmHelden1Lesson1() {
       {/* Learning goals styled as a "Mission Board" */}
         <div 
           className="card mx-auto mb-5 border-0 shadow-sm" 
-          style={{ width: "100%", maxWidth: "400px", borderRadius: "15px", backgroundColor: "#f8f9fa" }}
+          style={{ width: "100%", maxWidth: "800px", borderRadius: "15px"}}
         >
           <div className="card-header bg-primary text-white text-center fw-bold" style={{ borderRadius: "15px 15px 0 0", fontSize: "1.2rem" }}>
             🎯 Aan het einde van deze les leer je...
@@ -49,9 +49,8 @@ export default function GmHelden1Lesson1() {
 
         {/* Content section with colored background and rounded corners */}
         <div
-          className="p-4"
+          className="p-4 bg-primary bg-opacity-10"
           style={{
-            backgroundColor: "#e3f2fd",
             borderRadius: "20px",
           }}
         >
