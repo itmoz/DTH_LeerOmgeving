@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AppRoutes from './AppRoutes/AppRoutes';
 
-// Import Bootstrap CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 function App() {
   // 1. Theme State & LocalStorage
   const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
@@ -21,27 +18,29 @@ function App() {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       {/* Top Navigation & Theme Toggle Area */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex justify-content-between align-items-center py-2">
         
         {/* React Router Links */}
         <nav className="fs-5">
           <Link to="/" className="text-decoration-none me-2">Home</Link> 
+          |{" "}
+          <Link to="/Avatar" className="text-decoration-none ms-2 me-2">Avatar</Link>
           |{" "}
           <Link to="/LogIn" className="text-decoration-none ms-2">Log In</Link>
         </nav>
         
         {/* Theme Toggle Button */}
         <button 
-          className={`btn ${theme === 'light' ? 'btn-dark' : 'btn-light'}`} 
+          className={`btn ${theme === 'light' ? 'btn-dark' : 'btn-light'} rounded-pill`} 
           onClick={toggleTheme}
         >
-          Enable {theme === 'light' ? 'Dark' : 'Light'} Mode
+          <i className={`bi bi-${theme === 'light' ? 'moon' : 'sun'}-fill`}></i>
         </button>
       </div>
 
-      <hr className="mb-4" />
+      <hr className="mb-4 mt-0" />
 
       {/* Main Content Area (Where your pages will render) */}
       <main>

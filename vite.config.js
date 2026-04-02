@@ -4,5 +4,18 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-   base: '/DTH_LeerOmgeving/' 
+  base: '/',
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Silences the specific warnings Bootstrap triggers
+        silenceDeprecations: [
+          'import',
+          'global-builtin',
+          'color-functions',
+          'if-function'
+        ]
+      }
+    }
+  }
 })

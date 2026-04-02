@@ -1,0 +1,18 @@
+$bootstrap-icons-font-dir: "../../node_modules/bootstrap-icons/font/fonts";
+
+// 1. Include Bootstrap's required functions and variables
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+
+// 2. Define custom colors
+$custom-colors: (
+  "theme": #2727E6
+);
+
+// 3. Merge custom colors into Bootstrap's theme map
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+// 4. Import the rest of Bootstrap to generate the CSS with new color included
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons";
