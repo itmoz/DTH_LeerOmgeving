@@ -13,6 +13,7 @@ const ProgressCheckmarkCard = ({
   headingColor = "#1e88e5",
   bgColor = "#e3f2fd",
   borderRadius = "20px",
+  textColor = ".text-dark", // Nieuw: standaard tekstkleur is nu zwart
   onItemChange,
 }) => {
   const [listItems, setListItems] = useState(items);
@@ -106,7 +107,8 @@ const ProgressCheckmarkCard = ({
                   style={{
                     fontSize: "1.1rem",
                     textDecoration: item.checked ? "line-through" : "none",
-                    color: item.checked ? "#6c757d" : "inherit",
+                    // Aangepast: Hier gebruiken we nu de textColor (zwart) in plaats van "inherit"
+                    color: item.checked ? "#6c757d" : textColor, 
                     transition: "color 0.2s, text-decoration 0.2s",
                   }}
                 >

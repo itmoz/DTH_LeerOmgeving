@@ -14,11 +14,11 @@ export default function GmHelden1Lesson2() {
       className="d-flex justify-content-center align-items-center flex-column"
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #2728e5 0%, #fffefe 100%)",
+        background: "linear-gradient(135deg, primary, #fffefe 100%)",
         padding: "2rem",
       }}
     >
-      <h1 className="text-center mb-4" style={{ color: "#d7d7d7" }}>
+      <h1 className="text-center mb-4">
         Jouw Missie van Vandaag!
       </h1>
 
