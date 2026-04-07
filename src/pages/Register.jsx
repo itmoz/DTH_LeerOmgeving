@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const USERS_KEY = 'dth_users';
+const STARTING_BALANCE = 1000;
 
 const getUsers = () => {
   try {
@@ -152,6 +153,7 @@ export default function Register() {
         email: normalizedEmail,
         passwordHash,
         salt,
+        balance: STARTING_BALANCE,
         createdAt: Date.now(),
       };
 

@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 
 import './scss/styles.scss'
+import './Fonts/Icons/dth-icons.scss'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

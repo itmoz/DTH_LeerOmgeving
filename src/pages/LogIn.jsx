@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const USERS_KEY = 'dth_users';
 const LOCK_KEY = 'dth_login_lockouts';
+const STARTING_BALANCE = 1000;
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -126,6 +127,14 @@ export default function LogIn() {
     if (!user) {
       setError('Onbekend e-mailadres. Registreer eerst.');
       return;
+    }
+
+    if (typeof user.balance !== 'number') {
+      users[normalizedEmail] = {
+        ...user,
+        balance: STARTING_BALANCE,
+      };
+      setUsers(users);
     }
 
     const providedHash = await hashPassword(password, user.salt);
