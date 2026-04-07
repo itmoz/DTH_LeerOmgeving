@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AvatarButton from "../WebsiteElements/Buttons/AvatarButton";
 import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
+import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
 import ReactImage from "../assets/react.svg";
 
 export default function Avatar() {
@@ -19,6 +20,7 @@ export default function Avatar() {
   // --- NEW STATE FOR MODAL ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingPurchase, setPendingPurchase] = useState(null); // Stores { category, item }
+  const [isExploding, setIsExploding] = useState(false);
 
   // 3. Mock data for the customization options
   // You can eventually replace this with real data from your backend or assets
@@ -106,6 +108,12 @@ const handleSelect = (category, item) => {
 
     // 3. Close the modal
     handleCloseModal();
+
+    setIsExploding(true);
+
+    setTimeout(() => {
+      setIsExploding(false);
+    }, 1200);
   };
 
   const handleCloseModal = () => {
@@ -115,6 +123,7 @@ const handleSelect = (category, item) => {
 
   return (
     <div className="container py-5">
+      <CoinExplosion isExploding={isExploding} />
       <h2 className="mb-4">Avatar Editor</h2>
       
       <div className="row">
