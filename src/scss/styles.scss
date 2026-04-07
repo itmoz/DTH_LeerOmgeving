@@ -14,3 +14,7 @@ $theme-colors: map-merge($theme-colors, ("primary": $primary));
 // 4. Import the rest of Bootstrap to generate the CSS with new color included
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons";
+
+body {
+  font-family: 'Apparat_Regular', sans-serif;
+}
