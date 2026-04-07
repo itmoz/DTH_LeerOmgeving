@@ -1,8 +1,11 @@
 import React from "react";
 import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkCard.jsx";
-// Let op: pas de paden hieronder aan naar de map waar je de nieuwe bestanden hebt opgeslagen!
 import MissionBoard from "../../WebsiteElements/LessonContent/MissionBoard.jsx";
 import ContentSection from "../../WebsiteElements/LessonContent/ContentSection.jsx";
+
+// 1. Importeer hier je nieuwe achtergrond component! 
+// (Pas dit pad aan naar de map waar jij GradientBackground hebt opgeslagen)
+import GradientBackground from "../../WebsiteElements/BackgroundGradient/GradientBackground.jsx";
 
 export default function GmHelden1Lesson1() {
   // We maken een lijstje (array) van de doelen voor deze les
@@ -13,14 +16,8 @@ export default function GmHelden1Lesson1() {
   ];
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center"
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, var(--bs-primary), #ffffff 100%)",
-        padding: "2rem",
-      }}
-    >
+    // 2. We wikkelen nu alles in onze nieuwe GradientBackground component!
+    <GradientBackground>
       <div
         className="card shadow p-4 p-md-5"
         style={{
@@ -34,10 +31,10 @@ export default function GmHelden1Lesson1() {
           GmHelden1Lesson1
         </h1>
 
-        {/* 1. Onze nieuwe, herbruikbare Mission Board! */}
+        {/* 1. Onze herbruikbare Mission Board! */}
         <MissionBoard goals={lessonGoals} />
 
-        {/* 2. Onze nieuwe, herbruikbare Content Section! */}
+        {/* 2. Onze herbruikbare Content Section! */}
         <ContentSection title="Wat is Roblox?">
           <p>
             Roblox is een unieke app voor telefoon, computer en je console. Het
@@ -52,17 +49,16 @@ export default function GmHelden1Lesson1() {
           </p>
         </ContentSection>
 
-        {}
         <ContentSection title={"Hoe Speel je Roblox?"}>
-        <p>
-          Roblox is super makkelijk te spelen! Je hoeft alleen maar een account
-          aan te maken, Roblox Studio te downloaden (dat is de tool waarmee we
-          onze games gaan maken) en je bent klaar om te spelen en te creëren!
-        </p>
-        <p>
-          Je kunt kiezen uit miljoenen spellen gemaakt door andere gebruikers, of
-          je kunt zelf aan de slag gaan en je eigen spel maken!
-        </p>
+          <p>
+            Roblox is super makkelijk te spelen! Je hoeft alleen maar een account
+            aan te maken, Roblox Studio te downloaden (dat is de tool waarmee we
+            onze games gaan maken) en je bent klaar om te spelen en te creëren!
+          </p>
+          <p>
+            Je kunt kiezen uit miljoenen spellen gemaakt door andere gebruikers, of
+            je kunt zelf aan de slag gaan en je eigen spel maken!
+          </p>
         </ContentSection>
 
         {/* Bestaande voortgangskaart */}
@@ -81,6 +77,6 @@ export default function GmHelden1Lesson1() {
           />
         </div>
       </div>
-    </div>
+    </GradientBackground>
   );
 }
