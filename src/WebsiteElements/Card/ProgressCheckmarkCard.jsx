@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 
@@ -18,41 +18,43 @@ const ProgressCheckmarkCard = ({
   onItemChange,
   PlaysConfetti = true,
 }) => {
-  // FIX 1: Store only the IDs of the checked items. 
-  // This ensures new items added to the array prop show up instantly!
   const [checkedIds, setCheckedIds] = useState(() => {
     return items.filter((item) => item.checked).map((item) => item.id);
   });
   
   const [showConfetti, setShowConfetti] = useState(false);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
+  
+  // NIEUW: Een geheugensteuntje om bij te houden of de confetti al is geweest
+  const hasCelebrated = useRef(false);
 
   useEffect(() => {
-    // Check if every item in the passed prop array is in our checkedIds state
     const allDone = items.length > 0 && items.every((item) => checkedIds.includes(item.id));
 
-    if (allDone && PlaysConfetti) {
+    // Controleer nu ook of we het nog NIET gevierd hebben (!hasCelebrated.current)
+    if (allDone && PlaysConfetti && !hasCelebrated.current) {
       setShowConfetti(true);
+      hasCelebrated.current = true; // Onthoud dat het feestje is geweest!
+      
       const timer = setTimeout(() => setShowConfetti(false), 5000);
       return () => clearTimeout(timer);
-    } else {
+    } else if (!allDone) {
+      // Als niet alles is afgevinkt, resetten we de confetti en het geheugensteuntje
       setShowConfetti(false);
+      hasCelebrated.current = false; 
     }
   }, [checkedIds, items, PlaysConfetti]);
 
   const toggleItem = (id) => {
     let newCheckedIds;
     if (checkedIds.includes(id)) {
-      // Remove ID if already checked
       newCheckedIds = checkedIds.filter((checkedId) => checkedId !== id);
     } else {
-      // Add ID if not checked
       newCheckedIds = [...checkedIds, id];
     }
     
     setCheckedIds(newCheckedIds);
 
-    // Pass the updated array structure back to the parent if needed
     if (onItemChange) {
       const updatedItems = items.map((item) => ({
         ...item,
@@ -97,7 +99,6 @@ const ProgressCheckmarkCard = ({
           )}
 
           <ul className="list-group list-group-flush bg-transparent">
-            {/* FIX 2: Map over 'items' directly instead of a state copy */}
             {items.map((item) => {
               const isChecked = checkedIds.includes(item.id);
               
@@ -120,7 +121,6 @@ const ProgressCheckmarkCard = ({
                     ></i>
                   )}
 
-                  {/* FIX 3: Added flex: 1 and wordBreak so long text wraps properly inside the layout */}
                   <span
                     className={isChecked ? textCompletedColor : textColor}
                     style={{
