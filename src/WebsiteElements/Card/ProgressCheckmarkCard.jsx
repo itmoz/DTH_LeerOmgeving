@@ -10,29 +10,29 @@ const ProgressCheckmarkCard = ({
   itemPadding = "1rem 0",
   iconPosition = "start",
   iconSize = "1.5rem",
-  headingColor = "#1e88e5",
+  headingColor = "primary",
   bgColor = "#e3f2fd",
   borderRadius = "20px",
+  textColor = "text-dark", 
+  textCompletedColor = "text-success", 
   onItemChange,
+  PlaysConfetti = true, 
 }) => {
   const [listItems, setListItems] = useState(items);
   const [showConfetti, setShowConfetti] = useState(false);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
 
-  // Effect to check if all items are completed
   useEffect(() => {
-    // Check if the list isn't empty AND every item is checked
     const allDone = listItems.length > 0 && listItems.every((item) => item.checked);
-    
-    if (allDone) {
+
+    if (allDone && PlaysConfetti) {
       setShowConfetti(true);
-      // Turn off confetti after 5 seconds so it doesn't get annoying
       const timer = setTimeout(() => setShowConfetti(false), 5000);
       return () => clearTimeout(timer);
     } else {
       setShowConfetti(false);
     }
-  }, [listItems]);
+  }, [listItems, PlaysConfetti]); 
 
   const toggleItem = (id) => {
     const updatedItems = listItems.map((item) =>
@@ -47,14 +47,13 @@ const ProgressCheckmarkCard = ({
 
   return (
     <>
-      {/* Confetti overlay - will only render when showConfetti is true */}
       {showConfetti && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999, pointerEvents: 'none' }}>
            <Confetti
               width={windowWidth}
               height={windowHeight}
-              recycle={false} // Setting to false makes it shoot once and stop, rather than falling continuously
-              numberOfPieces={400} // A good burst amount!
+              recycle={false}
+              numberOfPieces={400}
            />
         </div>
       )}
@@ -67,7 +66,7 @@ const ProgressCheckmarkCard = ({
           backgroundColor: bgColor,
           borderRadius: borderRadius,
           border: "none",
-          position: "relative", // Ensures the card stays in normal document flow
+          position: "relative",
         }}
       >
         <div className="card-body p-4">
@@ -102,11 +101,12 @@ const ProgressCheckmarkCard = ({
                   ></i>
                 )}
 
+                {/* AANGEPAST: De klasse wordt nu dynamisch toegepast via className */}
                 <span
+                  className={item.checked ? textCompletedColor : textColor}
                   style={{
                     fontSize: "1.1rem",
                     textDecoration: item.checked ? "line-through" : "none",
-                    color: item.checked ? "#6c757d" : "inherit",
                     transition: "color 0.2s, text-decoration 0.2s",
                   }}
                 >
