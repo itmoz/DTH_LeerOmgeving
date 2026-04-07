@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
 
-export default function CoinExplosion({ isExploding }) {
+export default function CoinExplosion() {
   const [coins, setCoins] = useState([]);
 
   useEffect(() => {
-    if (isExploding) {
-      // Generate 20 coins with random distances and angles
-      const newCoins = Array.from({ length: 20 }).map((_, i) => {
-        const angle = Math.random() * Math.PI * 2; // Random 360-degree angle
-        const distance = 100 + Math.random() * 150; // Fly out between 100px and 250px
-        
-        // Calculate X and Y coordinates based on the angle
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
-        
-        return { id: i, tx, ty };
-      });
-      setCoins(newCoins);
-    } else {
-      setCoins([]); // Clear out when not exploding
-    }
-  }, [isExploding]);
-
-  if (!isExploding) return null;
+    // Generate the 20 coins as soon as this component mounts
+    const newCoins = Array.from({ length: 20 }).map((_, i) => {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 100 + Math.random() * 150;
+      
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance;
+      
+      return { id: i, tx, ty };
+    });
+    setCoins(newCoins);
+  }, []);
 
   return (
-    // Fixed position ensures the explosion happens in the center of the viewport
     <div style={{ position: "fixed", top: "50%", left: "50%", zIndex: 9999, pointerEvents: "none" }}>
       <style>
         {`
@@ -46,12 +38,10 @@ export default function CoinExplosion({ isExploding }) {
           key={coin.id}
           className="coin-particle"
           style={{
-            // Pass the random X and Y values to the CSS keyframes via variables
             "--tx": `${coin.tx}px`,
             "--ty": `${coin.ty}px`,
           }}
         >
-          {/* Custom SVG Coin */}
           <svg xmlns="http://www.w3.org/2000/svg" color="#DAA520" width="32" height="32" viewBox="0 0 512 512">
     
             <circle cx="256" cy="256" r="215" fill="#FFD700" />

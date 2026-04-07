@@ -20,7 +20,7 @@ export default function Avatar() {
   // --- NEW STATE FOR MODAL ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingPurchase, setPendingPurchase] = useState(null); // Stores { category, item }
-  const [isExploding, setIsExploding] = useState(false);
+  const [explosions, setExplosions] = useState([]);
 
   // 3. Mock data for the customization options
   // You can eventually replace this with real data from your backend or assets
@@ -72,14 +72,14 @@ export default function Avatar() {
     ],
   });
 
-  // 4. Function to handle clicking an option
+  // Function to handle clicking an option
 const handleSelect = (category, item) => {
     if (item.locked) {
-      // 1. If it's locked, stage the purchase and open the modal
+      // If it's locked, stage the purchase and open the modal
       setPendingPurchase({ category, item });
       setIsModalOpen(true);
     } else {
-      // 2. If it's already unlocked, just select it normally
+      // If it's already unlocked, just select it normally
       setSelections((prev) => ({
         ...prev,
         [category]: item,
@@ -92,7 +92,7 @@ const handleSelect = (category, item) => {
     if (!pendingPurchase) return;
     const { category, item } = pendingPurchase;
 
-    // 1. Unlock the item in the options array
+    // Unlock the item in the options array
     setOptions((prev) => ({
       ...prev,
       [category]: prev[category].map((optionItem) =>
@@ -100,7 +100,7 @@ const handleSelect = (category, item) => {
       ),
     }));
 
-    // 2. Automatically equip (select) the newly unlocked item
+    // Automatically equip (select) the newly unlocked item
     setSelections((prev) => ({
       ...prev,
       [category]: { ...item, locked: false },
@@ -109,10 +109,13 @@ const handleSelect = (category, item) => {
     // 3. Close the modal
     handleCloseModal();
 
-    setIsExploding(true);
+    // Handle coin explosions
+    const newExplosionId = Date.now();
 
+    setExplosions((prev) => [...prev, newExplosionId]);
+    
     setTimeout(() => {
-      setIsExploding(false);
+      setExplosions((prev) => prev.filter((id) => id !== newExplosionId));
     }, 1200);
   };
 
@@ -123,7 +126,9 @@ const handleSelect = (category, item) => {
 
   return (
     <div className="container py-5">
-      <CoinExplosion isExploding={isExploding} />
+      {explosions.map((id) => (
+        <CoinExplosion key={id} />
+      ))}
       <h2 className="mb-4">Avatar Editor</h2>
       
       <div className="row">
