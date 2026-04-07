@@ -28,7 +28,7 @@ export default function AvatarButton({
         >
           <i className="bi bi-lock fs-1 mb-1"></i>
           <div className="d-flex align-items-center gap-2 fs-5 fw-bold">
-            <i className="bi bi-coin"></i>
+            <i className="dth-coin"></i>
             <span>{price}</span>
           </div>
         </div>
