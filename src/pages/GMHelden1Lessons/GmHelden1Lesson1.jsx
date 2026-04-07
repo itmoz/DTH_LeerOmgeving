@@ -12,7 +12,8 @@ export default function GmHelden1Lesson1() {
   const lessonGoals = [
     "⭐ Wat is Roblox?",
     "💻 Hoe speel je Roblox op de computer?",
-    "🛠️ Hoe maak je je eigen game?"
+    "🛠️ Hoe worden spellen gemaakt in Roblox?",
+    "🎮 Hoe kan je je eigen game maken?"
   ];
 
   return (
@@ -56,24 +57,28 @@ export default function GmHelden1Lesson1() {
             onze games gaan maken) en je bent klaar om te spelen en te creëren!
           </p>
           <p>
-            Je kunt kiezen uit miljoenen spellen gemaakt door andere gebruikers, of
-            je kunt zelf aan de slag gaan en je eigen spel maken!
+            Je kunt kiezen uit miljoenen spellen gemaakt door andere gebruikers! 
+            Roblox op PC bestaat uit 2 delen: Roblox Studio (waar je spellen maakt) en Roblox Player (waar je spellen speelt).
+
+            Om Roblox Player te installeren moet je op de volgende link klikken: <a href="https://www.roblox.com/download" target="_blank" rel="noopener noreferrer">https://www.roblox.com/download</a>.
           </p>
         </ContentSection>
 
-        {/* Bestaande voortgangskaart */}
         <div className="w-100">
           <ProgressCheckmarkCard
-            title="Heb je dit al gedaan?"
+            title="Het installeren van Roblox Player"
             items={[
-              { id: 1, text: "Computer opgestart", checked: false },
-              { id: 2, text: "Roblox Studio gedownload", checked: false },
+              { id: 1, text: "Naar de pagina van de download gegaan", checked: false },
+              { id: 2, text: "Roblox Player gedownload", checked: false },
+              { id: 3, text: "Genavigeerd naar je downloads map", checked: false },
+              { id: 4, text: "Dubbel geklikt op RobloxPlayerInstaller.exe", checked: false },
+              { id: 5, text: "Instructies op je computer gevolgd", checked: false },
+              { id: 6, text: "Installatie voltooid!", checked: false },
             ]}
             iconPosition="end"
             bgColor="#fff9c4"
             headingColor="#f57f17"
             itemPadding="0.75rem 0"
-            PlaysConfetti={false}
           />
         </div>
       </div>

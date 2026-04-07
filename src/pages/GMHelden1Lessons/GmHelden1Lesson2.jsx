@@ -1,6 +1,7 @@
 import React from "react";
 // FIXED: Changed the capital 'M' to a lowercase 'm' to match the component below
 import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkCard.jsx"; 
+import GradientBackground from "../../WebsiteElements/BackgroundGradient/GradientBackground.jsx";
 
 export default function GmHelden1Lesson2() {
   const lessonChecklist = [
@@ -9,7 +10,9 @@ export default function GmHelden1Lesson2() {
     { id: 3, text: "Hoe maak je een game in Roblox?", checked: false },
   ];
 
+
   return (
+    <GradientBackground>
     <div
       className="d-flex justify-content-center align-items-center flex-column"
       style={{
@@ -46,5 +49,6 @@ export default function GmHelden1Lesson2() {
       </div>
 
     </div>
+  </GradientBackground>
   );
 }
