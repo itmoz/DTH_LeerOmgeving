@@ -1,9 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import http from "http";
 import { connectDB } from "./database.js";
 import { parseBody } from "./utils.js";
 
-const hostname = "127.0.0.1";
-const port = 3000;
+const hostname = process.env.HOST_NAME;
+const port = process.env.PORT;
 
 const server = http.createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -15,7 +18,6 @@ const server = http.createServer(async (req, res) => {
     return res.end();
   }
 
-  // ✅ Route: POST /users
   if (req.method === "POST" && req.url === "/users") {
     try {
       const data = await parseBody(req);
