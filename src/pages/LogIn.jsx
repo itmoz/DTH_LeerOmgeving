@@ -22,18 +22,6 @@ const hashPassword = async (password, salt) => {
   return toHex(digest);
 };
 
-const getUsers = () => {
-  try {
-    return JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
-  } catch {
-    return {};
-  }
-};
-
-const setUsers = (users) => {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-};
-
 const getLockouts = () => {
   try {
     return JSON.parse(localStorage.getItem(LOCK_KEY) || '{}');
@@ -121,62 +109,66 @@ export default function LogIn() {
       return;
     }
 
-    const users = getUsers();
-    const user = users[normalizedEmail];
+    try {
+      const providedHash = await hashPassword(password, normalizedEmail);
 
-    if (!user) {
-      setError('Onbekend e-mailadres. Registreer eerst.');
-      return;
-    }
+      const res = await fetch("http://127.0.0.1:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          passwordHash: providedHash
+        })
+      });
 
-    if (typeof user.balance !== 'number') {
-      users[normalizedEmail] = {
-        ...user,
-        balance: STARTING_BALANCE,
-      };
-      setUsers(users);
-    }
+      const data = await res.json();
 
-    const providedHash = await hashPassword(password, user.salt);
-    if (providedHash !== user.passwordHash) {
-      const lockouts = getLockouts();
-      const current = lockouts[normalizedEmail] || { attemptsLeft: 3, lockedUntil: 0 };
-      const nextAttempts = Math.max(0, current.attemptsLeft - 1);
+      if (!res.ok) {
+        // handle failed attempts
+        const lockouts = getLockouts();
+        const current = lockouts[normalizedEmail] || { attemptsLeft: 3, lockedUntil: 0 };
+        const nextAttempts = Math.max(0, current.attemptsLeft - 1);
 
-      if (nextAttempts <= 0) {
-        const newLockedUntil = Date.now() + 60 * 1000;
+        if (nextAttempts <= 0) {
+          const newLockedUntil = Date.now() + 60 * 1000;
+          lockouts[normalizedEmail] = {
+            attemptsLeft: 0,
+            lockedUntil: newLockedUntil,
+          };
+          setLockouts(lockouts);
+          setLockedUntil(newLockedUntil);
+          setAttempts(0);
+          setLockSeconds(60);
+          setError('Fout wachtwoord. Te veel keren fout. 1 minuut blokkering.');
+          return;
+        }
+
         lockouts[normalizedEmail] = {
-          attemptsLeft: 0,
-          lockedUntil: newLockedUntil,
+          attemptsLeft: nextAttempts,
+          lockedUntil: 0,
         };
         setLockouts(lockouts);
-        setLockedUntil(newLockedUntil);
-        setAttempts(0);
-        setLockSeconds(60);
-        setError('Fout wachtwoord. Te veel keren fout. 1 minuut blokkering.');
+        setAttempts(nextAttempts);
+        setError(`Fout wachtwoord. Nog ${nextAttempts} poging(en).`);
         return;
       }
 
-      lockouts[normalizedEmail] = {
-        attemptsLeft: nextAttempts,
-        lockedUntil: 0,
-      };
+      // SUCCESS
+      const lockouts = getLockouts();
+      delete lockouts[normalizedEmail];
       setLockouts(lockouts);
-      setAttempts(nextAttempts);
-      setError(`Fout wachtwoord. Nog ${nextAttempts} poging(en).`);
-      return;
+
+      setAttempts(3);
+      setError('');
+      setMessage('Inloggen geslaagd!');
+
+      navigate('/LearningDashboard');
+
+    } catch (err) {
+      setError("Server niet bereikbaar");
     }
-
-    // Succesvolle login
-    const lockouts = getLockouts();
-    delete lockouts[normalizedEmail];
-    setLockouts(lockouts);
-    setAttempts(3);
-    setError('');
-    setMessage('Inloggen geslaagd!');
-
-    // voeg authenticatie context/logica toe als nodig
-    navigate('/LearningDashboard');
   };
 
   return (
