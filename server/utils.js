@@ -1,17 +1,21 @@
 export function parseBody(req) {
   return new Promise((resolve, reject) => {
-    let body = "";
+    let data = "";
 
     req.on("data", chunk => {
-      body += chunk;
+      data += chunk;
     });
 
     req.on("end", () => {
       try {
-        resolve(JSON.parse(body));
+        const parsed = JSON.parse(data || "{}");
+        resolve(parsed);
       } catch (err) {
-        reject(err);
+        console.error("JSON parse error:", err);
+        resolve({});
       }
     });
+
+    req.on("error", reject);
   });
 }
