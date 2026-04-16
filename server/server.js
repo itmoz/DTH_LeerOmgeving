@@ -4,7 +4,7 @@ dotenv.config();
 import http from "http";
 import { connectDB } from "./database.js";
 import { parseBody } from "./utils.js";
-import { login, register } from "./controllers/authController.js";
+import { login, register, getUser } from "./controllers/authController.js";
 
 const hostname = process.env.HOST_NAME || "127.0.0.1";
 const port = process.env.PORT || 3000;
@@ -24,6 +24,11 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET" && req.url === "/") {
     res.writeHead(200, { "Content-Type": "text/plain" });
     return res.end("Server is running and connected to MongoDB");
+  }
+
+  // GET USER
+  if (req.method === "GET" && req.url.startsWith("/user")) {
+    return getUser(req, res);
   }
 
   // REGISTER

@@ -75,3 +75,34 @@ export async function login(req, res) {
     return res.end(JSON.stringify({ error: err.message }));
   }
 }
+
+// GET USER (for fetching salt only)
+export async function getUser(req, res) {
+  try {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const email = url.searchParams.get('email');
+
+    if (!email) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Email required" }));
+    }
+
+    const db = await connectDB();
+    const users = db.collection("users");
+
+    const user = await users.findOne({ email });
+
+    if (!user) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "User not found" }));
+    }
+
+    // Return only salt for security (client will hash and send back)
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ salt: user.salt }));
+
+  } catch (err) {
+    res.writeHead(500, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: err.message }));
+  }
+}
