@@ -125,13 +125,13 @@ const LessonListVertical = ({ lessons }) => {
  * Een component dat de skill-tree takken en hun lessen weergeeft.
  * @component
  * @param {object} props
- * @param {object} props.skillTreeData - De lesson-data georganiseerd per tak.
+ * @param {object} props.skillTreeData - De lesson-data georganiseerd per tak. test
  */
 const SkillTreeLayout = ({ skillTreeData }) => {
   return (
     <div className="row justify-content-center">
       <div className="col-12 col-md-4 mb-4">
-        <h3 className="text-center">Game Design</h3>
+        <h3 className="text-center">Game Design</h3> 
         <LessonListVertical lessons={skillTreeData.gameDesign} />
       </div>
       <div className="col-12 col-md-4 mb-4">
