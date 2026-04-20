@@ -27,6 +27,7 @@ export async function register(req, res) {
       email,
       passwordHash,
       salt,
+      balance: 0,
       createdAt: new Date()
     });
 
@@ -64,7 +65,10 @@ export async function login(req, res) {
 
     if (user.passwordHash === passwordHash) {
       res.writeHead(200, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ success: true }));
+      return res.end(JSON.stringify({
+        success: true,
+        balance: user.balance ?? 0
+      }));
     } else {
       res.writeHead(400, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "Wrong password" }));
@@ -101,6 +105,86 @@ export async function getUser(req, res) {
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({ salt: user.salt }));
 
+  } catch (err) {
+    res.writeHead(500, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: err.message }));
+  }
+}
+
+// GET BALANCE
+export async function getBalance(req, res) {
+  try {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const email = url.searchParams.get("email");
+
+    if (!email) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Email required" }));
+    }
+
+    const db = await connectDB();
+    const users = db.collection("users");
+
+    const user = await users.findOne(
+      { email },
+      { projection: { balance: 1 } }
+    );
+
+    if (!user) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "User not found" }));
+    }
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ balance: user.balance ?? 0 }));
+  } catch (err) {
+    res.writeHead(500, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: err.message }));
+  }
+}
+
+// ADD BALANCE
+export async function addBalance(req, res) {
+  try {
+    const { email, amount } = await parseBody(req);
+
+    // Check against undefined so an amount of 0 doesn't trigger an error
+    if (!email || amount === undefined) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Email and amount required" }));
+    }
+
+    const numericAmount = Number(amount);
+    const db = await connectDB();
+    const users = db.collection("users");
+
+    // 1. Fetch the user to check their current balance
+    const user = await users.findOne({ email });
+
+    if (!user) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "User not found" }));
+    }
+
+    const currentBalance = user.balance || 0;
+
+    // 2. Check if a subtraction pushes the balance below zero
+    if (numericAmount < 0 && currentBalance + numericAmount < 0) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "You do not have enough balance" }));
+    }
+
+    // 3. Proceed with the update
+    await users.updateOne(
+      { email },
+      { $inc: { balance: numericAmount } }
+    );
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({
+      success: true,
+      balance: currentBalance + numericAmount
+    }));
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({ error: err.message }));

@@ -4,7 +4,7 @@ dotenv.config();
 import http from "http";
 import { connectDB } from "./database.js";
 import { parseBody } from "./utils.js";
-import { login, register, getUser } from "./controllers/authController.js";
+import { login, register, getUser, getBalance, addBalance } from "./controllers/authController.js";
 
 const hostname = process.env.HOST_NAME || "127.0.0.1";
 const port = process.env.PORT || 3000;
@@ -29,6 +29,16 @@ const server = http.createServer(async (req, res) => {
   // GET USER
   if (req.method === "GET" && req.url.startsWith("/user")) {
     return getUser(req, res);
+  }
+
+  // GET BALANCE
+  if (req.method === "GET" && req.url.startsWith("/balance")) {
+    return getBalance(req, res);
+  }
+
+  // ADD BALANCE
+  if (req.method === "POST" && req.url === "/add-balance") {
+    return addBalance(req, res);
   }
 
   // REGISTER

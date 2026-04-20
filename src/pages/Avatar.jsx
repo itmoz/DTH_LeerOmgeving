@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AvatarButton from "../WebsiteElements/Buttons/AvatarButton";
+import Button from "../WebsiteElements/Buttons/Button";
 import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
 import ReactImage from "../assets/react.svg";
@@ -20,7 +21,7 @@ export default function Avatar() {
   // --- NEW STATE FOR MODAL ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingPurchase, setPendingPurchase] = useState(null); // Stores { category, item }
-  const [explosions, setExplosions] = useState([]);
+  const [explosions, setExplosions] = useState([]); // For managing multiple coin explosions
 
   // 3. Mock data for the customization options
   // You can eventually replace this with real data from your backend or assets
@@ -67,13 +68,13 @@ export default function Avatar() {
       { id: "t3", name: "The Swift", img: ReactImage, locked: false, price: 0 },
       { id: "t4", name: "The Cunning", img: ReactImage, locked: true, price: 35 },
       { id: "t5", name: "The Bold", img: ReactImage, locked: true, price: 45 },
-      { id: "t6", name: "The Mysterious", img: ReactImage, locked: true, price: 60 },
-      { id: "t7", name: "The Fearless", img: ReactImage, locked: true, price: 80 },
+      { id: "t6", name: "The Mysterious", img: ReactImage, locked: true, price: 60, },
+      { id: "t7", name: "The Fearless", img: ReactImage, locked: true, price: 80, },
     ],
   });
 
   // Function to handle clicking an option
-const handleSelect = (category, item) => {
+  const handleSelect = (category, item) => {
     if (item.locked) {
       // If it's locked, stage the purchase and open the modal
       setPendingPurchase({ category, item });
@@ -88,32 +89,38 @@ const handleSelect = (category, item) => {
   };
 
   // --- NEW HANDLERS FOR THE MODAL ---
-  const handleConfirmPurchase = () => {
-    if (!pendingPurchase) return;
+  const handleConfirmPurchase = async () => {
+  if (!pendingPurchase) return;
     const { category, item } = pendingPurchase;
 
-    // Unlock the item in the options array
+    const cost = Number(item.price || 0);
+    if (cost > 0) {
+      const payment = await handleAddBalance(-cost, { showError: false });
+      if (!payment.ok) {
+        alert("Not enough balance or payment failed");
+        handleCloseModal();
+        return;
+      }
+    }
+
     setOptions((prev) => ({
       ...prev,
       [category]: prev[category].map((optionItem) =>
-        optionItem.id === item.id ? { ...optionItem, locked: false } : optionItem
+        optionItem.id === item.id
+          ? { ...optionItem, locked: false }
+          : optionItem,
       ),
     }));
 
-    // Automatically equip (select) the newly unlocked item
     setSelections((prev) => ({
       ...prev,
       [category]: { ...item, locked: false },
     }));
 
-    // 3. Close the modal
     handleCloseModal();
 
-    // Handle coin explosions
     const newExplosionId = Date.now();
-
     setExplosions((prev) => [...prev, newExplosionId]);
-    
     setTimeout(() => {
       setExplosions((prev) => prev.filter((id) => id !== newExplosionId));
     }, 1200);
@@ -124,34 +131,86 @@ const handleSelect = (category, item) => {
     setPendingPurchase(null);
   };
 
+  const handleAddBalance = async (amount, opts = { showError: true }) => {
+    try {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        if (opts.showError) console.error("No logged-in user found");
+        return { ok: false };
+      }
+
+      const parsedAmount = Number(amount);
+
+      const res = await fetch("http://127.0.0.1:3000/add-balance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, amount: parsedAmount }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (opts.showError) console.error(data.error || "Could not update balance");
+        return { ok: false };
+      }
+
+      window.dispatchEvent(new Event("balance-updated"));
+      return { ok: true, balance: data.balance };
+    } catch {
+      if (opts.showError) console.error("Server not reachable");
+      return { ok: false };
+    }
+  };
+
   return (
     <div className="container py-5">
       {explosions.map((id) => (
         <CoinExplosion key={id} />
       ))}
       <h2 className="mb-4">Avatar Editor</h2>
-      
+
       <div className="row">
         {/* === LEFT PANE: PREVIEW === */}
         <div className="col-md-4 mb-4">
-          <div className="card shadow-sm position-sticky" style={{ top: "1rem" }}>
+          <div className="card shadow-sm">
             <div className="card-header bg-primary text-white text-center">
               <h5 className="mb-0">Preview</h5>
             </div>
-            <div 
-              className="card-body d-flex flex-column align-items-center justify-content-center" 
-              style={{ minHeight: "350px" }}
-            >
+            <div className="card-body d-flex flex-column align-items-center justify-content-center">
               {/* This is a text-based placeholder for your future visual preview */}
               <div className="text-muted mb-3">Visual preview goes here!</div>
-              
-              <ul className="list-group w-100 shadow-sm">
-                <li className="list-group-item"><strong>Shape:</strong> {selections.shape?.name || "None"}</li>
-                <li className="list-group-item"><strong>Color:</strong> {selections.color?.name || "None"}</li>
-                <li className="list-group-item"><strong>Face:</strong> {selections.face?.name || "None"}</li>
-                <li className="list-group-item"><strong>Accessory:</strong> {selections.accessory?.name || "None"}</li>
-                <li className="list-group-item"><strong>Title:</strong> {selections.title?.name || "None"}</li>
+
+              <ul className="list-group w-100 shadow-sm mb-3">
+                <li className="list-group-item">
+                  <strong>Shape:</strong> {selections.shape?.name || "None"}
+                </li>
+                <li className="list-group-item">
+                  <strong>Color:</strong> {selections.color?.name || "None"}
+                </li>
+                <li className="list-group-item">
+                  <strong>Face:</strong> {selections.face?.name || "None"}
+                </li>
+                <li className="list-group-item">
+                  <strong>Accessory:</strong>{" "}
+                  {selections.accessory?.name || "None"}
+                </li>
+                <li className="list-group-item">
+                  <strong>Title:</strong> {selections.title?.name || "None"}
+                </li>
               </ul>
+
+              <Button
+                variant="primary"
+                onClick={() => console.log("Save Avatar")}
+              >
+                Save Avatar
+              </Button>
+              <Button variant="warning" onClick={() => handleAddBalance(100)}>
+                Add Balance + 100
+              </Button>
+              <Button variant="danger" onClick={() => handleAddBalance(-100)}>
+                remove Balance - 100
+              </Button>
             </div>
           </div>
         </div>
@@ -159,7 +218,6 @@ const handleSelect = (category, item) => {
         {/* === RIGHT PANE: CUSTOMIZATION === */}
         <div className="col-md-8">
           <div className="card shadow-sm">
-            
             {/* Tab Navigation */}
             <div className="card-header">
               <ul className="nav nav-pills card-header-pills">
@@ -177,15 +235,16 @@ const handleSelect = (category, item) => {
             </div>
 
             {/* Tab Content (The Buttons) */}
-            <div className="card-body">
+            <div
+              className="card-body overflow-auto"
+              style={{ maxHeight: "600px" }}
+            >
               <div className="d-flex flex-wrap justify-content-center">
                 {options[activeTab].map((item) => {
                   // Check if this specific item is currently selected to apply a highlight
-                  
+
                   return (
-                    <div 
-                      key={item.id}
-                    >
+                    <div key={item.id}>
                       <AvatarButton
                         imageSrc={item.img}
                         onClick={() => handleSelect(activeTab, item)}
@@ -200,11 +259,10 @@ const handleSelect = (category, item) => {
                 })}
               </div>
             </div>
-
           </div>
         </div>
       </div>
-      <PurchaseModal 
+      <PurchaseModal
         isOpen={isModalOpen}
         item={pendingPurchase?.item}
         onConfirm={handleConfirmPurchase}
