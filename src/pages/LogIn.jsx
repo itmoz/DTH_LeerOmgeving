@@ -68,6 +68,8 @@ export default function LogIn() {
         return;
       }
 
+      localStorage.setItem("userEmail", normalizedEmail);
+
       setError('');
       setMessage('Inloggen geslaagd!');
       navigate('/LearningDashboard');
