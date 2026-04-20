@@ -5,6 +5,8 @@ import Avatar from "../pages/Avatar";
 import Register from "../pages/Register";
 import LearningDashboard from "../pages/LearningDashboard";
 import AppRoutesGMHelden1 from "./AppRoutesGMHelden1";
+import AppRoutesGMHelden2 from "./AppRoutesGMHelden2";
+import AppRoutesGMHelden3 from "./AppRoutesGMHelden3";
 
 const AppRoutes = () => {
   return (
@@ -14,6 +16,8 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/LearningDashboard" element={<LearningDashboard />} />
       <Route path="/GMHelden1/*" element={<AppRoutesGMHelden1 />} />
+      <Route path="/GMHelden2/*" element={<AppRoutesGMHelden2 />} />
+      <Route path="/GMHelden3/*" element={<AppRoutesGMHelden3 />} />
       <Route path="/Avatar" element={<Avatar />} />
     </Routes>
   );

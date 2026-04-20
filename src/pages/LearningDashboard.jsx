@@ -35,7 +35,7 @@ const LearningDashboard = () => {
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={50} // In the future get this number from backend
             buttonText= {continueLessonButtonText}
-            buttonAction={() => console.log("Lesson opened")}
+            buttonAction={() => navigate("/GMHelden2")}
           />
         </div>
 
@@ -47,7 +47,7 @@ const LearningDashboard = () => {
             imageUrl="https://picsum.photos/300/200?random=3"
             progress={30} // In the future get this number from backend
             buttonText= {continueLessonButtonText}
-            buttonAction={() => console.log("Lesson opened")}
+            buttonAction={() => navigate("/GMHelden3")}
           />
         </div>
 
