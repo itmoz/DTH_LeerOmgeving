@@ -2,6 +2,7 @@ import React from "react";
 import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkCard.jsx";
 import MissionBoard from "../../WebsiteElements/LessonContent/MissionBoard.jsx";
 import ContentSection from "../../WebsiteElements/LessonContent/ContentSection.jsx";
+import ImageLoggedIn from "../../Images/LesAfbeeldingen/GMHelden1/Les1/GmHeldenLes1AfbeeldingIngelogd.png";
 
 // 1. Importeer hier je nieuwe achtergrond component! 
 // (Pas dit pad aan naar de map waar jij GradientBackground hebt opgeslagen)
@@ -81,6 +82,21 @@ export default function GmHelden1Lesson1() {
             itemPadding="0.75rem 0"
           />
         </div>
+
+          <ContentSection
+            imageSrc={ImageLoggedIn}
+            imageAlt="Roblox Player Ingelogd"
+            imageCaption="De Roblox homepagina"
+            textBelow={
+            <p>
+            In de volgende les gaan we samen een Obby maken, dus zorg ervoor dat je Roblox Studio hebt geïnstalleerd en klaar staat om te leren!
+            </p>
+                      }
+>
+            <p>
+            Nadat de applicatie geïnstalleerd is, zie je dit scherm!
+          </p>
+          </ContentSection>
       </div>
     </GradientBackground>
   );

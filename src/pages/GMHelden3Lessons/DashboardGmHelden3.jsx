@@ -76,8 +76,8 @@ const lessonDataGMHelden3 = {
         buttonAction: (navigate) => navigate('/GMHelden3/les-ld-2'),
       },
     ],
-    programmingEssentials: [
-      {
+        programmingEssentials: [
+        {
         title: 'PE Les 1: Variabelen',
         text: 'Maak een muntensysteem.',
         imageUrl: 'https://picsum.photos/800/300?random=7',
@@ -139,7 +139,7 @@ const SkillTreeLayout = ({ skillTreeData }) => {
         <LessonListVertical lessons={skillTreeData.levelDesign} />
       </div>
       <div className="col-12 col-md-4 mb-4">
-        <h3 className="text-center">Programming Essentials</h3>
+        <h3 className="text-center">Player Engineer</h3>
         <LessonListVertical lessons={skillTreeData.programmingEssentials} />
       </div>
     </div>
@@ -167,7 +167,7 @@ const DashboardGmHelden3 = () => {
       {/* De Skill Tree sectie die hieronder begint en zich splitst */}
       <div className="row justify-content-center">
         <div className="col-12 col-lg-12">
-          <h3 className="text-center mb-4">Je Pad Kiezen</h3>
+          <h3 className="text-center mb-4">De padden</h3>
           <SkillTreeLayout skillTreeData={lessonDataGMHelden3.skillTree} />
         </div>
       </div>
