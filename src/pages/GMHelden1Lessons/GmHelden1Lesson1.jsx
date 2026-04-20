@@ -92,12 +92,12 @@ export default function GmHelden1Lesson1() {
             In de volgende les gaan we samen een Obby maken, dus zorg ervoor dat je Roblox Studio hebt geïnstalleerd en klaar staat om te leren!
             </p>
                       }
->
+          >\
             <p>
             Nadat de applicatie geïnstalleerd is, zie je dit scherm!
           </p>
           </ContentSection>
-      </div>
+       </div>
     </GradientBackground>
   );
 }
