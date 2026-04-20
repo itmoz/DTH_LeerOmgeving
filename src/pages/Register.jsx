@@ -2,19 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const USERS_KEY = 'dth_users';
-const STARTING_BALANCE = 1000;
-
-const getUsers = () => {
-  try {
-    return JSON.parse(localStorage.getItem(USERS_KEY) || '{}');
-  } catch {
-    return {};
-  }
-};
-
-const setUsers = (users) => {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-};
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -32,8 +19,7 @@ const computeStrength = (password) => {
   if (/[0-9]/.test(password)) score += 15;
   if (/[^A-Za-z0-9]/.test(password)) score += 10;
 
-  const max = 100;
-  if (score > max) score = max;
+  if (score > 100) score = 100;
 
   let label = 'Zwak';
   if (score >= 80) label = 'Sterk';
@@ -65,6 +51,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -74,8 +61,6 @@ export default function Register() {
   const normalizedEmail = normalizeEmail(email);
   const { score, label } = useMemo(() => computeStrength(password), [password]);
 
-  const [validationMessage, setValidationMessage] = useState('');
-
   const canSubmit =
     validateEmail(email) &&
     password.length >= 8 &&
@@ -84,35 +69,6 @@ export default function Register() {
     /[0-9]/.test(password) &&
     /[^A-Za-z0-9]/.test(password) &&
     password === confirmPassword;
-
-  useEffect(() => {
-    if (!email || !password || !confirmPassword) {
-      setValidationMessage('Vul alle velden in om te kunnen registreren.');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setValidationMessage('Gebruik een geldig e-mailadres.');
-      return;
-    }
-
-    if (password.length < 8) {
-      setValidationMessage('Wachtwoord moet minimaal 8 tekens zijn.');
-      return;
-    }
-
-    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
-      setValidationMessage('Wachtwoord moet hoofdletter, kleine letter, cijfer en speciaal teken bevatten.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setValidationMessage('Wachtwoorden zijn niet gelijk.');
-      return;
-    }
-
-    setValidationMessage('Prima! Je kunt registreren.');
-  }, [email, password, confirmPassword]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,152 +80,97 @@ export default function Register() {
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError('Wachtwoorden komen niet overeen.');
-      return;
-    }
-
     if (!canSubmit) {
-      setError(
-        'Wachtwoord moet minimaal 8 tekens hebben, kleine en hoofdletter, cijfer en speciaal teken.',
-      );
+      setError('Wachtwoord voldoet niet aan de eisen.');
       return;
     }
 
     setSubmitting(true);
 
-    const users = getUsers();
-    if (users[normalizedEmail]) {
-      setError('E-mail is al geregistreerd. Gebruik een ander e-mailadres.');
-      setSubmitting(false);
-      return;
-    }
-
     try {
       const salt = randomSalt();
       const passwordHash = await hashPassword(password, salt);
 
-      users[normalizedEmail] = {
-        email: normalizedEmail,
-        passwordHash,
-        salt,
-        balance: STARTING_BALANCE,
-        createdAt: Date.now(),
-      };
+      const res = await fetch("http://127.0.0.1:3000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          passwordHash,
+          salt
+        })
+      });
 
-      setUsers(users);
-      setSuccess('Registratie gelukt! Je wordt doorgestuurd naar inloggen...');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Registratie mislukt");
+        return;
+      }
+
+      setSuccess('Registratie gelukt! Je wordt doorgestuurd...');
 
       setTimeout(() => {
         navigate('/LogIn');
       }, 1000);
+
     } catch (err) {
-      setError('Er is een fout opgetreden tijdens het registreren. Probeer het opnieuw.');
+      setError('Server niet bereikbaar');
     } finally {
       setSubmitting(false);
     }
   };
 
   useEffect(() => {
-    // reset messages bij input wijziging
     setError('');
     setSuccess('');
   }, [email, password, confirmPassword]);
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <form
-        onSubmit={handleSubmit}
-        className="w-100"
-        style={{ maxWidth: '500px' }}
-        autoComplete="off"
-      >
+      <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '500px' }}>
         <h2 className="mb-4 text-center">Registreer</h2>
 
         {error && <div className="alert alert-danger">{error}</div>}
         {success && <div className="alert alert-success">{success}</div>}
 
-        <div className="form-outline mb-3">
-          <input
-            type="email"
-            id="registerEmail"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <label className="form-label" htmlFor="registerEmail">
-            E-mail adres
-          </label>
-        </div>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="form-control mb-3"
+          placeholder="E-mail"
+        />
 
-        <div className="form-outline mb-3">
-          <input
-            type="password"
-            id="registerPassword"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={8}
-          />
-          <label className="form-label" htmlFor="registerPassword">
-            Wachtwoord
-          </label>
-        </div>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="form-control mb-3"
+          placeholder="Wachtwoord"
+        />
+
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="form-control mb-3"
+          placeholder="Bevestig wachtwoord"
+        />
 
         <div className="mb-3">
-          <div className="progress" style={{ height: '10px' }}>
-            <div
-              className={`progress-bar ${
-                score >= 80 ? 'bg-success' : score >= 60 ? 'bg-info' : 'bg-danger'
-              }`}
-              role="progressbar"
-              style={{ width: `${score}%` }}
-              aria-valuenow={score}
-              aria-valuemin="0"
-              aria-valuemax="100"
-            ></div>
-          </div>
-          <small className="text-muted">
-            Sterkte: {label} ({score}%) - minimaal 8 tekens, hoofdletter, kleine letter, cijfer
-            en speciaal teken.
-          </small>
+          <small>Wachtwoord sterkte: {label} ({score}%)</small>
         </div>
 
-        <div className="form-outline mb-4">
-          <input
-            type="password"
-            id="confirmPassword"
-            className="form-control"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          <label className="form-label" htmlFor="confirmPassword">
-            Bevestig wachtwoord
-          </label>
-        </div>
-
-        <div className="mb-3">
-          <small className={canSubmit ? 'text-success' : 'text-danger'}>{validationMessage}</small>
-        </div>
-
-        <button type="submit" className="btn btn-primary btn-block mb-4 w-100" disabled={submitting || !canSubmit}>
+        <button
+          type="submit"
+          className="btn btn-primary w-100"
+          disabled={submitting || !canSubmit}
+        >
           {submitting ? 'Registreren...' : 'Registreren'}
         </button>
-
-        <div className="text-center">
-          <p>
-            Al lid?{' '}
-            <button type="button" className="btn btn-link p-0" onClick={() => navigate('/LogIn')}>
-              Log in
-            </button>
-          </p>
-        </div>
       </form>
     </div>
   );
