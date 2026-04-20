@@ -3,6 +3,7 @@ import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkC
 import MissionBoard from "../../WebsiteElements/LessonContent/MissionBoard.jsx";
 import ContentSection from "../../WebsiteElements/LessonContent/ContentSection.jsx";
 import ImageLoggedIn from "../../Images/LesAfbeeldingen/GMHelden1/Les1/GmHeldenLes1AfbeeldingIngelogd.png";
+import LessonQuiz from "../../WebsiteElements/LessonContent/LessonQuiz.jsx";
 
 // 1. Importeer hier je nieuwe achtergrond component! 
 // (Pas dit pad aan naar de map waar jij GradientBackground hebt opgeslagen)
@@ -15,6 +16,22 @@ export default function GmHelden1Lesson1() {
     "💻 Hoe speel je Roblox op de computer?",
     "🛠️ Hoe worden spellen gemaakt in Roblox?",
     "🎮 Hoe kan je je eigen game maken?"
+  ];
+
+  const quizQuestions = [
+    {
+      id: 1,
+      type: "multiple-choice",
+      question: "Wat is de tool waarmee we games maken in Roblox?",
+      options: ["Roblox Player", "Roblox Studio", "Roblox Creator"],
+      correctAnswer: "Roblox Studio"
+    },
+    {
+      id: 2,
+      type: "text-input",
+      question: "Welk spel gaan we samen maken aan het einde van deze lessenreeks? (Typ het woord)",
+      correctAnswer: ["obby", "obby game", "een obby", "een obby game", "obbygame"]
+    }
   ];
 
   return (
@@ -97,6 +114,10 @@ export default function GmHelden1Lesson1() {
             Nadat de applicatie geïnstalleerd is, zie je dit scherm!
           </p>
           </ContentSection>
+
+          <LessonQuiz 
+          questions={quizQuestions} 
+          balanceGainAmount={50}/>
        </div>
     </GradientBackground>
   );
