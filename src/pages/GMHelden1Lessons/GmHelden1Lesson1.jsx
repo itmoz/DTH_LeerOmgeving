@@ -30,7 +30,7 @@ export default function GmHelden1Lesson1() {
       id: 2,
       type: "text-input",
       question: "Welk spel gaan we samen maken aan het einde van deze lessenreeks? (Typ het woord)",
-      correctAnswer: ["obby", "obby game", "een obby", "een obby game", "obbygame"]
+      correctAnswer: ["obby", "obby game", "een obby", "een obby game", "obbygame", "platformer", "een platformer", "platformer game", "een platformer game"]
     }
   ];
 
