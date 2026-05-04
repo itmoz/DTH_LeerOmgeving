@@ -1,3 +1,6 @@
+
+// Gebruik dit niet, dit is een oude die ik bewaar voor archival en vergelijking purposes. 
+
 import React, { useState } from "react";
 // Zorg ervoor dat dit pad klopt naar de map waar je CoinExplosion hebt opgeslagen!
 import CoinExplosion from "../Effects/CoinExplosion";
@@ -64,20 +67,11 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
     const normalizedUserAnswer = userAnswer.trim().toLowerCase();
     let isCorrect = false;
 
-    // 1. NEW LOGIC: Check if the question uses 'answerIncludes' for keyword matching
-    if (currentQuestion.answerIncludes && Array.isArray(currentQuestion.answerIncludes)) {
-      isCorrect = currentQuestion.answerIncludes.some((keyword) =>
-        normalizedUserAnswer.includes(keyword.trim().toLowerCase())
-      );
-    } 
-    // 2. EXISTING LOGIC: Exact match fallback if it's an array
-    else if (Array.isArray(currentQuestion.correctAnswer)) {
+    if (Array.isArray(currentQuestion.correctAnswer)) {
       isCorrect = currentQuestion.correctAnswer.some(
         (answer) => answer.trim().toLowerCase() === normalizedUserAnswer
       );
-    } 
-    // 3. EXISTING LOGIC: Exact match fallback if it's a simple string
-    else if (currentQuestion.correctAnswer) {
+    } else {
       isCorrect = normalizedUserAnswer === currentQuestion.correctAnswer.trim().toLowerCase();
     }
 

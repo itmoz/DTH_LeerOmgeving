@@ -4,9 +4,9 @@ import MissionBoard from "../../WebsiteElements/LessonContent/MissionBoard.jsx";
 import ContentSection from "../../WebsiteElements/LessonContent/ContentSection.jsx";
 import ImageLoggedIn from "../../Images/LesAfbeeldingen/GMHelden1/Les1/GmHeldenLes1AfbeeldingIngelogd.png";
 import LessonQuiz from "../../WebsiteElements/LessonContent/LessonQuiz.jsx";
+import EndOfLesson from "../../WebsiteElements/LessonContent/EndOfLesson.jsx";
 
-// 1. Importeer hier je nieuwe achtergrond component! 
-// (Pas dit pad aan naar de map waar jij GradientBackground hebt opgeslagen)
+// Importeer hier je nieuwe achtergrond component!
 import GradientBackground from "../../WebsiteElements/BackgroundGradient/GradientBackground.jsx";
 
 export default function GmHelden1Lesson1() {
@@ -30,12 +30,21 @@ export default function GmHelden1Lesson1() {
       id: 2,
       type: "text-input",
       question: "Welk spel gaan we samen maken aan het einde van deze lessenreeks? (Typ het woord)",
+      answerIncludes: ["obby", "platformer"], // We accepteren meerdere antwoorden zolang ze maar een van deze woorden bevatten
       correctAnswer: ["obby", "obby game", "een obby", "een obby game", "obbygame", "platformer", "een platformer", "platformer game", "een platformer game"]
     }
   ];
 
+  // DEBUG FUNCTIE: Maakt de opgeslagen voortgang leeg en herlaadt de pagina
+  const handleResetProgress = () => {
+    localStorage.removeItem("les1-install-card-checked");
+    localStorage.removeItem("les1-quiz-index");
+    localStorage.removeItem("les1-quiz-finished");
+    window.location.reload();
+  };
+
   return (
-    // 2. We wikkelen nu alles in onze nieuwe GradientBackground component!
+    // We wikkelen nu alles in onze nieuwe GradientBackground component!
     <GradientBackground>
       <div
         className="card shadow p-4 p-md-5"
@@ -46,6 +55,17 @@ export default function GmHelden1Lesson1() {
           width: "100%",
         }}
       >
+        {/* DEBUG KNOP */}
+        <div className="d-flex justify-content-end mb-3">
+          <button 
+            onClick={handleResetProgress} 
+            className="btn btn-sm btn-danger shadow-sm"
+            style={{ borderRadius: "10px" }}
+          >
+            <i className="bi bi-arrow-clockwise me-1"></i> Debug: Reset Voortgang
+          </button>
+        </div>
+
         <h1 className="text-center mb-4" style={{ color: "#ff6b6b" }}>
           GmHelden1Lesson1
         </h1>
@@ -83,21 +103,23 @@ export default function GmHelden1Lesson1() {
         </ContentSection>
 
         <div className="w-100">
-          <ProgressCheckmarkCard
-            title="Het installeren van Roblox Player"
-            items={[
-              { id: 1, text: "Naar de pagina van de download gegaan", checked: false },
-              { id: 2, text: "Roblox Player gedownload", checked: false },
-              { id: 3, text: "Genavigeerd naar je downloads map", checked: false },
-              { id: 4, text: "Dubbel geklikt op RobloxPlayerInstaller.exe", checked: false },
-              { id: 5, text: "Instructies op je computer gevolgd", checked: false },
-              { id: 6, text: "Installatie voltooid!", checked: false },
-            ]}
-            iconPosition="end"
-            bgColor="#fff9c4"
-            headingColor="#f57f17"
-            itemPadding="0.75rem 0"
-          />
+            <ProgressCheckmarkCard
+              cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+              title="Het installeren van Roblox Player"
+              items={[
+                { id: 1, text: "Naar de pagina van de download gegaan", checked: false },
+                { id: 2, text: "Roblox Player gedownload", checked: false },
+                { id: 3, text: "Genavigeerd naar je downloads map", checked: false },
+                { id: 4, text: "Dubbel geklikt op RobloxPlayerInstaller.exe", checked: false },
+                { id: 5, text: "Instructies op je computer gevolgd", checked: false },
+                { id: 6, text: "Installatie voltooid!", checked: false },
+              ]}
+              iconPosition="end"
+              bgColor="#fff9c4"
+              headingColor="#f57f17"
+              itemPadding="0.75rem 0"
+              completionReward={30} // Voegt 30 valuta toe en toont de eindanimatie
+            />
         </div>
 
           <ContentSection
@@ -109,15 +131,22 @@ export default function GmHelden1Lesson1() {
             In de volgende les gaan we samen een Obby maken, dus zorg ervoor dat je Roblox Studio hebt geïnstalleerd en klaar staat om te leren!
             </p>
                       }
-          >\
+          >
             <p>
             Nadat de applicatie geïnstalleerd is, zie je dit scherm!
           </p>
           </ContentSection>
 
           <LessonQuiz 
-          questions={quizQuestions} 
-          balanceGainAmount={50}/>
+            quizId="les1-quiz" // Toegevoegd zodat we de juiste resetten
+            questions={quizQuestions} 
+            balanceGainAmount={50}
+          />
+
+          <EndOfLesson 
+            nextLessonPath="/GMHelden1/les-2"
+            dashboardPath="/GMHelden1" 
+          />
        </div>
     </GradientBackground>
   );

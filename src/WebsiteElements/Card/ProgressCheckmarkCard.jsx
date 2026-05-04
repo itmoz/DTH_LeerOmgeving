@@ -1,8 +1,43 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
+// Zorg ervoor dat dit pad klopt!
+import CoinExplosion from "../Effects/CoinExplosion";
+
+// De functie om het saldo bij te werken
+const handleAddBalance = async (amount, opts = { showError: true }) => {
+  try {
+    const email = localStorage.getItem("userEmail");
+    if (!email) {
+      if (opts.showError) console.error("No logged-in user found");
+      return { ok: false };
+    }
+
+    const parsedAmount = Number(amount);
+
+    const res = await fetch("http://127.0.0.1:3000/add-balance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, amount: parsedAmount }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (opts.showError) console.error(data.error || "Could not update balance");
+      return { ok: false };
+    }
+
+    window.dispatchEvent(new Event("balance-updated"));
+    return { ok: true, balance: data.balance };
+  } catch {
+    if (opts.showError) console.error("Server not reachable");
+    return { ok: false };
+  }
+};
 
 const ProgressCheckmarkCard = ({
+  cardId = "default-card", // NIEUW: Unieke ID voor localStorage
   title,
   items = [],
   width = "100%",
@@ -17,43 +52,71 @@ const ProgressCheckmarkCard = ({
   textCompletedColor = "text-success",
   onItemChange,
   PlaysConfetti = true,
+  itemReward = 0,       
+  completionReward = 0, 
 }) => {
+  
+  // 1. Initialiseer state vanuit localStorage
   const [checkedIds, setCheckedIds] = useState(() => {
+    const saved = localStorage.getItem(`${cardId}-checked`);
+    if (saved) {
+      return JSON.parse(saved);
+    }
     return items.filter((item) => item.checked).map((item) => item.id);
   });
   
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showCoinExplosion, setShowCoinExplosion] = useState(false); 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
-  
-  // NIEUW: Een geheugensteuntje om bij te houden of de confetti al is geweest
-  const hasCelebrated = useRef(false);
 
+  // 2. Sla de checkedIds op in localStorage telkens als ze veranderen
   useEffect(() => {
-    const allDone = items.length > 0 && items.every((item) => checkedIds.includes(item.id));
+    localStorage.setItem(`${cardId}-checked`, JSON.stringify(checkedIds));
+  }, [checkedIds, cardId]);
 
-    // Controleer nu ook of we het nog NIET gevierd hebben (!hasCelebrated.current)
-    if (allDone && PlaysConfetti && !hasCelebrated.current) {
-      setShowConfetti(true);
-      hasCelebrated.current = true; // Onthoud dat het feestje is geweest!
-      
-      const timer = setTimeout(() => setShowConfetti(false), 5000);
-      return () => clearTimeout(timer);
-    } else if (!allDone) {
-      // Als niet alles is afgevinkt, resetten we de confetti en het geheugensteuntje
-      setShowConfetti(false);
-      hasCelebrated.current = false; 
-    }
-  }, [checkedIds, items, PlaysConfetti]);
+  // Checken of alles al is gedaan
+  const allDone = items.length > 0 && items.every((item) => checkedIds.includes(item.id));
 
   const toggleItem = (id) => {
+    // Als alles al is voltooid, mag de speler niets meer uitvinken. We doen dan niets.
+    if (allDone) return;
+
     let newCheckedIds;
-    if (checkedIds.includes(id)) {
+    const isCurrentlyChecked = checkedIds.includes(id);
+
+    if (isCurrentlyChecked) {
       newCheckedIds = checkedIds.filter((checkedId) => checkedId !== id);
     } else {
       newCheckedIds = [...checkedIds, id];
+      
+      // Als er een beloning staat op losse vakjes en het vakje wordt zojuist aangevinkt
+      if (itemReward > 0) {
+        handleAddBalance(itemReward);
+      }
     }
     
     setCheckedIds(newCheckedIds);
+
+    // 3. Controleer of DIT specifieke moment de lijst compleet maakt
+    const isNowAllDone = items.length > 0 && items.every((item) => newCheckedIds.includes(item.id));
+
+    if (isNowAllDone) {
+      // Het is NU net voltooid! Start de animaties en geef de eindbeloning
+      if (PlaysConfetti) {
+        setShowConfetti(true);
+      }
+
+      if (completionReward > 0) {
+        handleAddBalance(completionReward);
+        setShowCoinExplosion(true);
+      }
+
+      // Zet de animaties na 5 seconden weer uit
+      setTimeout(() => {
+        setShowConfetti(false);
+        setShowCoinExplosion(false);
+      }, 5000);
+    }
 
     if (onItemChange) {
       const updatedItems = items.map((item) => ({
@@ -69,13 +132,16 @@ const ProgressCheckmarkCard = ({
       {showConfetti && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999, pointerEvents: 'none' }}>
            <Confetti
-              width={windowWidth}
-              height={windowHeight}
-              recycle={false}
-              numberOfPieces={400}
+             width={windowWidth}
+             height={windowHeight}
+             recycle={false}
+             numberOfPieces={400}
            />
         </div>
       )}
+
+      {/* Runt de munten explosie over het scherm als de eindbeloning is behaald */}
+      {showCoinExplosion && <CoinExplosion />}
 
       <div
         className="card shadow-sm mx-auto"
@@ -88,7 +154,7 @@ const ProgressCheckmarkCard = ({
           position: "relative",
         }}
       >
-        <div className="card-body p-4">
+        <div className="card-body p-4 text-center">
           {title && (
             <h3
               className="card-title text-center fw-bold mb-4"
@@ -98,7 +164,7 @@ const ProgressCheckmarkCard = ({
             </h3>
           )}
 
-          <ul className="list-group list-group-flush bg-transparent">
+          <ul className="list-group list-group-flush bg-transparent mb-3">
             {items.map((item) => {
               const isChecked = checkedIds.includes(item.id);
               
@@ -108,7 +174,8 @@ const ProgressCheckmarkCard = ({
                   className="list-group-item d-flex align-items-center bg-transparent border-bottom"
                   style={{
                     padding: itemPadding,
-                    cursor: "pointer",
+                    // Als het helemaal klaar is, verander de cursor zodat het duidelijk is dat je niet meer kan klikken
+                    cursor: allDone ? "default" : "pointer",
                     justifyContent: iconPosition === "end" ? "space-between" : "flex-start",
                     borderBottomColor: "rgba(0,0,0,0.05)",
                   }}
@@ -146,6 +213,16 @@ const ProgressCheckmarkCard = ({
               );
             })}
           </ul>
+
+          {/* Visuele feedback onderaan de kaart als de speler alles heeft gehaald en er een beloning was */}
+          {allDone && completionReward > 0 && (
+            <div className="mt-3 p-2 bg-white rounded shadow-sm d-inline-block">
+              <h5 className="text-warning m-0" style={{ fontWeight: "bold" }}>
+                <i className="dth-coin me-2"></i>
+                +{completionReward} Munten verdiend!
+              </h5>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -1,54 +1,58 @@
 import React from "react";
-// FIXED: Changed the capital 'M' to a lowercase 'm' to match the component below
-import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkCard.jsx"; 
+import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkCard.jsx";
+import MissionBoard from "../../WebsiteElements/LessonContent/MissionBoard.jsx";
+import ContentSection from "../../WebsiteElements/LessonContent/ContentSection.jsx";
+import ImageLoggedIn from "../../Images/LesAfbeeldingen/GMHelden1/Les1/GmHeldenLes1AfbeeldingIngelogd.png";
+import LessonQuiz from "../../WebsiteElements/LessonContent/LessonQuiz.jsx";
+import EndOfLesson from "../../WebsiteElements/LessonContent/EndOfLesson.jsx";
+
 import GradientBackground from "../../WebsiteElements/BackgroundGradient/GradientBackground.jsx";
 
 export default function GmHelden1Lesson2() {
-  const lessonChecklist = [
-    { id: 1, text: "Wat is Roblox?", checked: false },
-    { id: 2, text: "Hoe speel je Roblox op computer?", checked: false },
-    { id: 3, text: "Hoe maak je een game in Roblox?", checked: false },
+
+   const lessonGoals = [
+    " Het maken van een werkomgeving in Roblox Studio",
+    " De basis tools in Roblox Studio leren kennen",
+    " Leren hoe je een simpel platform maakt",
+    " Gereedschappen om je platformen leuker te maken ontdekken",
+    " Een spawnpoint toevoegen waar spelers beginnen",
+    " Het testen van je spel in Roblox Studio!"
+  ];
+
+  const quizQuestions = [
+    {
+      id: 1,
+      type: "multiple-choice",
+      question: "Welke van deze is GEEN onderdeel van de Roblox Studio interface?",
+      options: ["Explorer", "Properties", "Toolbox", "Inventory"],
+      correctAnswer: "Inventory"
+    },
+    {
+      id: 2,
+      type: "text-input",
+      question: "Wat is de naam van de tool waarmee je objecten in Roblox Studio kunt verplaatsen? (Typ het woord)",
+      correctAnswer: ["move tool", "move", "verplaats tool", "verplaats", "moven", "verplaatsen"]
+    },
+    {
+      id: 3,
+      type: "text-input",
+      question: "Hoe zorgen we ervoor dat blokjes in de lucht blijven in plaats van naar beneden vallen?",
+      correctAnswer: ["anchor", "anker", "anchor tool", "anker tool", "het anchored maken", "het anchored maken van de blokjes", "door het te anchoren", "door het te anchoren"]
+    }
   ];
 
 
-  return (
-    <GradientBackground>
-    <div
-      className="d-flex justify-content-center align-items-center flex-column"
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, primary, #fffefe 100%)",
-        padding: "2rem",
-      }}
-    >
-      <h1 className="text-center mb-4">
-        Jouw Missie van Vandaag!
-      </h1>
 
-      <div className="mb-5 w-100">
-        <ProgressCheckmarkCard 
-          title="Wat we gaan leren"
-          items={lessonChecklist}
-          iconSize="2rem" 
-          itemPadding="1.5rem 0" 
-        />
-      </div>
 
-      <div className="w-100">
-        <ProgressCheckmarkCard 
-          title="Heb je dit al gedaan?"
-          items={[
-            { id: 1, text: "Computer opgestart", checked: true },
-            { id: 2, text: "Roblox Studio gedownload", checked: false },
-          ]}
-          iconPosition="end"
-          bgColor="#fff9c4" 
-          headingColor="#f57f17" 
-          itemPadding="0.75rem 0"
-        />
-      </div>
 
-    </div>
-  </GradientBackground>
-  );
+
+
+
+
+
+
+
+
+
 }
+
