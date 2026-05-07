@@ -3,6 +3,9 @@ import CustomCard from '../WebsiteElements/Card/CustomCard.jsx';
 import CurriculumCard from '../WebsiteElements/Card/CurriculumCard.jsx';
 import { useNavigate } from 'react-router-dom';
 
+import DataMiniGameBanner from '../Images/DataMinigameBanner.png';
+import GmHelden1CurriculumCard from '../Images/CurriculumcardGMhelden1.png';
+
 // this file is in src/pages/LearningDashboard.jsx
 
 const LearningDashboard = () => {
@@ -20,62 +23,23 @@ const LearningDashboard = () => {
           <CurriculumCard
             title="Beginner Roblox Game Maken!"
             text="Een introductie tot het maken van je eigen Roblox game met als eind resultaat een Obby!"
-            imageUrl="https://picsum.photos/300/200?random=3"
+            imageUrl= {GmHelden1CurriculumCard}
             progress={0} // In the future get this number from backend
             buttonText= {continueLessonButtonText}
             buttonAction={() => navigate("/GMHelden1")}
           />
         </div>
 
-        {/* Card 5: Curriculum Progress */}
+
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
-            title="Gevorderd Roblox Game Maken!"
-            text="Maak een spannende avontuur game met gevechten, puzzels en meer!"
-            imageUrl="https://picsum.photos/300/200?random=3"
-            progress={50} // In the future get this number from backend
-            buttonText= {continueLessonButtonText}
-            buttonAction={() => console.log("Lesson opened")}
+            title="De Nieuws Helden!"
+            text= "Aliens proberen low-poly city over te nemen door nieuwsbronnen over te nemen en te vullen met misinformatie! Vernietig het slechte nieuws door het door midden te hakken voordat het de radio toren kan bereiken! Maar wees op je hoeden, de inwoners moeten wel op de hoogte gehouden worden met de huidige situatie, dus zorg ervoor dat het echte nieuws niet vernietigt wordt!"
+            imageUrl= {DataMiniGameBanner}
+            buttonText={"Speel nu!"}
+            buttonAction={() => window.open("https://martijn2410.github.io/Data-Minigame/", "_blank")}
           />
         </div>
-
-        {/* Card 5: Curriculum Progress */}
-        <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-          <CurriculumCard
-            title="Game Design principes met Roblox!"
-            text="Roblox Game Makers: Obby!"
-            imageUrl="https://picsum.photos/300/200?random=3"
-            progress={30} // In the future get this number from backend
-            buttonText= {continueLessonButtonText}
-            buttonAction={() => console.log("Lesson opened")}
-          />
-        </div>
-
-        {/* Card 5: Curriculum Progress */}
-        <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-          <CurriculumCard
-            title="Visual Card"
-            text="Roblox Game Makers: Obby!"
-            imageUrl="https://picsum.photos/300/200?random=3"
-            progress={60} // In the future get this number from backend
-            buttonText= {continueLessonButtonText}
-            buttonAction={() => console.log("Lesson opened")}
-          />
-        </div>
-
-        {/* Card 5: Curriculum Progress */}
-        <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-          <CurriculumCard
-            title="Visual Card"
-            text="Roblox Game Makers: Obby!"
-            imageUrl="https://picsum.photos/300/200?random=3"
-            progress={100}
-            buttonText="Continue Lesson"
-            buttonAction={() => console.log("Lesson opened")}
-          />
-        </div>
-
-        {}
 
       </div>
     </div>

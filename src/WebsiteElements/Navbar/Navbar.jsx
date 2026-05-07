@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import DTHLogoSVGBlue from '../../Images/logo-blue.svg';
 import DTHLogoSVGWhite from '../../Images/logo-white.svg';
@@ -5,6 +6,34 @@ import DTHLogoSVGWhite from '../../Images/logo-white.svg';
 // theme and toggletheme are passed as props from App.jsx 
 // they are used to determine the current theme and toggle it when the button is clicked
 function Navbar({ theme, toggleTheme }) {
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) {
+      setBalance(0);
+      return;
+    }
+
+    const loadBalance = async () => {
+      try {
+        const res = await fetch(
+          `http://127.0.0.1:3000/balance?email=${encodeURIComponent(email)}`
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        setBalance(data.balance ?? 0);
+      } catch {
+        // optional: keep current balance on network error
+      }
+    };
+
+    loadBalance();
+
+    window.addEventListener("balance-updated", loadBalance);
+    return () => window.removeEventListener("balance-updated", loadBalance);
+  }, []);
+
   return (
     <div className="d-flex justify-content-between align-items-center py-3 px-5 my-3 sticky-top bg-body z-3 shadow-lg rounded-pill mx-2">
       
@@ -25,6 +54,7 @@ function Navbar({ theme, toggleTheme }) {
           <Link to="/Avatar" className="text-decoration-none ms-2 me-2">Avatar</Link>
           |{" "}
           <Link to="/LogIn" className="text-decoration-none ms-2">Log In</Link>
+          <div className='d-inline ms-4'><i className="dth-coin"></i> {balance}</div>
         </nav>
         
         {/* Theme Toggle Button */}
