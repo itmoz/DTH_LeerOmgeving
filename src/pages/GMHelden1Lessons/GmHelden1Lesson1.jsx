@@ -3,6 +3,7 @@ import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkC
 import MissionBoard from "../../WebsiteElements/LessonContent/MissionBoard.jsx";
 import ContentSection from "../../WebsiteElements/LessonContent/ContentSection.jsx";
 import ImageLoggedIn from "../../Images/LesAfbeeldingen/GMHelden1/Les1/GmHeldenLes1AfbeeldingIngelogd.png";
+import EscapeTWO from "../../Images/LesAfbeeldingen/GMHelden1/Les1/EscapeTheWorldObby.png";
 import LessonQuiz from "../../WebsiteElements/LessonContent/LessonQuiz.jsx";
 import EndOfLesson from "../../WebsiteElements/LessonContent/EndOfLesson.jsx";
 
@@ -122,29 +123,48 @@ export default function GmHelden1Lesson1() {
             />
         </div>
 
-          <ContentSection
-            imageSrc={ImageLoggedIn}
-            imageAlt="Roblox Player Ingelogd"
-            imageCaption="De Roblox homepagina"
-            textBelow={
-            <p>
-            In de volgende les gaan we samen een Obby maken, dus zorg ervoor dat je Roblox Studio hebt geïnstalleerd en klaar staat om te leren!
-            </p>
-                      }
-          >
-            <p>
-            Nadat de applicatie geïnstalleerd is, zie je dit scherm!
+        <ContentSection>
+          <p>
+            Belangrijk is ook nog dat je een account nodig hebt om Roblox te spelen of spellen te maken.
           </p>
-          </ContentSection>
+          <p>
+            Vraag gerust aan een ouder of verzorger om je te helpen een account aan te maken als je dat nog niet hebt gedaan! (En natuurlijk alleen als je toestemming hebt van een ouder of verzorger!).
+          </p>
+          <p>
+            Onthoud je wachtwoord en gebruikersnaam goed, want die heb je nodig om in te loggen op Roblox Studio en Roblox Player!
+          </p>
+        </ContentSection>
 
-          <LessonQuiz 
-            quizId="les1-quiz" // Toegevoegd zodat we de juiste resetten
-            questions={quizQuestions} 
+          <ContentSection
+  title="Roblox Player Opstarten en Verkennen"
+  contentBlocks={[
+    {
+      // BLOCK 1
+      textAbove: <p>Nadat de applicatie geïnstalleerd is, zie je dit scherm!</p>,
+      imageSrc: ImageLoggedIn,
+      imageAlt: "Roblox Player Ingelogd",
+      imageCaption: "De Roblox homepagina",
+      textBelow: <p>In de volgende les gaan we samen een Obby maken, dus zorg ervoor dat je Roblox Studio hebt geïnstalleerd en klaar staat om te leren!</p>
+    },
+    {
+      // BLOCK 2
+      textAbove: <p>Nadat we daar klaar mee zijn is het tijd om inspiratie te zoeken door bestaande obbies te bekijken!</p>,
+      imageSrc: EscapeTWO, // Je tweede afbeelding
+      imageAlt: "Escape The World Obby",
+      imageCaption: "Een voorbeeld van een populaire Obby",
+      textBelow: <p>In de volgende les zullen we Roblox Studio opzetten en leren gebruiken!</p>
+    }
+  ]}
+/>
+
+          <LessonQuiz
+            quizId="les1-quiz"
+            questions={quizQuestions}
             balanceGainAmount={50}
           />
 
           <EndOfLesson 
-            nextLessonPath="/GMHelden1/les-2"
+          nextLessonPath="/GMHelden1/les-2"
             dashboardPath="/GMHelden1" 
           />
        </div>

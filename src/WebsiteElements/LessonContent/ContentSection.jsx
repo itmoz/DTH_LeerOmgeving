@@ -3,11 +3,8 @@ import React from "react";
 export default function ContentSection({ 
   title, 
   titleColor = "#1e88e5", 
-  imageSrc,           // NEW: The URL or path to your image
-  imageAlt = "Image", // NEW: Description of the image (good for accessibility)
-  imageCaption,       // NEW: Optional small italic text under the image
-  textBelow,          // NEW: Text to display underneath the image section
-  children            // This will act as the text ABOVE the image
+  contentBlocks = [], // NEW: An array of content objects
+  children,
 }) {
   return (
     <div
@@ -24,36 +21,48 @@ export default function ContentSection({
       )}
       
       <div className="text-center">
-        {/* Top Text (Your normal children) */}
+        {/* Render content passed as children */}
         {children}
-        
-        {/* Optional Image Section */}
-        {imageSrc && (
-          <div className="my-4">
-            <img 
-              src={imageSrc} 
-              alt={imageAlt} 
-              style={{ 
-                maxWidth: "100%", 
-                height: "auto", 
-                borderRadius: "10px" 
-              }} 
-            />
-            {/* Optional Small Italic Caption */}
-            {imageCaption && (
-              <p className="mt-2 text-muted" style={{ fontStyle: "italic", fontSize: "0.85em" }}>
-                {imageCaption}
-              </p>
+
+        {/* Loop through the array of content blocks */}
+        {contentBlocks.map((block, index) => (
+          <div key={index} className="mb-5">
+            
+            {/* 1. Text Above the Image */}
+            {block.textAbove && (
+              <div>{block.textAbove}</div>
             )}
+            
+            {/* 2. Optional Image Section */}
+            {block.imageSrc && (
+              <div className="my-4">
+                <img 
+                  src={block.imageSrc} 
+                  alt={block.imageAlt || "Image"} 
+                  style={{ 
+                    maxWidth: "100%", 
+                    height: "auto", 
+                    borderRadius: "10px" 
+                  }} 
+                />
+                {/* Optional Small Italic Caption */}
+                {block.imageCaption && (
+                  <p className="mt-2 text-muted" style={{ fontStyle: "italic", fontSize: "0.85em" }}>
+                    {block.imageCaption}
+                  </p>
+                )}
+              </div>
+            )}
+            
+            {/* 3. Text Below the Image */}
+            {block.textBelow && (
+              <div className="mt-3">
+                {block.textBelow}
+              </div>
+            )}
+
           </div>
-        )}
-        
-        {/* Optional Text Below the Image */}
-        {textBelow && (
-          <div className="mt-3">
-            {textBelow}
-          </div>
-        )}
+        ))}
       </div>
     </div>
   );
