@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const USERS_KEY = 'dth_users';
-
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
 const validateEmail = (email) => {
@@ -27,24 +25,6 @@ const computeStrength = (password) => {
   else if (score >= 40) label = 'Matig';
 
   return { score, label };
-};
-
-const toHex = (buffer) =>
-  Array.from(new Uint8Array(buffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-
-const randomSalt = () => {
-  const array = new Uint8Array(16);
-  window.crypto.getRandomValues(array);
-  return toHex(array);
-};
-
-const hashPassword = async (password, salt) => {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(`${salt}:${password}`);
-  const digest = await window.crypto.subtle.digest('SHA-256', data);
-  return toHex(digest);
 };
 
 export default function Register() {
@@ -88,9 +68,6 @@ export default function Register() {
     setSubmitting(true);
 
     try {
-      const salt = randomSalt();
-      const passwordHash = await hashPassword(password, salt);
-
       const res = await fetch("http://127.0.0.1:3000/register", {
         method: "POST",
         headers: {
@@ -98,8 +75,7 @@ export default function Register() {
         },
         body: JSON.stringify({
           email: normalizedEmail,
-          passwordHash,
-          salt
+          password
         })
       });
 

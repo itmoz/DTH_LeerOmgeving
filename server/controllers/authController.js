@@ -1,12 +1,13 @@
 import { connectDB } from "../database.js";
 import { parseBody } from "../utils.js";
+import bcrypt from "bcrypt";
 
 // REGISTER
 export async function register(req, res) {
   try {
-    const { email, passwordHash, salt } = await parseBody(req);
+    const { email, password } = await parseBody(req);
 
-    if (!email || !passwordHash || !salt) {
+    if (!email || !password) {
       res.writeHead(400, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "Missing fields" }));
     }
@@ -22,11 +23,12 @@ export async function register(req, res) {
       return res.end(JSON.stringify({ error: "User already exists" }));
     }
 
+    const passwordHash = await bcrypt.hash(password, 12);
+
     // insert user
     const result = await users.insertOne({
       email,
       passwordHash,
-      salt,
       balance: 0,
       createdAt: new Date()
     });
@@ -46,9 +48,9 @@ export async function register(req, res) {
 // LOGIN
 export async function login(req, res) {
   try {
-    const { email, passwordHash } = await parseBody(req);
+    const { email, password } = await parseBody(req);
 
-    if (!email || !passwordHash) {
+    if (!email || !password) {
       res.writeHead(400, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "Missing fields" }));
     }
@@ -63,7 +65,9 @@ export async function login(req, res) {
       return res.end(JSON.stringify({ error: "User not found" }));
     }
 
-    if (user.passwordHash === passwordHash) {
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+
+    if (isValidPassword) {
       res.writeHead(200, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({
         success: true,
@@ -80,7 +84,7 @@ export async function login(req, res) {
   }
 }
 
-// GET USER (for fetching salt only)
+// GET USER
 export async function getUser(req, res) {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
@@ -101,9 +105,9 @@ export async function getUser(req, res) {
       return res.end(JSON.stringify({ error: "User not found" }));
     }
 
-    // Return only salt for security (client will hash and send back)
+    // Return minimal user fields for client-side usage
     res.writeHead(200, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ salt: user.salt }));
+    return res.end(JSON.stringify({ email: user.email }));
 
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
