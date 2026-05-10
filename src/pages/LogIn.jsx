@@ -26,9 +26,10 @@ export default function LogIn() {
     }
 
     try {
-      const loginRes = await fetch("http://127.0.0.1:3000/login", {
+      const loginRes = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email: normalizedEmail, password })
       });
 
@@ -39,7 +40,7 @@ export default function LogIn() {
         return;
       }
 
-      localStorage.setItem("userEmail", normalizedEmail);
+      localStorage.setItem("userEmail", loginData.email || normalizedEmail);
 
       setError('');
       setMessage('Inloggen geslaagd!');

@@ -7,18 +7,13 @@ import CoinExplosion from "../Effects/CoinExplosion";
 // De functie om het saldo bij te werken
 const handleAddBalance = async (amount, opts = { showError: true }) => {
   try {
-    const email = localStorage.getItem("userEmail");
-    if (!email) {
-      if (opts.showError) console.error("No logged-in user found");
-      return { ok: false };
-    }
-
     const parsedAmount = Number(amount);
 
-    const res = await fetch("http://127.0.0.1:3000/add-balance", {
+    const res = await fetch("http://localhost:3000/add-balance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, amount: parsedAmount }),
+      credentials: "include",
+      body: JSON.stringify({ amount: parsedAmount }),
     });
 
     const data = await res.json();

@@ -9,22 +9,19 @@ function Navbar({ theme, toggleTheme }) {
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    const email = localStorage.getItem("userEmail");
-    if (!email) {
-      setBalance(0);
-      return;
-    }
-
     const loadBalance = async () => {
       try {
-        const res = await fetch(
-          `http://127.0.0.1:3000/balance?email=${encodeURIComponent(email)}`
-        );
-        if (!res.ok) return;
+        const res = await fetch("http://localhost:3000/balance", {
+          credentials: "include"
+        });
+        if (!res.ok) {
+          setBalance(0);
+          return;
+        }
         const data = await res.json();
         setBalance(data.balance ?? 0);
       } catch {
-        // optional: keep current balance on network error
+        setBalance(0);
       }
     };
 

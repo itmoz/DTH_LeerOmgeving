@@ -2,18 +2,28 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import http from "http";
-import { connectDB } from "./database.js";
-import { parseBody } from "./utils.js";
-import { login, register, getUser, getBalance, addBalance } from "./controllers/authController.js";
+import { login, register, getUser, getBalance, addBalance, logout } from "./controllers/authController.js";
 
 const hostname = process.env.HOST_NAME || "127.0.0.1";
 const port = process.env.PORT || 3000;
+const allowedOrigins = (
+  process.env.FRONTEND_ORIGIN ||
+  "http://127.0.0.1:5173,http://localhost:5173"
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 const server = http.createServer(async (req, res) => {
   // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const requestOrigin = req.headers.origin;
+  if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+    res.setHeader("Access-Control-Allow-Origin", requestOrigin);
+  }
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Requested-With");
 
   if (req.method === "OPTIONS") {
     res.writeHead(200);
@@ -49,6 +59,11 @@ const server = http.createServer(async (req, res) => {
   // LOGIN
   if (req.method === "POST" && req.url === "/login") {
     return login(req, res);
+  }
+
+  // LOGOUT
+  if (req.method === "POST" && req.url === "/logout") {
+    return logout(req, res);
   }
 
   // fallback
