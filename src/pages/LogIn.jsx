@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
@@ -12,6 +12,26 @@ export default function LogIn() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let cancelled = false;
+    const checkSession = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/user', {
+          credentials: 'include',
+        });
+        if (!cancelled && res.ok) {
+          navigate('/LearningDashboard', { replace: true });
+        }
+      } catch {
+        // blijf op login
+      }
+    };
+    checkSession();
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -41,6 +61,7 @@ export default function LogIn() {
       }
 
       localStorage.setItem("userEmail", loginData.email || normalizedEmail);
+      window.dispatchEvent(new Event('auth-changed'));
 
       setError('');
       setMessage('Inloggen geslaagd!');
