@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AvatarButton from "../WebsiteElements/Buttons/AvatarButton";
 import Button from "../WebsiteElements/Buttons/Button";
 import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
@@ -16,62 +16,16 @@ export default function Avatar() {
   });
 
   // 2. State to manage which category tab is currently open
-  const [activeTab, setActiveTab] = useState("shape");
+  const [activeTab, setActiveTab] = useState("");
 
   // --- NEW STATE FOR MODAL ---
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingPurchase, setPendingPurchase] = useState(null); // Stores { category, item }
   const [explosions, setExplosions] = useState([]); // For managing multiple coin explosions
 
-  // 3. Mock data for the customization options
-  // You can eventually replace this with real data from your backend or assets
-  const [options, setOptions] = useState({
-    shape: [
-      { id: "s1", name: "Round", img: ReactImage, locked: false, price: 0 },
-      { id: "s2", name: "Square", img: ReactImage, locked: false, price: 0 },
-      { id: "s3", name: "Triangle", img: ReactImage, locked: false, price: 0 },
-      { id: "s4", name: "Hexagon", img: ReactImage, locked: true, price: 30 },
-      { id: "s5", name: "Octagon", img: ReactImage, locked: true, price: 45 },
-      { id: "s6", name: "Diamond", img: ReactImage, locked: true, price: 55 },
-      { id: "s7", name: "Heart", img: ReactImage, locked: true, price: 70 },
-    ],
-    color: [
-      { id: "c1", name: "Red", img: ReactImage, locked: false, price: 0 },
-      { id: "c2", name: "Blue", img: ReactImage, locked: false, price: 0 },
-      { id: "c3", name: "Green", img: ReactImage, locked: false, price: 0 },
-      { id: "c4", name: "Yellow", img: ReactImage, locked: true, price: 20 },
-      { id: "c5", name: "Purple", img: ReactImage, locked: true, price: 30 },
-      { id: "c6", name: "Orange", img: ReactImage, locked: true, price: 35 },
-      { id: "c7", name: "Pink", img: ReactImage, locked: true, price: 40 },
-    ],
-    face: [
-      { id: "f1", name: "Happy", img: ReactImage, locked: false, price: 0 },
-      { id: "f2", name: "Grumpy", img: ReactImage, locked: false, price: 0 },
-      { id: "f3", name: "Surprised", img: ReactImage, locked: false, price: 0 },
-      { id: "f4", name: "Sad", img: ReactImage, locked: true, price: 25 },
-      { id: "f5", name: "Angry", img: ReactImage, locked: true, price: 35 },
-      { id: "f6", name: "Neutral", img: ReactImage, locked: true, price: 45 },
-      { id: "f7", name: "Winking", img: ReactImage, locked: true, price: 60 },
-    ],
-    accessory: [
-      { id: "a1", name: "Glasses", img: ReactImage, locked: false, price: 0 },
-      { id: "a2", name: "Hat", img: ReactImage, locked: false, price: 0 },
-      { id: "a3", name: "Bowtie", img: ReactImage, locked: false, price: 0 },
-      { id: "a4", name: "Earrings", img: ReactImage, locked: true, price: 30 },
-      { id: "a5", name: "Necklace", img: ReactImage, locked: true, price: 45 },
-      { id: "a6", name: "Scarf", img: ReactImage, locked: true, price: 50 },
-      { id: "a7", name: "Headphones", img: ReactImage, locked: true, price: 65 },
-    ],
-    title: [
-      { id: "t1", name: "The Brave", img: ReactImage, locked: false, price: 0 },
-      { id: "t2", name: "The Wise", img: ReactImage, locked: false, price: 0 },
-      { id: "t3", name: "The Swift", img: ReactImage, locked: false, price: 0 },
-      { id: "t4", name: "The Cunning", img: ReactImage, locked: true, price: 35 },
-      { id: "t5", name: "The Bold", img: ReactImage, locked: true, price: 45 },
-      { id: "t6", name: "The Mysterious", img: ReactImage, locked: true, price: 60, },
-      { id: "t7", name: "The Fearless", img: ReactImage, locked: true, price: 80, },
-    ],
-  });
+  // options will be loaded from the backend
+  const [options, setOptions] = useState({});
+  const [categories, setCategories] = useState([]);
 
   // Function to handle clicking an option
   const handleSelect = (category, item) => {
@@ -85,45 +39,88 @@ export default function Avatar() {
         ...prev,
         [category]: item,
       }));
+
+      // Persist equipped choice to server (non-blocking)
+      (async () => {
+        try {
+          const email = localStorage.getItem("userEmail");
+          const categoryObj = categories.find((c) => c.name === category);
+          if (email && categoryObj) {
+            await fetch("http://127.0.0.1:3000/equip", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
+            });
+          }
+        } catch (err) {
+          console.error("Failed to persist equip:", err);
+        }
+      })();
     }
   };
 
   // --- NEW HANDLERS FOR THE MODAL ---
   const handleConfirmPurchase = async () => {
-  if (!pendingPurchase) return;
+    if (!pendingPurchase) return;
     const { category, item } = pendingPurchase;
 
-    const cost = Number(item.price || 0);
-    if (cost > 0) {
-      const payment = await handleAddBalance(-cost, { showError: false });
-      if (!payment.ok) {
-        alert("Not enough balance or payment failed");
+    try {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("Not logged in");
         handleCloseModal();
         return;
       }
+
+      const res = await fetch("http://127.0.0.1:3000/purchase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, itemId: item.id }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Purchase failed");
+        handleCloseModal();
+        return;
+      }
+
+      // mark unlocked locally
+      setOptions((prev) => ({
+        ...prev,
+        [category]: prev[category].map((optionItem) =>
+          optionItem.id === item.id ? { ...optionItem, locked: false } : optionItem
+        ),
+      }));
+
+      setSelections((prev) => ({ ...prev, [category]: { ...item, locked: false } }));
+
+      // Persist equip on server (so equipped_items is set)
+      try {
+        const categoryObj = categories.find((c) => c.name === category);
+        if (categoryObj) {
+          await fetch("http://127.0.0.1:3000/equip", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
+          });
+        }
+      } catch (err) {
+        console.error("Failed to equip after purchase:", err);
+      }
+
+      window.dispatchEvent(new Event("balance-updated"));
+      handleCloseModal();
+
+      const newExplosionId = Date.now();
+      setExplosions((prev) => [...prev, newExplosionId]);
+      setTimeout(() => {
+        setExplosions((prev) => prev.filter((id) => id !== newExplosionId));
+      }, 1200);
+    } catch (err) {
+      console.error(err);
+      handleCloseModal();
     }
-
-    setOptions((prev) => ({
-      ...prev,
-      [category]: prev[category].map((optionItem) =>
-        optionItem.id === item.id
-          ? { ...optionItem, locked: false }
-          : optionItem,
-      ),
-    }));
-
-    setSelections((prev) => ({
-      ...prev,
-      [category]: { ...item, locked: false },
-    }));
-
-    handleCloseModal();
-
-    const newExplosionId = Date.now();
-    setExplosions((prev) => [...prev, newExplosionId]);
-    setTimeout(() => {
-      setExplosions((prev) => prev.filter((id) => id !== newExplosionId));
-    }, 1200);
   };
 
   const handleCloseModal = () => {
@@ -161,6 +158,82 @@ export default function Avatar() {
       return { ok: false };
     }
   };
+
+  const handleSaveAvatar = async () => {
+    try {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("You must be logged in to save your avatar.");
+        return;
+      }
+
+      const res = await fetch("http://127.0.0.1:3000/save-avatar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, selections }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Failed to save avatar");
+        return;
+      }
+
+      window.dispatchEvent(new Event("avatar-saved"));
+      alert("Avatar saved");
+    } catch (err) {
+      console.error(err);
+      alert("Could not reach server to save avatar");
+    }
+  };
+
+  // load categories, items and inventory from server
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const email = localStorage.getItem("userEmail");
+
+        const catRes = await fetch("http://127.0.0.1:3000/categories");
+        const catData = await catRes.json();
+        const cats = catData.categories || [];
+        setCategories(cats);
+
+        const opts = {};
+        // fetch items per category
+        for (const c of cats) {
+          const itemsRes = await fetch(`http://127.0.0.1:3000/items?categoryId=${c.id}`);
+          const itemsData = await itemsRes.json();
+          opts[c.name] = (itemsData.items || []).map((it) => ({ ...it, locked: it.price > 0 }));
+        }
+
+        // fetch inventory to unlock items
+        if (email) {
+          const invRes = await fetch(`http://127.0.0.1:3000/inventory?email=${encodeURIComponent(email)}`);
+          const invData = await invRes.json();
+          const unlocked = new Set((invData.inventory || []).map((i) => i.item.id));
+
+          for (const k of Object.keys(opts)) {
+            opts[k] = opts[k].map((it) => (unlocked.has(it.id) ? { ...it, locked: false } : it));
+          }
+
+          // fetch equipped and set selections
+          const eqRes = await fetch(`http://127.0.0.1:3000/equipped?email=${encodeURIComponent(email)}`);
+          const eqData = await eqRes.json();
+          const sel = {};
+          (eqData.equipped || []).forEach((e) => {
+            if (e.category && e.item) sel[e.category.name] = { id: e.item.id, name: e.item.name };
+          });
+          setSelections((prev) => ({ ...prev, ...sel }));
+        }
+
+        setOptions(opts);
+      } catch (err) {
+        console.error("Could not load avatar data", err);
+      }
+    };
+
+    load();
+  }, []);
 
   return (
     <div className="container py-5">
@@ -201,7 +274,7 @@ export default function Avatar() {
 
               <Button
                 variant="primary"
-                onClick={() => console.log("Save Avatar")}
+                onClick={handleSaveAvatar}
               >
                 Save Avatar
               </Button>
@@ -220,18 +293,18 @@ export default function Avatar() {
           <div className="card shadow-sm">
             {/* Tab Navigation */}
             <div className="card-header">
-              <ul className="nav nav-pills card-header-pills">
-                {Object.keys(options).map((category) => (
-                  <li className="nav-item" key={category}>
-                    <button
-                      className={`nav-link text-capitalize ${activeTab === category ? "active" : ""}`}
-                      onClick={() => setActiveTab(category)}
-                    >
-                      {category}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+                <ul className="nav nav-pills card-header-pills">
+                  {(categories.length ? categories.map(c => c.name) : Object.keys(options)).map((category) => (
+                    <li className="nav-item" key={category}>
+                      <button
+                        className={`nav-link text-capitalize ${activeTab === category ? "active" : ""}`}
+                        onClick={() => setActiveTab(category)}
+                      >
+                        {category}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
             </div>
 
             {/* Tab Content (The Buttons) */}
@@ -240,7 +313,7 @@ export default function Avatar() {
               style={{ maxHeight: "600px" }}
             >
               <div className="d-flex flex-wrap justify-content-center">
-                {options[activeTab].map((item) => {
+                {(options[activeTab] || []).map((item) => {
                   // Check if this specific item is currently selected to apply a highlight
 
                   return (

@@ -5,6 +5,15 @@ import http from "http";
 import { connectDB } from "./database.js";
 import { parseBody } from "./utils.js";
 import { login, register, getUser, getBalance, addBalance } from "./controllers/authController.js";
+import {
+  getCategories,
+  getItems,
+  getInventory,
+  purchaseItem,
+  equipItem,
+  getEquipped,
+  saveAvatar,
+} from "./controllers/avatarController.js";
 
 const hostname = process.env.HOST_NAME || "127.0.0.1";
 const port = process.env.PORT || 3000;
@@ -49,6 +58,41 @@ const server = http.createServer(async (req, res) => {
   // LOGIN
   if (req.method === "POST" && req.url === "/login") {
     return login(req, res);
+  }
+
+  // CATEGORIES
+  if (req.method === "GET" && req.url.startsWith("/categories")) {
+    return getCategories(req, res);
+  }
+
+  // ITEMS
+  if (req.method === "GET" && req.url.startsWith("/items")) {
+    return getItems(req, res);
+  }
+
+  // INVENTORY
+  if (req.method === "GET" && req.url.startsWith("/inventory")) {
+    return getInventory(req, res);
+  }
+
+  // PURCHASE
+  if (req.method === "POST" && req.url === "/purchase") {
+    return purchaseItem(req, res);
+  }
+
+  // EQUIP
+  if (req.method === "POST" && req.url === "/equip") {
+    return equipItem(req, res);
+  }
+
+  // GET EQUIPPED
+  if (req.method === "GET" && req.url.startsWith("/equipped")) {
+    return getEquipped(req, res);
+  }
+
+  // SAVE AVATAR
+  if (req.method === "POST" && req.url === "/save-avatar") {
+    return saveAvatar(req, res);
   }
 
   // fallback
