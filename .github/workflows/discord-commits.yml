@@ -31,7 +31,7 @@ jobs:
 
           # Random quotes list
           QUOTES=(
-            "I’ve been playing piano since I was six or seven and I was lucky enough my first piano teacher thought I was a complete and utter disaster. After a while he just quit."
+                      "I’ve been playing piano since I was six or seven and I was lucky enough my first piano teacher thought I was a complete and utter disaster. After a while he just quit."
             "Radiatie? Het heet uitstraling."
             "het is niet een kamerlid die, het is een kamerlid dát! DAT DAT DAT!!! Potdomme."
             "Who is the REAL protagonist of Skyrim? I don't think it's the Dragonborn..."
@@ -65,7 +65,16 @@ jobs:
             "Absoluut fantastisch, dit soort initiatieven!"
             "Unexplored 2 remains the most beautiful game I've ever worked on. It did not bring the (commercial) success we were hoping for, but it is still being updated to this day, so who know... maybe it'll gain steam on Steam one of these days 🙏"
             "Als schrijver is dit hoe je jouw boek het liefste ziet: letterlijk stukgelezen! 🤗"
-            "Ik sta zelf geregeld voor een groep HBO-ICT-studenten. Hun Nederlands is vaak slecht, hun Engels meestal nóg slechter. Paternotte spreekt over het gewenste resultaat, maar slaat daarbij twee noodzakelijke stappen over: 1: Herstel eerst het niveau van het Nederlands in basis- en middelbaar onderwijs Leerlingen en studenten hebben momenteel de grootste moeite zinnen te vormen in hun éigen taal, in het Nederlands. Los van de stortvloed aan taalfouten betekenen hun zinnen vaak iets anders dan hetgeen de leerlingen willen communiceren. Wie zich niet goed kan uitdrukken in zijn eigen taal, kan dat al helemáál niet in een vreemde taal. 2: Verbeter het niveau van het Engels dat leraren bezigen In mijn ervaring is het Engels van de meeste docenten vaak te slecht om onderwijs te geven op niveau. Dit geldt voor zowel middelbaar als hoger (beroeps)onderwijs. Voor de uitleg van complexe onderwerpen is een diep begrip van de gekozen taal nodig, inclusief het benodigde vocabulaire. Pas nádat deze twee stappen succesvol zijn afgerond, valt weer te denken aan Engels als voertaal op hogere onderwijsinstellingen."
+            "Please read before posting. This is not Twitter / X."
+            "'Over 45'...?! Since when is that an age group? Yes, I feel offended 😉"
+            "Ik sta zelf geregeld voor een groep HBO-ICT-studenten. Hun Nederlands is vaak slecht, hun Engels meestal nóg slechter."
+            "Misschien heel naïef, maar waarom campagnes voeren voor minderen? Waarom niet aanmoedigen om helemaal te stoppen? We zeggen toch ook niet 'Rook twee sigaretten per dag mínder'? Bovendien, juist voor mensen die te vaak en/of te veel drinken is helemaal stoppen simpelweg eenvoudiger dan minderen."
+            "Curation Craving, eindelijk een naam voor iets dat ik al heel lang en steeds intenser voel."
+            "Dat plakband-voorbeeld, geweldig,"
+            "You are a bot, right?"
+            "Exact. En wat een walgelijke update, 'die foto was niet zo bedoeld'. Donder toch op, wat een extreem nare, homofobische actie is dit zeg."
+            "Alderbastend... ik moest het googlen. Wat een prachtig woord!"
+            "Was wel benieuwd, maar je site maakt downloaden onmogelijk. En het is 'Word lid', zonder -t."
           )
 
           # Pick a random quote

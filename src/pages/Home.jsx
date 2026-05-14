@@ -11,7 +11,7 @@ export default function Home() {
       <h1>DigiLeer!</h1>
       <p>This is the main page of the application.</p>
 
-      <Button variant='primary' onClick={() => navigate('/login')}> 
+      <Button variant='primary' onClick={() => navigate('/LearningDashboard')}> 
         Start Learning
       </Button>
     </div>

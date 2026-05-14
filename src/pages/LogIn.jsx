@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
@@ -6,24 +6,32 @@ const normalizeEmail = (email) => email.trim().toLowerCase();
 const validateEmail = (email) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
 
-const toHex = (buffer) =>
-  Array.from(new Uint8Array(buffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-
-const hashPassword = async (password, salt) => {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(`${salt}:${password}`);
-  const digest = await window.crypto.subtle.digest('SHA-256', data);
-  return toHex(digest);
-};
-
 export default function LogIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let cancelled = false;
+    const checkSession = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/user', {
+          credentials: 'include',
+        });
+        if (!cancelled && res.ok) {
+          navigate('/LearningDashboard', { replace: true });
+        }
+      } catch {
+        // blijf op login
+      }
+    };
+    checkSession();
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -38,27 +46,11 @@ export default function LogIn() {
     }
 
     try {
-      // Fetch salt from DB
-      const userRes = await fetch(`http://127.0.0.1:3000/user?email=${encodeURIComponent(normalizedEmail)}`);
-      if (!userRes.ok) {
-        if (userRes.status === 404) {
-          setError('Gebruiker niet gevonden.');
-        } else {
-          setError('Fout bij ophalen gebruiker.');
-        }
-        return;
-      }
-      const userData = await userRes.json();
-      const { salt } = userData;
-
-      // Compute hash with provided password and fetched salt
-      const passwordHash = await hashPassword(password, salt);
-
-      // Send POST /login with email and computed hash
-      const loginRes = await fetch("http://127.0.0.1:3000/login", {
+      const loginRes = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: normalizedEmail, passwordHash })
+        credentials: "include",
+        body: JSON.stringify({ email: normalizedEmail, password })
       });
 
       const loginData = await loginRes.json();
@@ -67,6 +59,9 @@ export default function LogIn() {
         setError(loginData.error || "Inloggen mislukt");
         return;
       }
+
+      localStorage.setItem("userEmail", loginData.email || normalizedEmail);
+      window.dispatchEvent(new Event('auth-changed'));
 
       setError('');
       setMessage('Inloggen geslaagd!');
