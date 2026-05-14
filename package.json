@@ -12,10 +12,12 @@
     "check-node": "node -v"
   },
   "dependencies": {
+    "@codegenie/serverless-express": "^5.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "mongodb": "^7.1.1",
     "react": "^19.2.5",
     "react-confetti": "^6.4.0",
