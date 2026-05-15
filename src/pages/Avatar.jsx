@@ -16,6 +16,19 @@ const avatarSvgRawMap = import.meta.glob("../Images/Avatar/*.svg", {
 });
 
 const avatarCategories = ["shape", "color", "face", "accessory", "title"];
+const requiredAvatarCategories = ["shape", "color", "face"];
+const optionalAvatarCategories = ["accessory", "title"];
+const defaultAvatarSelectionNames = {
+  shape: "Round",
+  color: "Red",
+  face: "Happy",
+};
+const noneAccessoryOption = {
+  id: "__avatar_none__",
+  name: "None",
+  price: 0,
+  locked: false,
+};
 const avatarPreviewLayerOrder = [
   { category: "shape", shade: 0 },
   { category: "face", shade: 0.25 },
@@ -58,12 +71,65 @@ const shadeHexColor = (colorHex, shadeAmount) => {
 
 const getAvatarSvgMarkup = (itemName) => avatarSvgRawMap[`../Images/Avatar/${itemName}.svg`] || "";
 
+const resolveSelectionFromOptions = (sourceItem, optionItems) => {
+  if (!sourceItem) return null;
+
+  const matchedItem = optionItems.find(
+    (optionItem) => (sourceItem.id && optionItem.id === sourceItem.id) || optionItem.name === sourceItem.name
+  );
+
+  return matchedItem || sourceItem;
+};
+
+const buildAvatarSelections = (sourceSelections, optionMap) => {
+  const nextSelections = {
+    shape: null,
+    color: null,
+    face: null,
+    accessory: null,
+    title: null,
+  };
+
+  for (const category of avatarCategories) {
+    const optionItems = optionMap[category] || [];
+    const sourceItem = sourceSelections?.[category] || null;
+
+    if (sourceItem) {
+      nextSelections[category] = resolveSelectionFromOptions(sourceItem, optionItems);
+      continue;
+    }
+
+    if (requiredAvatarCategories.includes(category)) {
+      const defaultName = defaultAvatarSelectionNames[category];
+      nextSelections[category] = optionItems.find((optionItem) => optionItem.name === defaultName) || null;
+      continue;
+    }
+
+    nextSelections[category] = null;
+  }
+
+  return nextSelections;
+};
+
+const getDisplayedOptions = (category, optionItems) => {
+  if (category !== "accessory" && category !== "title") {
+    return optionItems;
+  }
+
+  return [noneAccessoryOption, ...optionItems.filter((optionItem) => optionItem.name !== "None")];
+};
+
 const getAvatarItemImageSrc = (category, item, tintColor) => {
   if (!item) return "";
 
   if (category === "color") {
     const colorMarkup = getAvatarSvgMarkup("Color");
     return colorMarkup ? createTintedSvgDataUri(colorMarkup, normalizeHexColor(item.color_hex)) : "";
+  }
+
+  if (item.name === "None") {
+    const noneMarkup = getAvatarSvgMarkup("None");
+    return noneMarkup ? createTintedSvgDataUri(noneMarkup, normalizeHexColor(tintColor)) : "";
   }
 
   if (category === "title") {
@@ -118,6 +184,11 @@ export default function Avatar() {
 
   // Function to handle clicking an option
   const handleSelect = (category, item) => {
+    if ((category === "accessory" || category === "title") && item.name === "None") {
+      handleClearSelection(category);
+      return;
+    }
+
     if (item.locked) {
       // If it's locked, stage the purchase and open the modal
       setPendingPurchase({ category, item });
@@ -145,6 +216,29 @@ export default function Avatar() {
           console.error("Failed to persist equip:", err);
         }
       })();
+    }
+  };
+
+  const handleClearSelection = async (category) => {
+    if (!optionalAvatarCategories.includes(category)) return;
+
+    setSelections((prev) => ({
+      ...prev,
+      [category]: null,
+    }));
+
+    try {
+      const email = localStorage.getItem("userEmail");
+      const categoryObj = categories.find((c) => c.name === category);
+      if (email && categoryObj) {
+        await fetch("http://127.0.0.1:3000/equip", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: null }),
+        });
+      }
+    } catch (err) {
+      console.error(`Failed to clear ${category}:`, err);
     }
   };
 
@@ -299,8 +393,14 @@ export default function Avatar() {
           setActiveTab(cats[0].name);
         }
 
-        // fetch inventory to unlock items
+        let savedAvatar = null;
         if (email) {
+          const userRes = await fetch(`http://127.0.0.1:3000/user?email=${encodeURIComponent(email)}`);
+          if (userRes.ok) {
+            const userData = await userRes.json();
+            savedAvatar = userData.avatar || null;
+          }
+
           const invRes = await fetch(`http://127.0.0.1:3000/inventory?email=${encodeURIComponent(email)}`);
           const invData = await invRes.json();
           const unlocked = new Set((invData.inventory || []).map((i) => i.item.id));
@@ -309,26 +409,28 @@ export default function Avatar() {
             opts[k] = opts[k].map((it) => (unlocked.has(it.id) ? { ...it, locked: false } : it));
           }
 
-          // fetch equipped and set selections
-          const eqRes = await fetch(`http://127.0.0.1:3000/equipped?email=${encodeURIComponent(email)}`);
-          const eqData = await eqRes.json();
-          const sel = {};
-          (eqData.equipped || []).forEach((e) => {
-            if (!e.category || !e.item) return;
+          if (!savedAvatar) {
+            const eqRes = await fetch(`http://127.0.0.1:3000/equipped?email=${encodeURIComponent(email)}`);
+            const eqData = await eqRes.json();
+            const sel = {};
+            (eqData.equipped || []).forEach((e) => {
+              if (!e.category || !e.item) return;
 
-            const categoryItems = opts[e.category.name] || [];
-            const matchedItem = categoryItems.find((optionItem) => optionItem.id === e.item.id);
-            sel[e.category.name] = matchedItem || {
-              id: e.item.id,
-              name: e.item.name,
-              price: e.item.price || 0,
-              color_hex: e.item.color_hex || null,
-            };
-          });
-          setSelections((prev) => ({ ...prev, ...sel }));
+              const categoryItems = opts[e.category.name] || [];
+              const matchedItem = categoryItems.find((optionItem) => optionItem.id === e.item.id);
+              sel[e.category.name] = matchedItem || {
+                id: e.item.id,
+                name: e.item.name,
+                price: e.item.price || 0,
+                color_hex: e.item.color_hex || null,
+              };
+            });
+            savedAvatar = sel;
+          }
         }
 
         setOptions(opts);
+        setSelections((prev) => buildAvatarSelections(savedAvatar, opts));
       } catch (err) {
         console.error("Could not load avatar data", err);
       }
@@ -394,21 +496,6 @@ export default function Avatar() {
                 </div>
               </div>
 
-              {/* <div className="d-flex flex-wrap justify-content-center gap-2 w-100">
-                {avatarCategories.map((category) => {
-                  const selectedItem = selections[category];
-
-                  return (
-                    <div
-                      key={category}
-                      className="d-inline-flex align-items-center gap-2 rounded-pill border bg-white px-3 py-2 shadow-sm"
-                    >
-                      <span className="text-uppercase small text-muted">{getCategoryLabel(category)}</span>
-                      <span className="fw-semibold">{selectedItem?.name || "None"}</span>
-                    </div>
-                  );
-                })}
-              </div> */}
               <Button
                 variant="primary"
                 onClick={handleSaveAvatar}
@@ -450,14 +537,17 @@ export default function Avatar() {
               style={{ maxHeight: "600px" }}
             >
               <div className="d-flex flex-wrap justify-content-center">
-                {(options[activeTab] || []).map((item) => {
+                {getDisplayedOptions(activeTab, options[activeTab] || []).map((item) => {
+                  const isNoneOption = (activeTab === "accessory" || activeTab === "title") && item.name === "None";
+                  const isSelected = isNoneOption ? !selections[activeTab] : selections[activeTab]?.id === item.id;
+
                   return (
                     <div key={item.id}>
                       <AvatarButton
                         imageSrc={getAvatarItemImageSrc(activeTab, item, avatarBaseColor)}
                         imageAlt={`${item.name} avatar item`}
                         onClick={() => handleSelect(activeTab, item)}
-                        selected={selections[activeTab]?.id === item.id}
+                        selected={isSelected}
                         locked={item.locked}
                         price={item.price}
                       >
