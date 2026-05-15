@@ -1,0 +1,25 @@
+$bootstrap-icons-font-dir: "../../node_modules/bootstrap-icons/font/fonts";
+
+// 1. Include Bootstrap's required functions and variables
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+
+// 2. Replace Bootstrap's primary color with the custom theme color
+$primary: #2727E6;
+
+// 3. Keep Bootstrap's theme map in sync with the new primary color
+$theme-colors: map-merge($theme-colors, ("primary": $primary));
+
+// 4. Import the rest of Bootstrap to generate the CSS with new color included
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons";
+
+body {
+  font-family: 'Apparat_Regular', sans-serif;
+}
+// Make the tabs and pills use the primary color for active state
+.nav-pills .nav-link.active, 
+.nav-pills .show > .nav-link {
+    background-color: var(--bs-primary) !important;
+}
