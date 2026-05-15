@@ -3,7 +3,77 @@ import AvatarButton from "../WebsiteElements/Buttons/AvatarButton";
 import Button from "../WebsiteElements/Buttons/Button";
 import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
-import ReactImage from "../assets/react.svg";
+
+const avatarImageUrls = import.meta.glob("../Images/Avatar/*.svg", {
+  eager: true,
+  import: "default",
+});
+
+const avatarSvgRawMap = import.meta.glob("../Images/Avatar/*.svg", {
+  eager: true,
+  import: "default",
+  query: "?raw",
+});
+
+const avatarCategories = ["shape", "color", "face", "accessory", "title"];
+const avatarPreviewLayerOrder = [
+  { category: "shape", shade: 0 },
+  { category: "face", shade: 0.25 },
+  { category: "accessory", shade: 0.4 },
+];
+
+const createTintedSvgDataUri = (svgMarkup, colorHex) => {
+  const tintedSvg = svgMarkup.replace(/currentColor/g, colorHex);
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(tintedSvg)}`;
+};
+
+const normalizeHexColor = (colorHex) => {
+  const fallback = "#7C99C9";
+  if (!colorHex || typeof colorHex !== "string") return fallback;
+
+  const hex = colorHex.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(hex)) return hex;
+  if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
+    return `#${hex
+      .slice(1)
+      .split("")
+      .map((char) => char + char)
+      .join("")}`;
+  }
+
+  return fallback;
+};
+
+const shadeHexColor = (colorHex, shadeAmount) => {
+  const normalizedHex = normalizeHexColor(colorHex).slice(1);
+  const numeric = Number.parseInt(normalizedHex, 16);
+  if (Number.isNaN(numeric)) return normalizeHexColor(colorHex);
+
+  const red = Math.max(0, Math.min(255, Math.round(((numeric >> 16) & 255) * (1 - shadeAmount))));
+  const green = Math.max(0, Math.min(255, Math.round(((numeric >> 8) & 255) * (1 - shadeAmount))));
+  const blue = Math.max(0, Math.min(255, Math.round((numeric & 255) * (1 - shadeAmount))));
+
+  return `#${[red, green, blue].map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+};
+
+const getAvatarSvgMarkup = (itemName) => avatarSvgRawMap[`../Images/Avatar/${itemName}.svg`] || "";
+
+const getAvatarItemImageSrc = (category, item) => {
+  if (!item) return "";
+
+  if (category === "color") {
+    const colorMarkup = getAvatarSvgMarkup("Color");
+    return colorMarkup ? createTintedSvgDataUri(colorMarkup, normalizeHexColor(item.color_hex)) : "";
+  }
+
+  if (category === "title") {
+    return avatarImageUrls["../Images/Avatar/Title.svg"] || "";
+  }
+
+  return avatarImageUrls[`../Images/Avatar/${item.name}.svg`] || "";
+};
+
+const getCategoryLabel = (category) => category.charAt(0).toUpperCase() + category.slice(1);
 
 export default function Avatar() {
   // 1. State to keep track of the currently selected options
@@ -26,6 +96,18 @@ export default function Avatar() {
   // options will be loaded from the backend
   const [options, setOptions] = useState({});
   const [categories, setCategories] = useState([]);
+
+  const avatarBaseColor = normalizeHexColor(
+    selections.color?.color_hex || options.color?.find((item) => item.id === selections.color?.id)?.color_hex
+  );
+  const previewLayers = avatarPreviewLayerOrder
+    .map(({ category, shade }) => ({ category, item: selections[category], shade }))
+    .filter(({ item }) => Boolean(item))
+    .map(({ category, item, shade }) => ({
+      category,
+      item,
+      imageSrc: createTintedSvgDataUri(getAvatarSvgMarkup(item.name), shadeHexColor(avatarBaseColor, shade)),
+    }));
 
   // Function to handle clicking an option
   const handleSelect = (category, item) => {
@@ -206,6 +288,10 @@ export default function Avatar() {
           opts[c.name] = (itemsData.items || []).map((it) => ({ ...it, locked: it.price > 0 }));
         }
 
+        if (!activeTab && cats.length > 0) {
+          setActiveTab(cats[0].name);
+        }
+
         // fetch inventory to unlock items
         if (email) {
           const invRes = await fetch(`http://127.0.0.1:3000/inventory?email=${encodeURIComponent(email)}`);
@@ -221,7 +307,16 @@ export default function Avatar() {
           const eqData = await eqRes.json();
           const sel = {};
           (eqData.equipped || []).forEach((e) => {
-            if (e.category && e.item) sel[e.category.name] = { id: e.item.id, name: e.item.name };
+            if (!e.category || !e.item) return;
+
+            const categoryItems = opts[e.category.name] || [];
+            const matchedItem = categoryItems.find((optionItem) => optionItem.id === e.item.id);
+            sel[e.category.name] = matchedItem || {
+              id: e.item.id,
+              name: e.item.name,
+              price: e.item.price || 0,
+              color_hex: e.item.color_hex || null,
+            };
           });
           setSelections((prev) => ({ ...prev, ...sel }));
         }
@@ -249,29 +344,65 @@ export default function Avatar() {
             <div className="card-header bg-primary text-white text-center">
               <h5 className="mb-0">Preview</h5>
             </div>
-            <div className="card-body d-flex flex-column align-items-center justify-content-center">
-              {/* This is a text-based placeholder for your future visual preview */}
-              <div className="text-muted mb-3">Visual preview goes here!</div>
+            <div className="card-body d-flex flex-column align-items-center justify-content-center gap-3">
+              <div
+                className="w-100 rounded-4 border position-relative overflow-hidden"
+                style={{
+                  aspectRatio: "1 / 1.15",
+                  maxWidth: "340px",
+                  background:
+                    "radial-gradient(circle at top, rgba(13, 110, 253, 0.12), rgba(255, 255, 255, 0.98) 55%)",
+                }}
+              >
+                {previewLayers.length > 0 ? (
+                  previewLayers.map(({ category, item, imageSrc }, index) => (
+                    <img
+                      key={`${category}-${item.id}`}
+                      src={imageSrc}
+                      alt={`${item.name} layer`}
+                      className="position-absolute top-50 start-50"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        transform: "translate(-50%, -50%)",
+                        zIndex: index + 1,
+                        pointerEvents: "none",
+                      }}
+                    />
+                  ))
+                ) : (
+                  <div className="h-100 d-flex align-items-center justify-content-center text-center text-muted px-4">
+                    Select avatar items to build the character preview.
+                  </div>
+                )}
+              </div>
 
-              <ul className="list-group w-100 shadow-sm mb-3">
-                <li className="list-group-item">
-                  <strong>Shape:</strong> {selections.shape?.name || "None"}
-                </li>
-                <li className="list-group-item">
-                  <strong>Color:</strong> {selections.color?.name || "None"}
-                </li>
-                <li className="list-group-item">
-                  <strong>Face:</strong> {selections.face?.name || "None"}
-                </li>
-                <li className="list-group-item">
-                  <strong>Accessory:</strong>{" "}
-                  {selections.accessory?.name || "None"}
-                </li>
-                <li className="list-group-item">
-                  <strong>Title:</strong> {selections.title?.name || "None"}
-                </li>
-              </ul>
+              <div className="w-100 text-center">
+                <div className="text-uppercase small text-muted">Title</div>
+                <div
+                  className="fw-semibold fs-5"
+                  style={{ color: shadeHexColor(avatarBaseColor, 0.45) }}
+                >
+                  {selections.title?.name || "No title selected"}
+                </div>
+              </div>
 
+              <div className="d-flex flex-wrap justify-content-center gap-2 w-100">
+                {avatarCategories.map((category) => {
+                  const selectedItem = selections[category];
+
+                  return (
+                    <div
+                      key={category}
+                      className="d-inline-flex align-items-center gap-2 rounded-pill border bg-white px-3 py-2 shadow-sm"
+                    >
+                      <span className="text-uppercase small text-muted">{getCategoryLabel(category)}</span>
+                      <span className="fw-semibold">{selectedItem?.name || "None"}</span>
+                    </div>
+                  );
+                })}
+              </div>
               <Button
                 variant="primary"
                 onClick={handleSaveAvatar}
@@ -293,18 +424,18 @@ export default function Avatar() {
           <div className="card shadow-sm">
             {/* Tab Navigation */}
             <div className="card-header">
-                <ul className="nav nav-pills card-header-pills">
-                  {(categories.length ? categories.map(c => c.name) : Object.keys(options)).map((category) => (
-                    <li className="nav-item" key={category}>
-                      <button
-                        className={`nav-link text-capitalize ${activeTab === category ? "active" : ""}`}
-                        onClick={() => setActiveTab(category)}
-                      >
-                        {category}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+              <ul className="nav nav-pills card-header-pills">
+                {(categories.length ? categories.map((c) => c.name) : Object.keys(options)).map((category) => (
+                  <li className="nav-item" key={category}>
+                    <button
+                      className={`nav-link text-capitalize ${activeTab === category ? "active" : ""}`}
+                      onClick={() => setActiveTab(category)}
+                    >
+                      {category}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Tab Content (The Buttons) */}
@@ -314,12 +445,11 @@ export default function Avatar() {
             >
               <div className="d-flex flex-wrap justify-content-center">
                 {(options[activeTab] || []).map((item) => {
-                  // Check if this specific item is currently selected to apply a highlight
-
                   return (
                     <div key={item.id}>
                       <AvatarButton
-                        imageSrc={item.img}
+                        imageSrc={getAvatarItemImageSrc(activeTab, item)}
+                        imageAlt={`${item.name} avatar item`}
                         onClick={() => handleSelect(activeTab, item)}
                         selected={selections[activeTab]?.id === item.id}
                         locked={item.locked}
@@ -338,6 +468,7 @@ export default function Avatar() {
       <PurchaseModal
         isOpen={isModalOpen}
         item={pendingPurchase?.item}
+        imageSrc={pendingPurchase ? getAvatarItemImageSrc(pendingPurchase.category, pendingPurchase.item) : ""}
         onConfirm={handleConfirmPurchase}
         onCancel={handleCloseModal}
       />

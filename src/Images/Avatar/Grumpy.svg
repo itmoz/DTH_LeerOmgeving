@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150">
+  <!-- Angled Brows & Dot Eyes -->
+  <path d="M 40 50 L 65 60 M 110 50 L 85 60" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+  <circle cx="55" cy="65" r="5" fill="currentColor" />
+  <circle cx="95" cy="65" r="5" fill="currentColor" />
+  <!-- Frowning Mouth -->
+  <path d="M 55 105 Q 75 90 95 105" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+</svg>

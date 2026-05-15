@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150">
+  <!-- Angry Brows -->
+  <line x1="40" y1="45" x2="65" y2="60" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+  <line x1="110" y1="45" x2="85" y2="60" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+  <!-- Eyes -->
+  <circle cx="55" cy="70" r="4" fill="currentColor" />
+  <circle cx="95" cy="70" r="4" fill="currentColor" />
+  <!-- Yelling Mouth -->
+  <path d="M 60 95 C 60 85, 90 85, 90 95 C 90 110, 60 110, 60 95 Z" fill="currentColor" />
+</svg>

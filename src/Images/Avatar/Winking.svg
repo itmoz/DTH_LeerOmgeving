@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150">
+  <!-- One open eye, one closed eye -->
+  <circle cx="55" cy="60" r="6" fill="currentColor" />
+  <path d="M 85 60 L 105 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+  <!-- Smirk -->
+  <path d="M 60 95 Q 75 105 95 90" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+</svg>
