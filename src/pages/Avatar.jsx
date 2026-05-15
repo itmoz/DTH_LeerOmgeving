@@ -58,7 +58,7 @@ const shadeHexColor = (colorHex, shadeAmount) => {
 
 const getAvatarSvgMarkup = (itemName) => avatarSvgRawMap[`../Images/Avatar/${itemName}.svg`] || "";
 
-const getAvatarItemImageSrc = (category, item) => {
+const getAvatarItemImageSrc = (category, item, tintColor) => {
   if (!item) return "";
 
   if (category === "color") {
@@ -67,10 +67,17 @@ const getAvatarItemImageSrc = (category, item) => {
   }
 
   if (category === "title") {
-    return avatarImageUrls["../Images/Avatar/Title.svg"] || "";
+    const titleMarkup = getAvatarSvgMarkup("Title");
+    return titleMarkup ? createTintedSvgDataUri(titleMarkup, normalizeHexColor(tintColor)) : "";
   }
 
-  return avatarImageUrls[`../Images/Avatar/${item.name}.svg`] || "";
+  const svgMarkup = getAvatarSvgMarkup(item.name);
+  if (!svgMarkup) {
+    return avatarImageUrls[`../Images/Avatar/${item.name}.svg`] || "";
+  }
+
+  const tint = normalizeHexColor(tintColor);
+  return createTintedSvgDataUri(svgMarkup, tint);
 };
 
 const getCategoryLabel = (category) => category.charAt(0).toUpperCase() + category.slice(1);
@@ -350,8 +357,7 @@ export default function Avatar() {
                 style={{
                   aspectRatio: "1 / 1.15",
                   maxWidth: "340px",
-                  background:
-                    "radial-gradient(circle at top, rgba(13, 110, 253, 0.12), rgba(255, 255, 255, 0.98) 55%)",
+                  backgroundColor: "var(--bs-body-bg)",
                 }}
               >
                 {previewLayers.length > 0 ? (
@@ -388,7 +394,7 @@ export default function Avatar() {
                 </div>
               </div>
 
-              <div className="d-flex flex-wrap justify-content-center gap-2 w-100">
+              {/* <div className="d-flex flex-wrap justify-content-center gap-2 w-100">
                 {avatarCategories.map((category) => {
                   const selectedItem = selections[category];
 
@@ -402,7 +408,7 @@ export default function Avatar() {
                     </div>
                   );
                 })}
-              </div>
+              </div> */}
               <Button
                 variant="primary"
                 onClick={handleSaveAvatar}
@@ -448,7 +454,7 @@ export default function Avatar() {
                   return (
                     <div key={item.id}>
                       <AvatarButton
-                        imageSrc={getAvatarItemImageSrc(activeTab, item)}
+                        imageSrc={getAvatarItemImageSrc(activeTab, item, avatarBaseColor)}
                         imageAlt={`${item.name} avatar item`}
                         onClick={() => handleSelect(activeTab, item)}
                         selected={selections[activeTab]?.id === item.id}
