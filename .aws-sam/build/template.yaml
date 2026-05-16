@@ -1,19 +1,52 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+Description: 'DTH_AWS SAM Template for Express backend
+
+  '
+Globals:
+  Function:
+    Timeout: 10
+    LoggingConfig:
+      LogFormat: JSON
+    Environment:
+      Variables:
+        FRONTEND_ORIGIN: http://127.0.0.1:5173,http://localhost:5173
 Resources:
-  ApiFunction:
+  ExpressBackendFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ExpressBackendFunction
+      Handler: handler.lambdaHandler
       Runtime: nodejs20.x
-      Handler: lambda.handler
-      MemorySize: 512
-      Timeout: 15
-      CodeUri: ApiFunction
+      Architectures:
+      - x86_64
       Events:
-        Api:
+        ProxyRoute:
           Type: Api
           Properties:
             Path: /{proxy+}
             Method: ANY
+        RootRoute:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
     Metadata:
-      SamResourceId: ApiFunction
+      SamResourceId: ExpressBackendFunction
+Outputs:
+  BackendApi:
+    Description: API Gateway endpoint URL
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/
+  ExpressBackendFunction:
+    Description: Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - ExpressBackendFunction
+      - Arn
+  ExpressBackendFunctionIamRole:
+    Description: Implicit IAM Role ARN
+    Value:
+      Fn::GetAtt:
+      - ExpressBackendFunctionRole
+      - Arn

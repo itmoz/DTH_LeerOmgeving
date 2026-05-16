@@ -33,14 +33,6 @@ Resources:
           Properties:
             Path: /
             Method: ANY
-    Metadata:
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: es2020
-        Sourcemap: true
-        EntryPoints:
-          - handler.ts
 
 Outputs:
   BackendApi:
