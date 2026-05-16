@@ -6,7 +6,7 @@ import {
   register,
   getUser,
   getBalance,
-  addBalance,
+  // addBalance,
   logout
 } from "./controllers/authController.js";
 
