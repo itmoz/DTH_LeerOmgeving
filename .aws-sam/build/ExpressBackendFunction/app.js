@@ -58,7 +58,7 @@ app.get("/user", getUser);
 
 app.get("/balance", getBalance);
 
-app.post("/add-balance", addBalance);
+//app.post("/add-balance", addBalance);
 
 app.post("/register", register);
 
