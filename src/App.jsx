@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import AppRoutes from './AppRoutes/AppRoutes';
 import Navbar from './WebsiteElements/Navbar/Navbar';
 
-const API_BASE = "http://127.0.0.1:3000";
+const API_BASE = "http://localhost:3000";
 
 function App() {
   // 1. Theme State & LocalStorage
@@ -35,19 +35,6 @@ function App() {
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
-
-  return (
-    <div className="container">
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
-      <main>
-        <AppRoutes />
-        <section style={{ marginTop: '2rem', padding: '1rem', border: '1px solid #ccc' }}>
-          <h2>Debug: data van backend (/user)</h2>
-          <pre>{JSON.stringify(userData, null, 2)}</pre>
-        </section>
-      </main>
-    </div>
-  );
 }
 
 export default App;

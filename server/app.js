@@ -1,69 +1,53 @@
+// server/app.js
 import express from "express";
-import dotenv from "dotenv";
-
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import {
   login,
   register,
   getUser,
-  getBalance,
-  // addBalance,
-  logout
+  logout,
+  getBalance  
 } from "./controllers/authController.js";
-
-if (process.env.AWS_LAMBDA_FUNCTION_NAME === undefined) {
-  dotenv.config();
-}
 
 const app = express();
 
+// 1. Body + cookies
 app.use(express.json());
+app.use(cookieParser());
 
-const allowedOrigins = (
-  process.env.FRONTEND_ORIGIN ||
-  "http://127.0.0.1:5173,http://localhost:5173"
-)
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+// 2. CORS vóór je routes
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
-// CORS middleware
-app.use((req, res, next) => {
-  const requestOrigin = req.headers.origin;
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // origin kan null zijn bij bv. Postman → dan gewoon toelaten
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS: " + origin));
+      }
+    },
+    credentials: true,
+  })
+);
 
-  if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
-    res.setHeader("Access-Control-Allow-Origin", requestOrigin);
-  }
+// Preflight (OPTIONS) ook afhandelen
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 
-  res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, X-Requested-With"
-  );
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
-// Routes
+// 3. Routes
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
-app.get("/user", getUser);
-
-app.get("/balance", getBalance);
-
-//app.post("/add-balance", addBalance);
-
-app.post("/register", register);
-
 app.post("/login", login);
-
+app.post("/register", register);
+app.get("/user", getUser);
 app.post("/logout", logout);
+app.get("/balance", getBalance);
 
 export default app;
