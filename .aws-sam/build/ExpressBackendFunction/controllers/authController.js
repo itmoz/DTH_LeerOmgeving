@@ -7,7 +7,7 @@ export const register = (req, res) => {
 };
 
 export const getUser = (req, res) => {
-  res.json({ user: null });
+  res.json({ user: { id: 1, name: "Test Gebruiker" } });
 };
 
 export const getBalance = (req, res) => {
