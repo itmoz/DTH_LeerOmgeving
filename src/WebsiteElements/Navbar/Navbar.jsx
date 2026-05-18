@@ -1,81 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DTHLogoSVGBlue from "../../Images/logo-blue.svg";
 import DTHLogoSVGWhite from "../../Images/logo-white.svg";
 
-function Navbar({ theme, toggleTheme }) {
+function Navbar({ theme, toggleTheme, userData }) {
   const navigate = useNavigate();
-  const [balance, setBalance] = useState(0);
-  const [userEmail, setUserEmail] = useState(null);
-  const [authChecked, setAuthChecked] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
-
-  const refreshAuth = useCallback(async () => {
-    try {
-      const res = await fetch("http://localhost:3000/user", {
-        credentials: "include",
-      });
-      if (!res.ok) {
-        setUserEmail(null);
-        return;
-      }
-      const data = await res.json();
-      setUserEmail(data.email ?? null);
-      if (data.email) {
-        localStorage.setItem("userEmail", data.email);
-      }
-    } catch {
-      setUserEmail(null);
-    } finally {
-      setAuthChecked(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    refreshAuth();
-    const onAuthChange = () => {
-      refreshAuth();
-    };
-    window.addEventListener("auth-changed", onAuthChange);
-    return () => window.removeEventListener("auth-changed", onAuthChange);
-  }, [refreshAuth]);
-
-  useEffect(() => {
-    if (!profileOpen) return;
-
-    const onPointerDown = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) {
-        setProfileOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [profileOpen]);
-
-  useEffect(() => {
-    const loadBalance = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/balance", {
-          credentials: "include",
-        });
-        if (!res.ok) {
-          setBalance(0);
-          return;
-        }
-        const data = await res.json();
-        setBalance(data.balance ?? 0);
-      } catch {
-        setBalance(0);
-      }
-    };
-
-    loadBalance();
-
-    window.addEventListener("balance-updated", loadBalance);
-    return () => window.removeEventListener("balance-updated", loadBalance);
-  }, [userEmail]);
 
   const handleLogout = async () => {
     try {
@@ -87,8 +19,6 @@ function Navbar({ theme, toggleTheme }) {
       // cookie cleared server-side on success; proceed with client cleanup
     }
     localStorage.removeItem("userEmail");
-    setUserEmail(null);
-    setBalance(0);
     setProfileOpen(false);
     window.dispatchEvent(new Event("auth-changed"));
     navigate("/");
@@ -112,7 +42,7 @@ function Navbar({ theme, toggleTheme }) {
             Avatar
           </Link>
           <span className="text-secondary">|</span>
-          {authChecked && userEmail ? (
+          {userData && userData.email ? (
             <div className="position-relative d-inline-flex" ref={profileRef}>
               <button
                 type="button"
@@ -135,7 +65,7 @@ function Navbar({ theme, toggleTheme }) {
                 >
                   <div className="px-3 py-2 border-bottom">
                     <div className="small text-muted">Ingelogd als</div>
-                    <div className="text-break fw-medium">{userEmail}</div>
+                    <div className="text-break fw-medium">{userData.email}</div>
                   </div>
                   <Link
                     className="dropdown-item"
@@ -156,30 +86,17 @@ function Navbar({ theme, toggleTheme }) {
                 </div>
               )}
             </div>
-          ) : authChecked ? (
+          ) : (
             <Link to="/LogIn" className="text-decoration-none">
               Log in
             </Link>
-          ) : (
-            <span
-              className="text-muted small px-2"
-              aria-busy="true"
-              aria-label="Sessie laden"
-            >
-              …
-            </span>
           )}
-          <div className="d-inline ms-2">
-            <i className="dth-coin"></i> {balance}
-          </div>
         </nav>
-
         <button
-          className={`btn ${theme === "light" ? "btn-dark" : "btn-light"} rounded-pill`}
-          type="button"
+          className="btn btn-outline-secondary rounded-pill ms-2"
           onClick={toggleTheme}
         >
-          <i className={`bi bi-${theme === "light" ? "moon" : "sun"}-fill`}></i>
+          <i className={`bi bi-${theme === "light" ? "moon" : "sun"}`} aria-hidden="true"></i>
         </button>
       </div>
     </div>
@@ -187,3 +104,4 @@ function Navbar({ theme, toggleTheme }) {
 }
 
 export default Navbar;
+
