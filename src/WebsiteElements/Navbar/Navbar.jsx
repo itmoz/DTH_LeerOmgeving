@@ -53,6 +53,8 @@ function Navbar({ theme, toggleTheme }) {
           |{" "}
           <Link to="/Avatar" className="text-decoration-none ms-2 me-2">Avatar</Link>
           |{" "}
+          <Link to="/Achievements" className="text-decoration-none ms-2 me-2">Prestaties</Link>
+          |{" "}
           <Link to="/LogIn" className="text-decoration-none ms-2">Log In</Link>
           <div className='d-inline ms-4'><i className="dth-coin"></i> {balance}</div>
         </nav>
