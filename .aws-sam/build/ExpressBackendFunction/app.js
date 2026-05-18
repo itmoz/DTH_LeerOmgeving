@@ -1,69 +1,61 @@
+// server/app.js
 import express from "express";
-import dotenv from "dotenv";
-
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import {
   login,
   register,
   getUser,
+  logout,
   getBalance,
-  // addBalance,
-  logout
 } from "./controllers/authController.js";
-
-if (process.env.AWS_LAMBDA_FUNCTION_NAME === undefined) {
-  dotenv.config();
-}
 
 const app = express();
 
+// JSON body & cookies
 app.use(express.json());
+app.use(cookieParser());
 
-const allowedOrigins = (
-  process.env.FRONTEND_ORIGIN ||
-  "http://127.0.0.1:5173,http://localhost:5173"
-)
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+// CORS-config
+const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
-// CORS middleware
-app.use((req, res, next) => {
-  const requestOrigin = req.headers.origin;
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS: " + origin));
+    }
+  },
+  credentials: true,
+};
 
-  if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
-    res.setHeader("Access-Control-Allow-Origin", requestOrigin);
-  }
 
-  res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, X-Requested-With"
-  );
+app.use(cors(corsOptions));
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
 
-  next();
+// Health check route (no DB)
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", time: new Date().toISOString() });
 });
 
-// Routes
+// Test-route
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
+// Auth routes
+app.post("/login", login);
+app.post("/register", register);
 app.get("/user", getUser);
-
+app.post("/logout", logout);
 app.get("/balance", getBalance);
 
-//app.post("/add-balance", addBalance);
 
-app.post("/register", register);
-
-app.post("/login", login);
-
-app.post("/logout", logout);
+// Global error handler (always last)
+app.use((err, req, res, next) => {
+  console.error("Global error handler:", err);
+  res.status(500).json({ error: "Internal server error", details: err?.message || err });
+});
 
 export default app;

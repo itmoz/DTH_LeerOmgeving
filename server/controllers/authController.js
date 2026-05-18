@@ -11,7 +11,11 @@ export const register = async (req, res) => {
     const normalizedEmail = email.trim().toLowerCase();
 
     const db = await getDb();
+    console.log("Gebruik database:", db.databaseName);
     const users = db.collection("users");
+
+    const count = await users.countDocuments();
+    console.log("Aantal users in deze DB:", count);
 
     const existing = await users.findOne({ email: normalizedEmail });
     if (existing) {
@@ -79,11 +83,18 @@ export const getUser = async (req, res) => {
       return res.json({ user: null });
     }
 
+    // extra check: is het een geldige ObjectId?
+    if (!ObjectId.isValid(sessionId)) {
+      res.clearCookie("session");
+      return res.json({ user: null });
+    }
+
     const db = await getDb();
     const users = db.collection("users");
 
     const user = await users.findOne({ _id: new ObjectId(sessionId) });
     if (!user) {
+      res.clearCookie("session");
       return res.json({ user: null });
     }
 

@@ -7,47 +7,55 @@ import {
   register,
   getUser,
   logout,
-  getBalance  
+  getBalance,
 } from "./controllers/authController.js";
 
 const app = express();
 
-// 1. Body + cookies
+// JSON body & cookies
 app.use(express.json());
 app.use(cookieParser());
 
-// 2. CORS vóór je routes
+// CORS-config
 const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // origin kan null zijn bij bv. Postman → dan gewoon toelaten
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS: " + origin));
-      }
-    },
-    credentials: true,
-  })
-);
-
-// Preflight (OPTIONS) ook afhandelen
-app.options("*", cors({
-  origin: allowedOrigins,
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS: " + origin));
+    }
+  },
   credentials: true,
-}));
+};
 
-// 3. Routes
+
+app.use(cors(corsOptions));
+
+
+// Health check route (no DB)
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", time: new Date().toISOString() });
+});
+
+// Test-route
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
+// Auth routes
 app.post("/login", login);
 app.post("/register", register);
 app.get("/user", getUser);
 app.post("/logout", logout);
 app.get("/balance", getBalance);
+
+
+// Global error handler (always last)
+app.use((err, req, res, next) => {
+  console.error("Global error handler:", err);
+  res.status(500).json({ error: "Internal server error", details: err?.message || err });
+});
 
 export default app;

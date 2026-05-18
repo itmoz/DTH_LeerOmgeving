@@ -2,7 +2,7 @@
 import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.DB_NAME || "dth";
+const dbName = process.env.DB_NAME;
 
 let client;
 let db;
