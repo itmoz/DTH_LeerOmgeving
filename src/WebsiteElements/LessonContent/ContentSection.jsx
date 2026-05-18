@@ -3,7 +3,7 @@ import React from "react";
 export default function ContentSection({ 
   title, 
   titleColor = "#1e88e5", 
-  contentBlocks = [], // NEW: An array of content objects
+  contentBlocks = [], // An array of content objects
   children,
 }) {
   return (
@@ -28,7 +28,7 @@ export default function ContentSection({
         {contentBlocks.map((block, index) => (
           <div key={index} className="mb-5">
             
-            {/* 1. Text Above the Image */}
+            {/* 1. Text Above the Image/Video */}
             {block.textAbove && (
               <div>{block.textAbove}</div>
             )}
@@ -53,8 +53,15 @@ export default function ContentSection({
                 )}
               </div>
             )}
+
+            {/* 3. Optional Custom Element (like VideoPlayer) */}
+            {block.customElement && (
+              <div className="my-4">
+                {block.customElement}
+              </div>
+            )}
             
-            {/* 3. Text Below the Image */}
+            {/* 4. Text Below the Image/Video */}
             {block.textBelow && (
               <div className="mt-3">
                 {block.textBelow}

@@ -7,6 +7,9 @@ import LessonQuiz from "../../WebsiteElements/LessonContent/LessonQuiz.jsx";
 import EndOfLesson from "../../WebsiteElements/LessonContent/EndOfLesson.jsx";
 
 import GradientBackground from "../../WebsiteElements/BackgroundGradient/GradientBackground.jsx";
+import VideoPlayer from "../../WebsiteElements/ImagesAndVideos/VideoPlayer.jsx";
+
+import CreatingStudioEnv from "../../Video/GMHelden1/Les2/DGMH1_Clip1.mp4";
 
 export default function GmHelden1Lesson2() {
 
@@ -18,7 +21,6 @@ export default function GmHelden1Lesson2() {
   "📍 Een spawnpoint toevoegen waar spelers beginnen",
   "🕹️ Het testen van je spel in Roblox Studio!"
 ];
-
 
   const quizQuestions = [
     {
@@ -84,18 +86,18 @@ export default function GmHelden1Lesson2() {
           },
           {
             textAbove: <p>Om een nieuw project te starten, klik op 'New' en kies 'Baseplate'. Dit geeft ons een leeg canvas om op te bouwen!</p>,
+          },
+          // FIX: Pass the VideoPlayer inside a content object under a new key
+          {
+            customElement: (
+              <VideoPlayer
+                src={CreatingStudioEnv}
+                title="Het maken van een werkomgeving in Roblox Studio"
+                width="100%"
+               />
+            )
           }
         ]}/>
-
-
-
-
-
-
-
-
-
-
 
         <EndOfLesson 
           prevLessonPath="/GMHelden1/les-1"
@@ -107,4 +109,3 @@ export default function GmHelden1Lesson2() {
     </GradientBackground>
   );
 }
-
