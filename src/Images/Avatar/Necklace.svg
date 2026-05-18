@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150">
+  <!-- Chain -->
+  <path d="M 40 110 Q 75 140 110 110" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="4 4" />
+  <!-- Pendant -->
+  <polygon points="75,125 80,132 75,139 70,132" fill="currentColor" />
+</svg>

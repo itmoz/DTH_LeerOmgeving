@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150">
+  <!-- Tail hanging down -->
+  <path d="M 90 120 L 95 150 L 75 145 Z" fill="currentColor" />
+  <!-- Wrapped Scarf -->
+  <path d="M 30 115 Q 75 140 120 115 L 115 130 Q 75 155 35 130 Z" fill="currentColor" />
+</svg>

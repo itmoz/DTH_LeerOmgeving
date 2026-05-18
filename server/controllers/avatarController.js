@@ -2,6 +2,66 @@ import { connectDB } from "../database.js";
 import { parseBody } from "../utils.js";
 import { ObjectId } from "mongodb";
 
+const REQUIRED_AVATAR_CATEGORIES = ["shape", "color", "face"];
+const OPTIONAL_AVATAR_CATEGORIES = ["accessory", "title"];
+const DEFAULT_AVATAR_SELECTION_NAMES = {
+  shape: "Round",
+  color: "Red",
+  face: "Happy",
+  accessory: null,
+  title: null,
+};
+
+const toObjectId = (value) => {
+  if (!value || typeof value !== "string" || !ObjectId.isValid(value)) {
+    return null;
+  }
+
+  return new ObjectId(value);
+};
+
+const toSelectionPayload = (item) => {
+  if (!item) return null;
+
+  return {
+    id: item._id.toString(),
+    name: item.name,
+    price: item.price || 0,
+    color_hex: item.color_hex || null,
+  };
+};
+
+async function resolveSelectionForCategory(db, categoryDoc, selection, fallbackName) {
+  if (!categoryDoc) {
+    return null;
+  }
+
+  const itemsColl = db.collection("items");
+  const categoryId = categoryDoc._id;
+  const selectionId = toObjectId(selection?.id);
+
+  if (selectionId) {
+    const selectedById = await itemsColl.findOne({ _id: selectionId, category_id: categoryId });
+    if (selectedById) {
+      return toSelectionPayload(selectedById);
+    }
+  }
+
+  if (selection?.name) {
+    const selectedByName = await itemsColl.findOne({ name: selection.name, category_id: categoryId });
+    if (selectedByName) {
+      return toSelectionPayload(selectedByName);
+    }
+  }
+
+  if (!fallbackName) {
+    return null;
+  }
+
+  const fallbackItem = await itemsColl.findOne({ name: fallbackName, category_id: categoryId });
+  return fallbackItem ? toSelectionPayload(fallbackItem) : null;
+}
+
 export async function getCategories(req, res) {
   try {
     const db = await connectDB();
@@ -133,16 +193,51 @@ export async function purchaseItem(req, res) {
 export async function equipItem(req, res) {
   try {
     const { email, categoryId, itemId } = await parseBody(req);
-    if (!email || !categoryId || !itemId) {
+    if (!email || !categoryId) {
       res.writeHead(400, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ error: "email, categoryId and itemId required" }));
+      return res.end(JSON.stringify({ error: "email and categoryId required" }));
     }
 
     const db = await connectDB();
+    const categoryObjectId = toObjectId(categoryId);
+    if (!categoryObjectId) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Invalid categoryId" }));
+    }
+
+    const category = await db.collection("categories").findOne({ _id: categoryObjectId });
+    if (!category) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Category not found" }));
+    }
+
+    if (!itemId) {
+      if (REQUIRED_AVATAR_CATEGORIES.includes(category.name)) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: `Cannot unequip required category: ${category.name}` }));
+      }
+
+      await db.collection("equipped_items").deleteOne({ email, category_id: categoryObjectId });
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ success: true, unequipped: true }));
+    }
+
+    const itemObjectId = toObjectId(itemId);
+    if (!itemObjectId) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Invalid itemId" }));
+    }
+
+    const item = await db.collection("items").findOne({ _id: itemObjectId, category_id: categoryObjectId });
+    if (!item) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "Item not found" }));
+    }
 
     await db.collection("equipped_items").updateOne(
-      { email, category_id: new ObjectId(categoryId) },
-      { $set: { item_id: new ObjectId(itemId), updatedAt: new Date() } },
+      { email, category_id: categoryObjectId },
+      { $set: { item_id: itemObjectId, updatedAt: new Date() } },
       { upsert: true }
     );
 
@@ -212,7 +307,39 @@ export async function saveAvatar(req, res) {
     }
 
     const db = await connectDB();
-    await db.collection("users").updateOne({ email }, { $set: { avatar: selections } });
+    const categoryDocs = await db.collection("categories").find().toArray();
+    const categoryMap = new Map(categoryDocs.map((category) => [category.name, category]));
+
+    const normalizedAvatar = {};
+
+    for (const categoryName of [...REQUIRED_AVATAR_CATEGORIES, ...OPTIONAL_AVATAR_CATEGORIES]) {
+      const categoryDoc = categoryMap.get(categoryName);
+      const fallbackName = DEFAULT_AVATAR_SELECTION_NAMES[categoryName];
+      const resolvedSelection = await resolveSelectionForCategory(
+        db,
+        categoryDoc,
+        selections?.[categoryName],
+        fallbackName
+      );
+
+      normalizedAvatar[categoryName] = resolvedSelection;
+
+      if (!categoryDoc) {
+        continue;
+      }
+
+      if (resolvedSelection) {
+        await db.collection("equipped_items").updateOne(
+          { email, category_id: categoryDoc._id },
+          { $set: { item_id: new ObjectId(resolvedSelection.id), updatedAt: new Date() } },
+          { upsert: true }
+        );
+      } else {
+        await db.collection("equipped_items").deleteOne({ email, category_id: categoryDoc._id });
+      }
+    }
+
+    await db.collection("users").updateOne({ email }, { $set: { avatar: normalizedAvatar } });
 
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({ success: true }));

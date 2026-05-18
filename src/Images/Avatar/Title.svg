@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" width="150" height="150">
+  <!-- 
+    Combining the shield shape and the star shape in one path string.
+    Using fill-rule="evenodd" cuts the star out of the shield.
+  -->
+  <path 
+    fill-rule="evenodd" 
+    d="
+      M 75,10 C 110,10 140,20 140,60 C 140,110 100,140 75,145 C 50,140 10,110 10,60 C 10,20 40,10 75,10 Z 
+      M 75,40 L 85,60 L 107,63 L 91,78 L 95,100 L 75,89 L 55,100 L 59,78 L 43,63 L 65,60 Z" 
+    fill="currentColor" 
+  />
+</svg>

@@ -28,6 +28,13 @@ export async function register(req, res) {
       passwordHash,
       salt,
       balance: 0,
+      avatar: {
+        shape: { name: "Round" },
+        color: { name: "Red" },
+        face: { name: "Happy" },
+        accessory: null,
+        title: null,
+      },
       createdAt: new Date()
     });
 
@@ -80,7 +87,7 @@ export async function login(req, res) {
   }
 }
 
-// GET USER (for fetching salt only)
+// GET USER (for fetching salt and avatar snapshot)
 export async function getUser(req, res) {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
@@ -101,9 +108,9 @@ export async function getUser(req, res) {
       return res.end(JSON.stringify({ error: "User not found" }));
     }
 
-    // Return only salt for security (client will hash and send back)
+    // Return salt plus avatar snapshot; password data stays excluded.
     res.writeHead(200, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ salt: user.salt }));
+    return res.end(JSON.stringify({ salt: user.salt, avatar: user.avatar ?? null }));
 
   } catch (err) {
     res.writeHead(500, { "Content-Type": "application/json" });
