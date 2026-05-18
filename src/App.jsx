@@ -18,19 +18,6 @@ function App() {
     localStorage.setItem('app-theme', theme);
   }, [theme]);
 
-  // Nieuw: één keer /user ophalen bij laden van de app
-  useEffect(() => {
-    fetch(`${API_BASE}/user`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Data van backend /user:", data);
-        setUserData(data); // bv. { user: null }
-      })
-      .catch((err) => {
-        console.error("Fout bij ophalen /user:", err);
-      });
-  }, []);
-
   // 3. Toggle Function
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
