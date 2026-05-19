@@ -3,6 +3,7 @@ import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 // Zorg ervoor dat dit pad klopt!
 import CoinExplosion from "../Effects/CoinExplosion";
+import { triggerAchievement } from "../../utils/achievementSystem";
 
 // De functie om het saldo bij te werken
 const handleAddBalance = async (amount, opts = { showError: true }) => {
@@ -29,6 +30,8 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
     }
 
     window.dispatchEvent(new Event("balance-updated"));
+    // Notify achievement system about earned coins
+    void triggerAchievement("coins_earned", { amount: parsedAmount });
     return { ok: true, balance: data.balance };
   } catch {
     if (opts.showError) console.error("Server not reachable");

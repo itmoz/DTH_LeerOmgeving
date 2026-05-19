@@ -1,15 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { triggerAchievement } from "../../utils/achievementSystem";
 
 export default function EndOfLesson({ 
   prevLessonPath, 
   nextLessonPath, 
-  dashboardPath = "/" 
+  dashboardPath = "/",
+  achievementEventName = "lesson_completed",
+  achievementEventData = {},
 }) {
   const navigate = useNavigate();
 
   // We check if both paths are provided to determine if we are in the "middle" of the lessons
   const hasBothLessons = prevLessonPath && nextLessonPath;
+
+  const handleLessonComplete = () => {
+    void triggerAchievement(achievementEventName, achievementEventData);
+  };
 
   return (
     <div 
@@ -32,7 +39,10 @@ export default function EndOfLesson({
           <button 
             className="btn btn-outline-primary py-3 px-4 flex-grow-1"
             style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-            onClick={() => navigate(prevLessonPath)}
+              onClick={() => {
+                handleLessonComplete();
+                navigate(prevLessonPath);
+              }}
           >
             ⬅️ Vorige Les
           </button>
@@ -40,7 +50,10 @@ export default function EndOfLesson({
           <button 
             className="btn btn-outline-secondary py-3 px-4 flex-grow-1"
             style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-            onClick={() => navigate(dashboardPath)}
+              onClick={() => {
+                handleLessonComplete();
+                navigate(dashboardPath);
+              }}
           >
             🏠 Terug naar Dashboard
           </button>
@@ -51,7 +64,10 @@ export default function EndOfLesson({
           <button 
             className="btn btn-primary py-3 px-4 flex-grow-1"
             style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-            onClick={() => navigate(nextLessonPath)}
+              onClick={() => {
+                handleLessonComplete();
+                navigate(nextLessonPath);
+              }}
           >
             Volgende Les ➡️
           </button>
@@ -59,7 +75,10 @@ export default function EndOfLesson({
           <button 
             className="btn btn-success py-3 px-4 flex-grow-1"
             style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-            onClick={() => navigate(dashboardPath)}
+              onClick={() => {
+                handleLessonComplete();
+                navigate(dashboardPath);
+              }}
           >
             🏠 Afronden & Naar Dashboard
           </button>
@@ -73,7 +92,10 @@ export default function EndOfLesson({
           <button 
             className="btn btn-outline-secondary py-2 px-4 w-100"
             style={{ borderRadius: "15px", fontSize: "1rem", fontWeight: "bold" }}
-            onClick={() => navigate(dashboardPath)}
+              onClick={() => {
+                handleLessonComplete();
+                navigate(dashboardPath);
+              }}
           >
             🏠 Terug naar Dashboard
           </button>

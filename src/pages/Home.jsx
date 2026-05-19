@@ -3,6 +3,7 @@ import Sidebar from '../WebsiteElements/Sidebar/Sidebar';
 import { useNavigate } from 'react-router-dom';
 
 
+
 export default function Home() {
   const navigate = useNavigate();
 
