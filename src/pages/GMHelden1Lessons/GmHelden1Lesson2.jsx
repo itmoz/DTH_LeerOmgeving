@@ -8,8 +8,20 @@ import EndOfLesson from "../../WebsiteElements/LessonContent/EndOfLesson.jsx";
 
 import GradientBackground from "../../WebsiteElements/BackgroundGradient/GradientBackground.jsx";
 import VideoPlayer from "../../WebsiteElements/ImagesAndVideos/VideoPlayer.jsx";
+import GIFPlayer from "../../WebsiteElements/ImagesAndVideos/GIFPlayer.jsx";
 
 import CreatingStudioEnv from "../../Video/GMHelden1/Les2/DGMH1_Clip1.mp4";
+import PlacingPartsGIF from "../../GIFS/GMHelden1Lessons/Les2/DGMH1_Clip2.gif";
+import MovingParts from "../../Video/GMHelden1/Les2/DGMH1_Clip3.mp4";
+import DisplayingZoomAndMoveCamera from "../../GIFS/GMHelden1Lessons/Les2/DGMH1_Clip4.gif";
+import ScalingParts from "../../Video/GMHelden1/Les2/DGMH1_Clip5.mp4";
+import RotatingParts from "../../Video/GMHelden1/Les2/DGMH1_Clip6.mp4";
+import DeletingBaseplateDel from "../../Video/GMHelden1/Les2/DGMH1_Clip7.mp4";
+import DeletingBaseplateMenu from "../../Video/GMHelden1/Les2/DGMH1_Clip8.mp4"; // make this a GIF later
+import PlayingGame from "../../Video/GMHelden1/Les2/DGMH1_Clip9.mp4";
+import PausingGame from "../../Video/GMHelden1/Les2/DGMH1_Clip10.mp4";
+import StoppingGameWithFallingBlock from "../../Video/GMHelden1/Les2/DGMH1_Clip11.mp4";
+
 
 export default function GmHelden1Lesson2() {
 
@@ -72,7 +84,7 @@ export default function GmHelden1Lesson2() {
         <p>
           Nadat we de download hebben voltooid en op het geinstalleerde programma hebben geklikt zal Roblox Studio automatisch openen en zien we dit scherm:
         </p>
-      </ContentSection>
+        </ContentSection>
 
         <ContentSection title="Het maken van de werkomgeving!"
         
@@ -89,20 +101,268 @@ export default function GmHelden1Lesson2() {
           },
           // FIX: Pass the VideoPlayer inside a content object under a new key
           {
-            customElement: (
+              customElement: (
               <VideoPlayer
                 src={CreatingStudioEnv}
                 title="Het maken van een werkomgeving in Roblox Studio"
-                width="100%"
+                style={{ width: "100%", height: "auto" }}
                />
             )
           }
         ]}/>
+        
+        <ContentSection
+          title="Het plaatsen van objecten"
+          contentBlocks={[
+            {
+              textAbove: (
+                <p>
+                  We hebben nu een leeg speelveld. Maar de spelers moeten ergens
+                  op komen te staan, dus gaan we ons eerste platform maken!
+                  <br />
+                  <br />
+                  Deze keer kijken we naar de balk aan de bovenkant van het
+                  scherm. We willen dan klikken op de knop “Part” in deze
+                  balk. Je kan het hier vinden:
+                </p>
+              ),
+              customElement:
+                <GIFPlayer
+                  src={PlacingPartsGIF}
+                  alt="GIF van het plaatsen van een part in Roblox Studio"
+                  width="100%"
+                  aspectRatio="16/9"
+                />
+            },
+            {
+              textAbove: (
+                <p>
+                  Wat belangrijk is om te weten is hoe we kunnen rondkijken in Roblox Studio. Door de rechter muisknop op je muis 
+                  or een trackpad te houden en te bewegen kunnen we rondkijken in onze werkomgeving.
+                  <br />
+                  <br />
+                  Om te bewegen in onze werkomgeving kan je de WASD toetsen of de pijltoetsen gebruiken terwijl je de rechter muisknop ingedrukt houdt.
 
-        <EndOfLesson 
+                  <br />
+                  <br />
+                  Ook kan je met de scrollknop van je muis in en uitzoomen. Probeer dit allemaal eens uit terwijl je rondkijkt in je werkomgeving!
+                </p>
+              ),
+              customElement: (
+                <GIFPlayer
+                  src={DisplayingZoomAndMoveCamera}
+                  alt="GIF van het bewegen en zoomen in Roblox Studio"
+                  width="100%"
+                  aspectRatio="16/9"
+                />
+              )
+            }
+
+          ]}
+        />
+
+          <ContentSection
+          title={"Het manipuleren van platforms"}
+          contentBlocks={[
+            {
+              textAbove: (
+                <p>
+                  We kunnen nu een platform zien in onze werkomgeving, Wanneer we een blokje plaatsen zien we dat "Workspace" openklapt in de "Explorer" aan de rechterkant van het scherm. Hier kunnen we al onze objecten zien die in onze werkomgeving staan. <br />
+                <br />
+                  We kunnen een aantal dingen doen om ons platform te manipuleren, om te beginnen kunnen we het platform selecteren door erop te klikken en vervolgens links boven in de balk op de "Move" te klikken. Hiermee kunnen we het platform verplaatsen door de pijlen die verschijnen te slepen<br />
+                </p>
+              ),
+              customElement: (
+                <VideoPlayer
+                  src={MovingParts}
+                  title="Het verplaatsen van objecten in Roblox Studio"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              )
+            },
+            {
+              textAbove: (
+                <p>
+                  Als je op 'Scale' drukt, en dan op het blokje in het game scherm, dan zie je een hoop gekleurde bolletjes verschijnen. 
+                  <br />
+                  <br />
+                  Je kan deze bolletjes klikken en slepen om zo de vorm van het blokje te veranderen!
+                  <br />
+                  <br />
+                  Zo ziet dat eruit:
+                </p>
+              ),
+              customElement: (
+                <VideoPlayer
+                  src={ScalingParts}
+                  title="Het schalen van objecten in Roblox Studio"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              )
+            },
+            {
+              textAbove: (
+                <p>
+                 'Rotate' is het engelse woord voor 'Draaien'. Als je deze tool selecteert en op een object klikt, verschijnen er nu cirkels rond het object.
+                  <br />
+                  <br />
+                  Door deze cirkels te slepen kun je het object draaien!
+                </p>
+              ),
+              customElement: (
+                <VideoPlayer
+                  src={RotatingParts}
+                  title="Het roteren van objecten in Roblox Studio"
+                  style={{ width: "100%", height: "auto" }}
+                />
+              )
+            },
+          ]}
+          />
+
+          <div className="w-100">
+            <ProgressCheckmarkCard
+              cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+              title="De eerste stapjes in Roblox Studio"
+              items={[
+                { id: 1, text: "Roblox Studio opgezet", checked: false },
+                { id: 2, text: "Een platform geplaatst", checked: false },
+                { id: 3, text: "Het platform verplaatst", checked: false },
+                { id: 4, text: "Het platform geschaald", checked: false },
+                { id: 5, text: "Het platform geroteerd", checked: false },
+              ]}
+              iconPosition="end"
+              bgColor="#fff9c4"
+              headingColor="#f57f17"
+              itemPadding="0.75rem 0"
+              completionReward={20}
+            />
+          </div>
+
+          <ContentSection
+            title={"Het verwijderen van de baseplate"}
+            contentBlocks={[
+              {
+                textAbove: (
+                  <p>
+                    De baseplate is het grote vlak dat in het midden van je werkomgeving staat. Het is een soort van "grond" waarop je dingen kunt bouwen. 
+                    <br />
+                    <br />
+                    Omdat we een obby gaan maken willen we dat onze spelers kunnen vallen, dus we willen deze baseplate verwijderen zodat er niks onder onze platforms is.
+                    <br />
+                    <br />
+                    Er zijn twee manieren om dit te doen:
+                    <br />
+                    <br />
+                    1. Je kan het baseplate selecteren in de "Explorer" aan de rechterkant van het scherm, en dan op de "Delete" of "Backspace" toets op je toetsenbord drukken.
+                    <br />
+                    <br />
+                    2. Je kan het baseplate selecteren in de "Explorer", en dan rechts klikken en "Delete" kiezen in het menu dat verschijnt.
+                  </p>
+                ),
+                customElement: (
+                  <>
+                    <VideoPlayer
+                      src={DeletingBaseplateDel}
+                      title="Het verwijderen van de baseplate met de Delete toets"
+                      style={{ width: "100%", height: "auto" }}
+                    />
+                    <VideoPlayer
+                      src={DeletingBaseplateMenu}
+                      title="Het verwijderen van de baseplate met het menu"
+                      style={{ width: "100%", height: "auto", marginTop: "1rem" }}
+                    />
+                  </>
+                )
+              }
+            ]}
+          />
+
+          <div className="w-100">
+            <ProgressCheckmarkCard
+              cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+              title="Het verwijderen van de baseplate"
+              items={[
+                { id: 1, text: "Baseplate verwijderd", checked: false },
+              ]}
+              iconPosition="end"
+              bgColor="#fff9c4"
+              headingColor="#f57f17"
+              itemPadding="0.75rem 0"
+              completionReward={5}
+            />
+          </div>
+
+          <ContentSection
+            title={"Het testen van je spel!"}
+            contentBlocks={[
+              {
+                textAbove: (
+                  <p>
+                    Nu je weet hoe je objecten kunt manipuleren, is het tijd om je spel te testen! Klik op de "Play" knop in de bovenste balk van Roblox Studio om je spel te starten.
+                  </p>
+                ),
+                customElement: (
+                  <>
+                    <VideoPlayer
+                      src={PlayingGame}
+                      title="Het spelen van je spel in Roblox Studio"
+                      style={{ width: "100%", height: "auto" }}
+                    />
+                  </>
+                )
+              },
+              {
+                textAbove: (
+                  <p>
+                    Tijdens het spelen van je spel, kun je op de "Pause" knop klikken om het spel te pauzeren.
+                  </p>
+                ),
+                customElement: (
+                  <>
+                    <VideoPlayer
+                      src={PausingGame}
+                      title="Het pauzeren van je spel in Roblox Studio"
+                      style={{ width: "100%", height: "auto" }}
+                    />
+                  </>
+                )
+              },
+              {
+                textAbove: (
+                  <p>
+                    Om het testen van je spel te stoppen, klik op de rode vierkant linksboven in de balk. Je zult zien dat je weer terug bent in de bewerkmodus van Roblox Studio.
+                  </p>
+                ),
+                customElement: (
+                  <>
+                    <VideoPlayer
+                      src={StoppingGameWithFallingBlock}
+                      title="Het stoppen van het testen van je spel in Roblox Studio"
+                      style={{ width: "100%", height: "auto" }}
+                    />
+                  </>
+                )
+              },
+              {
+                textAbove: (
+                  <p>
+                    Als je net scherp oplette zag je dat het platform wat we hadden gemaakt begon te vallen toen we op "Play" klikten. 
+                    <br />
+                    <br />
+                    Dat komt omdat we het platform nog niet "anchored"/ "geankerd"hebben, wat betekent dat het niet vast staat en dus naar beneden valt.
+                  </p>
+                )
+              }
+
+
+            ]}
+          />
+
+        <EndOfLesson
           prevLessonPath="/GMHelden1/les-1"
           nextLessonPath="/GMHelden1/les-3"
-          dashboardPath="/GMHelden1" 
+          dashboardPath="/GMHelden1"
         />
 
       </div>
