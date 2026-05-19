@@ -22,6 +22,7 @@ import PlayingGame from "../../Video/GMHelden1/Les2/DGMH1_Clip9.mp4";
 import PausingGame from "../../Video/GMHelden1/Les2/DGMH1_Clip10.mp4";
 import StoppingGameWithFallingBlock from "../../Video/GMHelden1/Les2/DGMH1_Clip11.mp4";
 import AnchoringParts from "../../Video/GMHelden1/Les2/DGMH1_Clip12.mp4";
+import SavingObby from "../../Video/GMHelden1/Les2/ObbyOpslaan.mp4";
 
 export default function GmHelden1Lesson2() {
   const lessonGoals = [
@@ -483,6 +484,13 @@ export default function GmHelden1Lesson2() {
                   je Roblox account en kun je er later weer aan werken vanaf
                   elke computer!
                 </p>
+              ),
+              customElement: (
+                <VideoPlayer
+                  src={SavingObby} // Je kunt hier een andere video of GIF plaatsen die het opslaan van werk laat zien
+                  title="Het opslaan van je werk in Roblox Studio"
+                  style={{ width: "400%", height: "auto" }}
+                />
               ),
             },
           ]}
