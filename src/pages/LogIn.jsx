@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -8,43 +8,45 @@ const validateEmail = (email) =>
 
 const toHex = (buffer) =>
   Array.from(new Uint8Array(buffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 
 const hashPassword = async (password, salt) => {
   const encoder = new TextEncoder();
   const data = encoder.encode(`${salt}:${password}`);
-  const digest = await window.crypto.subtle.digest('SHA-256', data);
+  const digest = await window.crypto.subtle.digest("SHA-256", data);
   return toHex(digest);
 };
 
 export default function LogIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    setError('');
-    setMessage('');
+    setError("");
+    setMessage("");
 
     const normalizedEmail = normalizeEmail(email);
 
     if (!validateEmail(email)) {
-      setError('Voer een geldig e-mailadres in.');
+      setError("Voer een geldig e-mailadres in.");
       return;
     }
 
     try {
       // Fetch salt from DB
-      const userRes = await fetch(`http://127.0.0.1:3000/user?email=${encodeURIComponent(normalizedEmail)}`);
+      const userRes = await fetch(
+        `http://127.0.0.1:3000/user?email=${encodeURIComponent(normalizedEmail)}`,
+      );
       if (!userRes.ok) {
         if (userRes.status === 404) {
-          setError('Gebruiker niet gevonden.');
+          setError("Gebruiker niet gevonden.");
         } else {
-          setError('Fout bij ophalen gebruiker.');
+          setError("Fout bij ophalen gebruiker.");
         }
         return;
       }
@@ -58,7 +60,7 @@ export default function LogIn() {
       const loginRes = await fetch("http://127.0.0.1:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: normalizedEmail, passwordHash })
+        body: JSON.stringify({ email: normalizedEmail, passwordHash }),
       });
 
       const loginData = await loginRes.json();
@@ -70,18 +72,21 @@ export default function LogIn() {
 
       localStorage.setItem("userEmail", normalizedEmail);
 
-      setError('');
-      setMessage('Inloggen geslaagd!');
-      navigate('/LearningDashboard');
-
+      setError("");
+      setMessage("Inloggen geslaagd!");
+      navigate("/LearningDashboard");
     } catch (err) {
-      setError('Server niet bereikbaar');
+      setError("Server niet bereikbaar");
     }
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <form onSubmit={handleSignIn} className="w-100" style={{ maxWidth: '500px' }}>
+      <form
+        onSubmit={handleSignIn}
+        className="w-100"
+        style={{ maxWidth: "500px" }}
+      >
         <h2 className="mb-4">Inloggen</h2>
 
         {message && <div className="alert alert-info">{message}</div>}
@@ -115,17 +120,18 @@ export default function LogIn() {
           </label>
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary btn-block mb-4 w-100"
-        >
+        <button type="submit" className="btn btn-primary btn-block mb-4 w-100">
           Log in
         </button>
 
         <div className="text-center">
           <p>
-            Nog geen lid?{' '}
-            <button type="button" className="btn btn-link p-0" onClick={() => navigate('/register')}>
+            Nog geen lid?{" "}
+            <button
+              type="button"
+              className="btn btn-link p-0"
+              onClick={() => navigate("/register")}
+            >
               Registreer hier
             </button>
           </p>

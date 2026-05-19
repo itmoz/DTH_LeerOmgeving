@@ -9,7 +9,6 @@ import GmHelden1Lesson6 from "../pages/GMHelden1Lessons/GmHelden1Lesson6";
 import GmHelden1Lesson7 from "../pages/GMHelden1Lessons/GmHelden1Lesson7";
 import GmHelden1Lesson8 from "../pages/GMHelden1Lessons/GmHelden1Lesson8";
 
-
 const AppRoutesGMHelden1 = () => {
   return (
     <Routes>

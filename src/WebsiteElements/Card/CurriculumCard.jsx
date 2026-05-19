@@ -7,9 +7,8 @@ const CurriculumCard = ({
   imageUrl,
   progress = 0,
   buttonText,
-  buttonAction
+  buttonAction,
 }) => {
-
   const getProgressColor = () => {
     if (progress === 0) {
       return "gray";
@@ -24,7 +23,8 @@ const CurriculumCard = ({
   const progressColor = getProgressColor();
 
   // Centralized button label logic
-  const resolvedButtonText = progress === 0 ? "Begin" : (buttonText ?? "Continue Lesson");
+  const resolvedButtonText =
+    progress === 0 ? "Begin" : (buttonText ?? "Continue Lesson");
 
   return (
     <CustomCard
@@ -46,7 +46,7 @@ const CurriculumCard = ({
             role="progressbar"
             style={{
               width: `${progress}%`,
-              backgroundColor: progressColor
+              backgroundColor: progressColor,
             }}
             aria-valuenow={progress}
             aria-valuemin="0"

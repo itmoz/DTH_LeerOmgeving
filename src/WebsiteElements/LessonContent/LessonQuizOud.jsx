@@ -1,5 +1,4 @@
-
-// Gebruik dit niet, dit is een oude die ik bewaar voor archival en vergelijking purposes. 
+// Gebruik dit niet, dit is een oude die ik bewaar voor archival en vergelijking purposes.
 
 import React, { useState } from "react";
 // Zorg ervoor dat dit pad klopt naar de map waar je CoinExplosion hebt opgeslagen!
@@ -25,7 +24,8 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
     const data = await res.json();
 
     if (!res.ok) {
-      if (opts.showError) console.error(data.error || "Could not update balance");
+      if (opts.showError)
+        console.error(data.error || "Could not update balance");
       return { ok: false };
     }
 
@@ -38,8 +38,11 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
 };
 
 // 2. Component met de nieuwe "quizId" prop (standaardwaarde "default-quiz")
-export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = "default-quiz" }) {
-  
+export default function LessonQuiz({
+  questions,
+  balanceGainAmount = 0,
+  quizId = "default-quiz",
+}) {
   // 3. States initialiseren met localStorage
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
     const savedIndex = localStorage.getItem(`${quizId}-index`);
@@ -69,10 +72,12 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
 
     if (Array.isArray(currentQuestion.correctAnswer)) {
       isCorrect = currentQuestion.correctAnswer.some(
-        (answer) => answer.trim().toLowerCase() === normalizedUserAnswer
+        (answer) => answer.trim().toLowerCase() === normalizedUserAnswer,
       );
     } else {
-      isCorrect = normalizedUserAnswer === currentQuestion.correctAnswer.trim().toLowerCase();
+      isCorrect =
+        normalizedUserAnswer ===
+        currentQuestion.correctAnswer.trim().toLowerCase();
     }
 
     if (isCorrect) {
@@ -82,7 +87,7 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
         setTimeout(() => {
           setFeedback(null);
           setUserAnswer("");
-          
+
           // 4. Sla de nieuwe index op in localStorage
           const nextIndex = currentQuestionIndex + 1;
           setCurrentQuestionIndex(nextIndex);
@@ -91,14 +96,14 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
       } else {
         setFeedback(null);
         setUserAnswer("");
-        setQuizFinished(true); 
-        
+        setQuizFinished(true);
+
         // NIEUW: Zet justFinished op true zodat de animatie alleen nú speelt
         setJustFinished(true);
-        
+
         // 5. Sla op dat de quiz is afgerond
         localStorage.setItem(`${quizId}-finished`, "true");
-        
+
         // Voeg munten toe
         if (balanceGainAmount > 0) {
           handleAddBalance(balanceGainAmount);
@@ -111,8 +116,10 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
 
   if (quizFinished) {
     return (
-      <div className="card shadow-sm p-4 text-center mt-4" style={{ borderRadius: "20px", backgroundColor: "#e8f5e9" }}>
-        
+      <div
+        className="card shadow-sm p-4 text-center mt-4"
+        style={{ borderRadius: "20px", backgroundColor: "#e8f5e9" }}
+      >
         {/* AANGEPAST: Munten explosie checkt nu ook op 'justFinished' */}
         {justFinished && balanceGainAmount > 0 && <CoinExplosion />}
 
@@ -121,13 +128,13 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
           Gefeliciteerd!
         </h3>
         <p>Je hebt alle vragen van deze quiz succesvol beantwoord.</p>
-        
+
         {/* Laten zien hoeveel ze hebben verdiend! */}
         {balanceGainAmount > 0 && (
           <div className="mt-3 p-2 bg-white rounded shadow-sm d-inline-block">
             <h5 className="text-warning m-0" style={{ fontWeight: "bold" }}>
-              <i className="dth-coin me-2"></i>
-              +{balanceGainAmount} Munten verdiend!
+              <i className="dth-coin me-2"></i>+{balanceGainAmount} Munten
+              verdiend!
             </h5>
           </div>
         )}
@@ -136,7 +143,10 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
   }
 
   return (
-    <div className="card shadow-sm p-4 mt-4" style={{ borderRadius: "20px", border: "2px solid #1e88e5" }}>
+    <div
+      className="card shadow-sm p-4 mt-4"
+      style={{ borderRadius: "20px", border: "2px solid #1e88e5" }}
+    >
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4 style={{ color: "#1e88e5", margin: 0 }}>Quiz Tijd!</h4>
         <span className="badge bg-primary rounded-pill">
@@ -154,7 +164,7 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
               className={`btn text-start ${userAnswer === option ? "btn-primary" : "btn-outline-primary"}`}
               onClick={() => {
                 setUserAnswer(option);
-                setFeedback(null); 
+                setFeedback(null);
               }}
               style={{ borderRadius: "10px" }}
             >
@@ -181,23 +191,29 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
       )}
 
       {feedback === "correct" && (
-        <div className="alert alert-success d-flex align-items-center" style={{ borderRadius: "10px" }}>
+        <div
+          className="alert alert-success d-flex align-items-center"
+          style={{ borderRadius: "10px" }}
+        >
           <i className="bi bi-check-circle-fill fs-4 me-2"></i>
           <div>Helemaal goed! We gaan door naar de volgende vraag...</div>
         </div>
       )}
 
       {feedback === "incorrect" && (
-        <div className="alert alert-danger d-flex align-items-center" style={{ borderRadius: "10px" }}>
+        <div
+          className="alert alert-danger d-flex align-items-center"
+          style={{ borderRadius: "10px" }}
+        >
           <i className="bi bi-x-circle-fill fs-4 me-2"></i>
           <div>Oeps, dat is niet helemaal juist. Probeer het nog eens!</div>
         </div>
       )}
 
-      <button 
-        className="btn btn-success w-100" 
+      <button
+        className="btn btn-success w-100"
         onClick={handleCheckAnswer}
-        disabled={!userAnswer || feedback === "correct"} 
+        disabled={!userAnswer || feedback === "correct"}
         style={{ borderRadius: "10px", fontWeight: "bold" }}
       >
         Controleer Antwoord

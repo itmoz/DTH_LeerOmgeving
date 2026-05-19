@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-const CustomCard = ({ 
-  title, 
-  text, 
-  imageUrl, 
-  imageAlt = "Card image", 
-  buttonText, 
-  buttonAction, 
+const CustomCard = ({
+  title,
+  text,
+  imageUrl,
+  imageAlt = "Card image",
+  buttonText,
+  buttonAction,
   children,
-  width = '18rem' // Default width added here
+  width = "18rem", // Default width added here
 }) => {
   return (
     // Replaced the hardcoded '18rem' with the width prop
@@ -17,15 +17,15 @@ const CustomCard = ({
       {imageUrl && (
         <img src={imageUrl} className="card-img-top" alt={imageAlt} />
       )}
-      
+
       <div className="card-body">
         {/* Conditionally render the title and text */}
         {title && <h5 className="card-title">{title}</h5>}
         {text && <p className="card-text">{text}</p>}
-        
+
         {/* Render any custom content passed between the component tags */}
         {children}
-        
+
         {/* Conditionally render the button */}
         {buttonText && (
           <button onClick={buttonAction} className="btn btn-primary">

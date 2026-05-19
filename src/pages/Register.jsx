@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const USERS_KEY = 'dth_users';
+const USERS_KEY = "dth_users";
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -21,18 +21,18 @@ const computeStrength = (password) => {
 
   if (score > 100) score = 100;
 
-  let label = 'Zwak';
-  if (score >= 80) label = 'Sterk';
-  else if (score >= 60) label = 'Goed';
-  else if (score >= 40) label = 'Matig';
+  let label = "Zwak";
+  if (score >= 80) label = "Sterk";
+  else if (score >= 60) label = "Goed";
+  else if (score >= 40) label = "Matig";
 
   return { score, label };
 };
 
 const toHex = (buffer) =>
   Array.from(new Uint8Array(buffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 
 const randomSalt = () => {
   const array = new Uint8Array(16);
@@ -43,17 +43,17 @@ const randomSalt = () => {
 const hashPassword = async (password, salt) => {
   const encoder = new TextEncoder();
   const data = encoder.encode(`${salt}:${password}`);
-  const digest = await window.crypto.subtle.digest('SHA-256', data);
+  const digest = await window.crypto.subtle.digest("SHA-256", data);
   return toHex(digest);
 };
 
 export default function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const navigate = useNavigate();
@@ -72,16 +72,16 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     if (!validateEmail(email)) {
-      setError('Voer een geldig e-mailadres in.');
+      setError("Voer een geldig e-mailadres in.");
       return;
     }
 
     if (!canSubmit) {
-      setError('Wachtwoord voldoet niet aan de eisen.');
+      setError("Wachtwoord voldoet niet aan de eisen.");
       return;
     }
 
@@ -94,13 +94,13 @@ export default function Register() {
       const res = await fetch("http://127.0.0.1:3000/register", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: normalizedEmail,
           passwordHash,
-          salt
-        })
+          salt,
+        }),
       });
 
       const data = await res.json();
@@ -110,27 +110,30 @@ export default function Register() {
         return;
       }
 
-      setSuccess('Registratie gelukt! Je wordt doorgestuurd...');
+      setSuccess("Registratie gelukt! Je wordt doorgestuurd...");
 
       setTimeout(() => {
-        navigate('/LogIn');
+        navigate("/LogIn");
       }, 1000);
-
     } catch (err) {
-      setError('Server niet bereikbaar');
+      setError("Server niet bereikbaar");
     } finally {
       setSubmitting(false);
     }
   };
 
   useEffect(() => {
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
   }, [email, password, confirmPassword]);
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <form onSubmit={handleSubmit} className="w-100" style={{ maxWidth: '500px' }}>
+      <form
+        onSubmit={handleSubmit}
+        className="w-100"
+        style={{ maxWidth: "500px" }}
+      >
         <h2 className="mb-4 text-center">Registreer</h2>
 
         {error && <div className="alert alert-danger">{error}</div>}
@@ -161,7 +164,9 @@ export default function Register() {
         />
 
         <div className="mb-3">
-          <small>Wachtwoord sterkte: {label} ({score}%)</small>
+          <small>
+            Wachtwoord sterkte: {label} ({score}%)
+          </small>
         </div>
 
         <button
@@ -169,7 +174,7 @@ export default function Register() {
           className="btn btn-primary w-100"
           disabled={submitting || !canSubmit}
         >
-          {submitting ? 'Registreren...' : 'Registreren'}
+          {submitting ? "Registreren..." : "Registreren"}
         </button>
       </form>
     </div>

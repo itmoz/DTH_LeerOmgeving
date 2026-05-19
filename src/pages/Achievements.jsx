@@ -11,7 +11,9 @@ export default function Achievements() {
         const email = localStorage.getItem("userEmail");
         if (!email) return;
 
-        const res = await fetch(`http://127.0.0.1:3000/achievements?email=${encodeURIComponent(email)}`);
+        const res = await fetch(
+          `http://127.0.0.1:3000/achievements?email=${encodeURIComponent(email)}`,
+        );
         const data = await res.json();
 
         if (data.ok) {
@@ -27,7 +29,8 @@ export default function Achievements() {
     loadAchievements();
   }, []);
 
-  if (loading) return <div className="container py-4 text-center">Loading...</div>;
+  if (loading)
+    return <div className="container py-4 text-center">Loading...</div>;
 
   return (
     <div className="container py-4">

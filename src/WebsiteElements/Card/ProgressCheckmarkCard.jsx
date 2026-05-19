@@ -25,7 +25,8 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
     const data = await res.json();
 
     if (!res.ok) {
-      if (opts.showError) console.error(data.error || "Could not update balance");
+      if (opts.showError)
+        console.error(data.error || "Could not update balance");
       return { ok: false };
     }
 
@@ -55,10 +56,9 @@ const ProgressCheckmarkCard = ({
   textCompletedColor = "text-success",
   onItemChange,
   PlaysConfetti = true,
-  itemReward = 0,       
-  completionReward = 0, 
+  itemReward = 0,
+  completionReward = 0,
 }) => {
-  
   // 1. Initialiseer state vanuit localStorage
   const [checkedIds, setCheckedIds] = useState(() => {
     const saved = localStorage.getItem(`${cardId}-checked`);
@@ -67,9 +67,9 @@ const ProgressCheckmarkCard = ({
     }
     return items.filter((item) => item.checked).map((item) => item.id);
   });
-  
+
   const [showConfetti, setShowConfetti] = useState(false);
-  const [showCoinExplosion, setShowCoinExplosion] = useState(false); 
+  const [showCoinExplosion, setShowCoinExplosion] = useState(false);
   const { width: windowWidth, height: windowHeight } = useWindowSize();
 
   // 2. Sla de checkedIds op in localStorage telkens als ze veranderen
@@ -78,7 +78,8 @@ const ProgressCheckmarkCard = ({
   }, [checkedIds, cardId]);
 
   // Checken of alles al is gedaan
-  const allDone = items.length > 0 && items.every((item) => checkedIds.includes(item.id));
+  const allDone =
+    items.length > 0 && items.every((item) => checkedIds.includes(item.id));
 
   const toggleItem = (id) => {
     // Als alles al is voltooid, mag de speler niets meer uitvinken. We doen dan niets.
@@ -91,17 +92,19 @@ const ProgressCheckmarkCard = ({
       newCheckedIds = checkedIds.filter((checkedId) => checkedId !== id);
     } else {
       newCheckedIds = [...checkedIds, id];
-      
+
       // Als er een beloning staat op losse vakjes en het vakje wordt zojuist aangevinkt
       if (itemReward > 0) {
         handleAddBalance(itemReward);
       }
     }
-    
+
     setCheckedIds(newCheckedIds);
 
     // 3. Controleer of DIT specifieke moment de lijst compleet maakt
-    const isNowAllDone = items.length > 0 && items.every((item) => newCheckedIds.includes(item.id));
+    const isNowAllDone =
+      items.length > 0 &&
+      items.every((item) => newCheckedIds.includes(item.id));
 
     if (isNowAllDone) {
       // Het is NU net voltooid! Start de animaties en geef de eindbeloning
@@ -133,13 +136,23 @@ const ProgressCheckmarkCard = ({
   return (
     <>
       {showConfetti && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999, pointerEvents: 'none' }}>
-           <Confetti
-             width={windowWidth}
-             height={windowHeight}
-             recycle={false}
-             numberOfPieces={400}
-           />
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 9999,
+            pointerEvents: "none",
+          }}
+        >
+          <Confetti
+            width={windowWidth}
+            height={windowHeight}
+            recycle={false}
+            numberOfPieces={400}
+          />
         </div>
       )}
 
@@ -170,7 +183,7 @@ const ProgressCheckmarkCard = ({
           <ul className="list-group list-group-flush bg-transparent mb-3">
             {items.map((item) => {
               const isChecked = checkedIds.includes(item.id);
-              
+
               return (
                 <li
                   key={item.id}
@@ -179,7 +192,8 @@ const ProgressCheckmarkCard = ({
                     padding: itemPadding,
                     // Als het helemaal klaar is, verander de cursor zodat het duidelijk is dat je niet meer kan klikken
                     cursor: allDone ? "default" : "pointer",
-                    justifyContent: iconPosition === "end" ? "space-between" : "flex-start",
+                    justifyContent:
+                      iconPosition === "end" ? "space-between" : "flex-start",
                     borderBottomColor: "rgba(0,0,0,0.05)",
                   }}
                   onClick={() => toggleItem(item.id)}
@@ -194,10 +208,10 @@ const ProgressCheckmarkCard = ({
                   <span
                     className={isChecked ? textCompletedColor : textColor}
                     style={{
-                      flex: 1, 
+                      flex: 1,
                       textAlign: "left",
                       wordBreak: "break-word",
-                      padding: "0 10px", 
+                      padding: "0 10px",
                       fontSize: "1.1rem",
                       textDecoration: isChecked ? "line-through" : "none",
                       transition: "color 0.2s, text-decoration 0.2s",
@@ -221,8 +235,8 @@ const ProgressCheckmarkCard = ({
           {allDone && completionReward > 0 && (
             <div className="mt-3 p-2 bg-white rounded shadow-sm d-inline-block">
               <h5 className="text-warning m-0" style={{ fontWeight: "bold" }}>
-                <i className="dth-coin me-2"></i>
-                +{completionReward} Munten verdiend!
+                <i className="dth-coin me-2"></i>+{completionReward} Munten
+                verdiend!
               </h5>
             </div>
           )}

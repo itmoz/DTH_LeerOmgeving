@@ -8,17 +8,25 @@ export default function CoinExplosion() {
     const newCoins = Array.from({ length: 20 }).map((_, i) => {
       const angle = Math.random() * Math.PI * 2;
       const distance = 100 + Math.random() * 150;
-      
+
       const tx = Math.cos(angle) * distance;
       const ty = Math.sin(angle) * distance;
-      
+
       return { id: i, tx, ty };
     });
     setCoins(newCoins);
   }, []);
 
   return (
-    <div style={{ position: "fixed", top: "50%", left: "50%", zIndex: 9999, pointerEvents: "none" }}>
+    <div
+      style={{
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        zIndex: 9999,
+        pointerEvents: "none",
+      }}
+    >
       <style>
         {`
           @keyframes coin-explode {
@@ -32,7 +40,7 @@ export default function CoinExplosion() {
           }
         `}
       </style>
-      
+
       {coins.map((coin) => (
         <div
           key={coin.id}
@@ -42,13 +50,29 @@ export default function CoinExplosion() {
             "--ty": `${coin.ty}px`,
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" color="#DAA520" width="32" height="32" viewBox="0 0 512 512">
-    
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            color="#DAA520"
+            width="32"
+            height="32"
+            viewBox="0 0 512 512"
+          >
             <circle cx="256" cy="256" r="215" fill="#FFD700" />
 
-            <path fill="currentColor" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 464c-114.7 0-208-93.3-208-208S141.3 48 256 48s208 93.3 208 208-93.3 208-208 208z" />
-            
-            <circle cx="256" cy="256" r="180" fill="none" stroke="currentColor" strokeWidth="16" strokeDasharray="24 16" />
+            <path
+              fill="currentColor"
+              d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zm0 464c-114.7 0-208-93.3-208-208S141.3 48 256 48s208 93.3 208 208-93.3 208-208 208z"
+            />
+
+            <circle
+              cx="256"
+              cy="256"
+              r="180"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="16"
+              strokeDasharray="24 16"
+            />
 
             <g fill="currentColor" transform="translate(151.5, 190) scale(5.5)">
               <g>

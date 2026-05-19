@@ -1,13 +1,11 @@
-import React from 'react';
-import LessonCard from '../../WebsiteElements/Card/LessonCard.jsx'; // Make sure this path is correct
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import LessonCard from "../../WebsiteElements/Card/LessonCard.jsx"; // Make sure this path is correct
+import { useNavigate } from "react-router-dom";
 
-import Les1Banner from '../../Images/Les1BannerImage.png';
+import Les1Banner from "../../Images/Les1BannerImage.png";
 
 const DashboardGmHelden1 = () => {
   const navigate = useNavigate();
-
-  
 
   return (
     <div className="container py-5">
@@ -15,10 +13,8 @@ const DashboardGmHelden1 = () => {
 
       {/* Vertical Grid Wrapper */}
       <div className="row justify-content-center">
-        
         {/* Constraining max width slightly for readability (col-lg-8), and stacking children vertically with a gap */}
         <div className="col-12 col-lg-8 d-flex flex-column gap-4">
-
           <LessonCard
             title="Les 1 GMHelden1: Introductie tot Roblox Game Maken!"
             text="Een introductie tot het maken van je eigen Roblox game met als eind resultaat een Obby!"
@@ -77,7 +73,6 @@ const DashboardGmHelden1 = () => {
             completed={false}
             buttonAction={() => navigate("/GMHelden1/les-8")}
           />
-
         </div>
       </div>
     </div>

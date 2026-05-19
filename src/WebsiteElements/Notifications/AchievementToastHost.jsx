@@ -10,7 +10,10 @@ export default function AchievementToastHost() {
       const achievements = event.detail?.achievements || [];
       if (achievements.length === 0) return;
 
-      const totalCoins = achievements.reduce((sum, achievement) => sum + (Number(achievement.reward) || 0), 0);
+      const totalCoins = achievements.reduce(
+        (sum, achievement) => sum + (Number(achievement.reward) || 0),
+        0,
+      );
       setToastData({
         name: achievements[0].name,
         reward: totalCoins,
@@ -24,7 +27,8 @@ export default function AchievementToastHost() {
     };
 
     window.addEventListener("achievement-unlocked", handleUnlocked);
-    return () => window.removeEventListener("achievement-unlocked", handleUnlocked);
+    return () =>
+      window.removeEventListener("achievement-unlocked", handleUnlocked);
   }, []);
 
   useEffect(() => {
@@ -50,7 +54,11 @@ export default function AchievementToastHost() {
           className="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3"
           style={{ zIndex: 1080, marginBottom: "1.25rem" }}
         >
-          <div className="toast show align-items-center border-0 shadow-lg" role="status" style={{ minWidth: "320px" }}>
+          <div
+            className="toast show align-items-center border-0 shadow-lg"
+            role="status"
+            style={{ minWidth: "320px" }}
+          >
             <div className="d-flex">
               <div className="toast-body d-flex align-items-center gap-3 py-3 px-4">
                 <div
@@ -62,10 +70,12 @@ export default function AchievementToastHost() {
 
                 <div className="text-start">
                   <div className="fw-semibold">Achievement voltooid</div>
-                  <div className="small text-body-secondary">{toastData.name}</div>
+                  <div className="small text-body-secondary">
+                    {toastData.name}
+                  </div>
                   <div className="small text-warning-emphasis fw-semibold">
-                    <i className="dth-coin me-1"></i>
-                    +{toastData.reward} munten verdiend
+                    <i className="dth-coin me-1"></i>+{toastData.reward} munten
+                    verdiend
                   </div>
                 </div>
               </div>

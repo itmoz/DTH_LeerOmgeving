@@ -8,12 +8,22 @@ export default function AchievementCard({
   maxProgress = 100,
 }) {
   const safeMaxProgress = Math.max(1, Number(maxProgress) || 1);
-  const normalizedProgress = Math.max(0, Math.min(100, ((Number(progress) || 0) / safeMaxProgress) * 100));
+  const normalizedProgress = Math.max(
+    0,
+    Math.min(100, ((Number(progress) || 0) / safeMaxProgress) * 100),
+  );
   const cycleCount = Number(achievedCount) || 0;
   const displayCount = cycleCount;
   const achievedTierColor =
-    displayCount >= 50 ? "#d4af37" : displayCount >= 20 ? "#c0c0c0" : displayCount >= 1 ? "#cd7f32" : "#6c757d";
-  const achievementIconClass = displayCount === 0 ? "bi bi-dash-circle-dotted" : "bi bi-award-fill";
+    displayCount >= 50
+      ? "#d4af37"
+      : displayCount >= 20
+        ? "#c0c0c0"
+        : displayCount >= 1
+          ? "#cd7f32"
+          : "#6c757d";
+  const achievementIconClass =
+    displayCount === 0 ? "bi bi-dash-circle-dotted" : "bi bi-award-fill";
 
   return (
     <div className="card shadow-sm w-100">
@@ -21,7 +31,11 @@ export default function AchievementCard({
         <div className="d-flex align-items-start gap-3 mb-3">
           <i
             className={`${achievementIconClass} flex-shrink-0`}
-            style={{ fontSize: "3rem", color: achievedTierColor, lineHeight: 1 }}
+            style={{
+              fontSize: "3rem",
+              color: achievedTierColor,
+              lineHeight: 1,
+            }}
           ></i>
 
           <div className="flex-grow-1">
@@ -33,8 +47,8 @@ export default function AchievementCard({
 
               {cycleCount === 0 ? (
                 <span className="badge text-bg-primary rounded-pill px-3 py-2">
-                  <i className="dth-coin me-1"></i>
-                  +{firstTimeReward} Eerste keer
+                  <i className="dth-coin me-1"></i>+{firstTimeReward} Eerste
+                  keer
                 </span>
               ) : (
                 <span className="badge text-bg-success rounded-pill px-3 py-2">
@@ -46,7 +60,9 @@ export default function AchievementCard({
         </div>
 
         <div className="mb-2 d-flex justify-content-between small text-body-secondary">
-          <span>{Number(progress) || 0}/{safeMaxProgress} voltooid</span>
+          <span>
+            {Number(progress) || 0}/{safeMaxProgress} voltooid
+          </span>
           <span>{displayCount} keer behaald</span>
         </div>
 

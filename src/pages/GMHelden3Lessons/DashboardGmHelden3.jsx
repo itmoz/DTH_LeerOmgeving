@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import LessonCard from '../../WebsiteElements/Card/LessonCard.jsx'; // Controleer of dit pad klopt
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import LessonCard from "../../WebsiteElements/Card/LessonCard.jsx"; // Controleer of dit pad klopt
 
 /**
  * @typedef {object} Lesson
@@ -29,67 +29,67 @@ import LessonCard from '../../WebsiteElements/Card/LessonCard.jsx'; // Controlee
 const lessonDataGMHelden3 = {
   general: [
     {
-      title: 'Les 1 GMHelden3: Introductie tot Roblox Game Maken!',
-      text: 'Een introductie tot het maken van je eigen Roblox game met als eindresultaat een Obby!',
-      imageUrl: 'https://picsum.photos/800/300?random=1',
+      title: "Les 1 GMHelden3: Introductie tot Roblox Game Maken!",
+      text: "Een introductie tot het maken van je eigen Roblox game met als eindresultaat een Obby!",
+      imageUrl: "https://picsum.photos/800/300?random=1",
       completed: true,
-      buttonAction: (navigate) => navigate('/GMHelden3/les-1'),
+      buttonAction: (navigate) => navigate("/GMHelden3/les-1"),
     },
     {
-      title: 'Les 2 GMHelden3: Obby Mechanics!',
-      text: 'Leer hoe je checkpoints en killbricks maakt voor je Obby.',
-      imageUrl: 'https://picsum.photos/800/300?random=2',
+      title: "Les 2 GMHelden3: Obby Mechanics!",
+      text: "Leer hoe je checkpoints en killbricks maakt voor je Obby.",
+      imageUrl: "https://picsum.photos/800/300?random=2",
       completed: false,
-      buttonAction: (navigate) => navigate('/GMHelden3/les-2'),
+      buttonAction: (navigate) => navigate("/GMHelden3/les-2"),
     },
   ],
   skillTree: {
     gameDesign: [
       {
-        title: 'GD Les 1: Game Design Documentatie',
-        text: 'Maak een GDD voor je game.',
-        imageUrl: 'https://picsum.photos/800/300?random=3',
+        title: "GD Les 1: Game Design Documentatie",
+        text: "Maak een GDD voor je game.",
+        imageUrl: "https://picsum.photos/800/300?random=3",
         completed: false,
-        buttonAction: (navigate) => navigate('/GMHelden3/les-gd-1'),
+        buttonAction: (navigate) => navigate("/GMHelden3/les-gd-1"),
       },
       {
-        title: 'GD Les 2: Game Balancing',
-        text: 'Maak je game uitdagender.',
-        imageUrl: 'https://picsum.photos/800/300?random=4',
+        title: "GD Les 2: Game Balancing",
+        text: "Maak je game uitdagender.",
+        imageUrl: "https://picsum.photos/800/300?random=4",
         completed: false,
-        buttonAction: (navigate) => navigate('/GMHelden3/les-gd-2'),
+        buttonAction: (navigate) => navigate("/GMHelden3/les-gd-2"),
       },
     ],
     levelDesign: [
       {
-        title: 'LD Les 1: Level Structuur',
-        text: 'Maak een level dat leuk en logisch is.',
-        imageUrl: 'https://picsum.photos/800/300?random=5',
+        title: "LD Les 1: Level Structuur",
+        text: "Maak een level dat leuk en logisch is.",
+        imageUrl: "https://picsum.photos/800/300?random=5",
         completed: false,
-        buttonAction: (navigate) => navigate('/GMHelden3/les-ld-1'),
+        buttonAction: (navigate) => navigate("/GMHelden3/les-ld-1"),
       },
       {
-        title: 'LD Les 2: Level Thema en Sfeer',
-        text: 'Voeg decoraties toe aan je level.',
-        imageUrl: 'https://picsum.photos/800/300?random=6',
+        title: "LD Les 2: Level Thema en Sfeer",
+        text: "Voeg decoraties toe aan je level.",
+        imageUrl: "https://picsum.photos/800/300?random=6",
         completed: false,
-        buttonAction: (navigate) => navigate('/GMHelden3/les-ld-2'),
+        buttonAction: (navigate) => navigate("/GMHelden3/les-ld-2"),
       },
     ],
-        programmingEssentials: [
-        {
-        title: 'PE Les 1: Variabelen',
-        text: 'Maak een muntensysteem.',
-        imageUrl: 'https://picsum.photos/800/300?random=7',
+    programmingEssentials: [
+      {
+        title: "PE Les 1: Variabelen",
+        text: "Maak een muntensysteem.",
+        imageUrl: "https://picsum.photos/800/300?random=7",
         completed: false,
-        buttonAction: (navigate) => navigate('/GMHelden3/les-pe-1'),
+        buttonAction: (navigate) => navigate("/GMHelden3/les-pe-1"),
       },
       {
-        title: 'PE Les 2: Functies',
-        text: 'Maak een winkelsysteem.',
-        imageUrl: 'https://picsum.photos/800/300?random=8',
+        title: "PE Les 2: Functies",
+        text: "Maak een winkelsysteem.",
+        imageUrl: "https://picsum.photos/800/300?random=8",
         completed: false,
-        buttonAction: (navigate) => navigate('/GMHelden3/les-pe-2'),
+        buttonAction: (navigate) => navigate("/GMHelden3/les-pe-2"),
       },
     ],
   },
@@ -131,7 +131,7 @@ const SkillTreeLayout = ({ skillTreeData }) => {
   return (
     <div className="row justify-content-center">
       <div className="col-12 col-md-4 mb-4">
-        <h3 className="text-center">Game Design</h3> 
+        <h3 className="text-center">Game Design</h3>
         <LessonListVertical lessons={skillTreeData.gameDesign} />
       </div>
       <div className="col-12 col-md-4 mb-4">

@@ -63,20 +63,32 @@ const shadeHexColor = (colorHex, shadeAmount) => {
   const numeric = Number.parseInt(normalizedHex, 16);
   if (Number.isNaN(numeric)) return normalizeHexColor(colorHex);
 
-  const red = Math.max(0, Math.min(255, Math.round(((numeric >> 16) & 255) * (1 - shadeAmount))));
-  const green = Math.max(0, Math.min(255, Math.round(((numeric >> 8) & 255) * (1 - shadeAmount))));
-  const blue = Math.max(0, Math.min(255, Math.round((numeric & 255) * (1 - shadeAmount))));
+  const red = Math.max(
+    0,
+    Math.min(255, Math.round(((numeric >> 16) & 255) * (1 - shadeAmount))),
+  );
+  const green = Math.max(
+    0,
+    Math.min(255, Math.round(((numeric >> 8) & 255) * (1 - shadeAmount))),
+  );
+  const blue = Math.max(
+    0,
+    Math.min(255, Math.round((numeric & 255) * (1 - shadeAmount))),
+  );
 
   return `#${[red, green, blue].map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
 };
 
-const getAvatarSvgMarkup = (itemName) => avatarSvgRawMap[`../Images/Avatar/${itemName}.svg`] || "";
+const getAvatarSvgMarkup = (itemName) =>
+  avatarSvgRawMap[`../Images/Avatar/${itemName}.svg`] || "";
 
 const resolveSelectionFromOptions = (sourceItem, optionItems) => {
   if (!sourceItem) return null;
 
   const matchedItem = optionItems.find(
-    (optionItem) => (sourceItem.id && optionItem.id === sourceItem.id) || optionItem.name === sourceItem.name
+    (optionItem) =>
+      (sourceItem.id && optionItem.id === sourceItem.id) ||
+      optionItem.name === sourceItem.name,
   );
 
   return matchedItem || sourceItem;
@@ -96,13 +108,18 @@ const buildAvatarSelections = (sourceSelections, optionMap) => {
     const sourceItem = sourceSelections?.[category] || null;
 
     if (sourceItem) {
-      nextSelections[category] = resolveSelectionFromOptions(sourceItem, optionItems);
+      nextSelections[category] = resolveSelectionFromOptions(
+        sourceItem,
+        optionItems,
+      );
       continue;
     }
 
     if (requiredAvatarCategories.includes(category)) {
       const defaultName = defaultAvatarSelectionNames[category];
-      nextSelections[category] = optionItems.find((optionItem) => optionItem.name === defaultName) || null;
+      nextSelections[category] =
+        optionItems.find((optionItem) => optionItem.name === defaultName) ||
+        null;
       continue;
     }
 
@@ -117,7 +134,10 @@ const getDisplayedOptions = (category, optionItems) => {
     return optionItems;
   }
 
-  return [noneAccessoryOption, ...optionItems.filter((optionItem) => optionItem.name !== "None")];
+  return [
+    noneAccessoryOption,
+    ...optionItems.filter((optionItem) => optionItem.name !== "None"),
+  ];
 };
 
 const getAvatarItemImageSrc = (category, item, tintColor) => {
@@ -125,17 +145,23 @@ const getAvatarItemImageSrc = (category, item, tintColor) => {
 
   if (category === "color") {
     const colorMarkup = getAvatarSvgMarkup("Color");
-    return colorMarkup ? createTintedSvgDataUri(colorMarkup, normalizeHexColor(item.color_hex)) : "";
+    return colorMarkup
+      ? createTintedSvgDataUri(colorMarkup, normalizeHexColor(item.color_hex))
+      : "";
   }
 
   if (item.name === "None") {
     const noneMarkup = getAvatarSvgMarkup("None");
-    return noneMarkup ? createTintedSvgDataUri(noneMarkup, normalizeHexColor(tintColor)) : "";
+    return noneMarkup
+      ? createTintedSvgDataUri(noneMarkup, normalizeHexColor(tintColor))
+      : "";
   }
 
   if (category === "title") {
     const titleMarkup = getAvatarSvgMarkup("Title");
-    return titleMarkup ? createTintedSvgDataUri(titleMarkup, normalizeHexColor(tintColor)) : "";
+    return titleMarkup
+      ? createTintedSvgDataUri(titleMarkup, normalizeHexColor(tintColor))
+      : "";
   }
 
   const svgMarkup = getAvatarSvgMarkup(item.name);
@@ -147,7 +173,8 @@ const getAvatarItemImageSrc = (category, item, tintColor) => {
   return createTintedSvgDataUri(svgMarkup, tint);
 };
 
-const getCategoryLabel = (category) => category.charAt(0).toUpperCase() + category.slice(1);
+const getCategoryLabel = (category) =>
+  category.charAt(0).toUpperCase() + category.slice(1);
 
 export default function Avatar() {
   // 1. State to keep track of the currently selected options
@@ -172,20 +199,32 @@ export default function Avatar() {
   const [categories, setCategories] = useState([]);
 
   const avatarBaseColor = normalizeHexColor(
-    selections.color?.color_hex || options.color?.find((item) => item.id === selections.color?.id)?.color_hex
+    selections.color?.color_hex ||
+      options.color?.find((item) => item.id === selections.color?.id)
+        ?.color_hex,
   );
   const previewLayers = avatarPreviewLayerOrder
-    .map(({ category, shade }) => ({ category, item: selections[category], shade }))
+    .map(({ category, shade }) => ({
+      category,
+      item: selections[category],
+      shade,
+    }))
     .filter(({ item }) => Boolean(item))
     .map(({ category, item, shade }) => ({
       category,
       item,
-      imageSrc: createTintedSvgDataUri(getAvatarSvgMarkup(item.name), shadeHexColor(avatarBaseColor, shade)),
+      imageSrc: createTintedSvgDataUri(
+        getAvatarSvgMarkup(item.name),
+        shadeHexColor(avatarBaseColor, shade),
+      ),
     }));
 
   // Function to handle clicking an option
   const handleSelect = (category, item) => {
-    if ((category === "accessory" || category === "title") && item.name === "None") {
+    if (
+      (category === "accessory" || category === "title") &&
+      item.name === "None"
+    ) {
       handleClearSelection(category);
       return;
     }
@@ -207,14 +246,21 @@ export default function Avatar() {
           const email = localStorage.getItem("userEmail");
           const categoryObj = categories.find((c) => c.name === category);
           if (email && categoryObj) {
-              const equipRes = await fetch("http://127.0.0.1:3000/equip", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
+            const equipRes = await fetch("http://127.0.0.1:3000/equip", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email,
+                categoryId: categoryObj.id,
+                itemId: item.id,
+              }),
+            });
+            if (equipRes.ok) {
+              void triggerAchievement("avatar_customized", {
+                category: categoryObj.name,
+                itemId: item.id,
               });
-              if (equipRes.ok) {
-                void triggerAchievement("avatar_customized", { category: categoryObj.name, itemId: item.id });
-              }
+            }
           }
         } catch (err) {
           console.error("Failed to persist equip:", err);
@@ -238,7 +284,11 @@ export default function Avatar() {
         await fetch("http://127.0.0.1:3000/equip", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: null }),
+          body: JSON.stringify({
+            email,
+            categoryId: categoryObj.id,
+            itemId: null,
+          }),
         });
       }
     } catch (err) {
@@ -276,11 +326,16 @@ export default function Avatar() {
       setOptions((prev) => ({
         ...prev,
         [category]: prev[category].map((optionItem) =>
-          optionItem.id === item.id ? { ...optionItem, locked: false } : optionItem
+          optionItem.id === item.id
+            ? { ...optionItem, locked: false }
+            : optionItem,
         ),
       }));
 
-      setSelections((prev) => ({ ...prev, [category]: { ...item, locked: false } }));
+      setSelections((prev) => ({
+        ...prev,
+        [category]: { ...item, locked: false },
+      }));
 
       // Persist equip on server (so equipped_items is set)
       try {
@@ -289,10 +344,17 @@ export default function Avatar() {
           const eqRes = await fetch("http://127.0.0.1:3000/equip", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
+            body: JSON.stringify({
+              email,
+              categoryId: categoryObj.id,
+              itemId: item.id,
+            }),
           });
           if (eqRes.ok) {
-            void triggerAchievement("avatar_customized", { category: categoryObj.name, itemId: item.id });
+            void triggerAchievement("avatar_customized", {
+              category: categoryObj.name,
+              itemId: item.id,
+            });
           }
         }
       } catch (err) {
@@ -337,7 +399,8 @@ export default function Avatar() {
       const data = await res.json();
 
       if (!res.ok) {
-        if (opts.showError) console.error(data.error || "Could not update balance");
+        if (opts.showError)
+          console.error(data.error || "Could not update balance");
         return { ok: false };
       }
 
@@ -371,7 +434,10 @@ export default function Avatar() {
       }
 
       window.dispatchEvent(new Event("avatar-saved"));
-      void triggerAchievement("avatar_customized", { method: "save", selections });
+      void triggerAchievement("avatar_customized", {
+        method: "save",
+        selections,
+      });
       alert("Avatar saved");
     } catch (err) {
       console.error(err);
@@ -393,9 +459,14 @@ export default function Avatar() {
         const opts = {};
         // fetch items per category
         for (const c of cats) {
-          const itemsRes = await fetch(`http://127.0.0.1:3000/items?categoryId=${c.id}`);
+          const itemsRes = await fetch(
+            `http://127.0.0.1:3000/items?categoryId=${c.id}`,
+          );
           const itemsData = await itemsRes.json();
-          opts[c.name] = (itemsData.items || []).map((it) => ({ ...it, locked: it.price > 0 }));
+          opts[c.name] = (itemsData.items || []).map((it) => ({
+            ...it,
+            locked: it.price > 0,
+          }));
         }
 
         if (!activeTab && cats.length > 0) {
@@ -404,29 +475,41 @@ export default function Avatar() {
 
         let savedAvatar = null;
         if (email) {
-          const userRes = await fetch(`http://127.0.0.1:3000/user?email=${encodeURIComponent(email)}`);
+          const userRes = await fetch(
+            `http://127.0.0.1:3000/user?email=${encodeURIComponent(email)}`,
+          );
           if (userRes.ok) {
             const userData = await userRes.json();
             savedAvatar = userData.avatar || null;
           }
 
-          const invRes = await fetch(`http://127.0.0.1:3000/inventory?email=${encodeURIComponent(email)}`);
+          const invRes = await fetch(
+            `http://127.0.0.1:3000/inventory?email=${encodeURIComponent(email)}`,
+          );
           const invData = await invRes.json();
-          const unlocked = new Set((invData.inventory || []).map((i) => i.item.id));
+          const unlocked = new Set(
+            (invData.inventory || []).map((i) => i.item.id),
+          );
 
           for (const k of Object.keys(opts)) {
-            opts[k] = opts[k].map((it) => (unlocked.has(it.id) ? { ...it, locked: false } : it));
+            opts[k] = opts[k].map((it) =>
+              unlocked.has(it.id) ? { ...it, locked: false } : it,
+            );
           }
 
           if (!savedAvatar) {
-            const eqRes = await fetch(`http://127.0.0.1:3000/equipped?email=${encodeURIComponent(email)}`);
+            const eqRes = await fetch(
+              `http://127.0.0.1:3000/equipped?email=${encodeURIComponent(email)}`,
+            );
             const eqData = await eqRes.json();
             const sel = {};
             (eqData.equipped || []).forEach((e) => {
               if (!e.category || !e.item) return;
 
               const categoryItems = opts[e.category.name] || [];
-              const matchedItem = categoryItems.find((optionItem) => optionItem.id === e.item.id);
+              const matchedItem = categoryItems.find(
+                (optionItem) => optionItem.id === e.item.id,
+              );
               sel[e.category.name] = matchedItem || {
                 id: e.item.id,
                 name: e.item.name,
@@ -505,10 +588,7 @@ export default function Avatar() {
                 </div>
               </div>
 
-              <Button
-                variant="primary"
-                onClick={handleSaveAvatar}
-              >
+              <Button variant="primary" onClick={handleSaveAvatar}>
                 Save Avatar
               </Button>
               {/* <Button variant="warning" onClick={() => handleAddBalance(100)}>
@@ -527,7 +607,10 @@ export default function Avatar() {
             {/* Tab Navigation */}
             <div className="card-header">
               <ul className="nav nav-pills card-header-pills">
-                {(categories.length ? categories.map((c) => c.name) : Object.keys(options)).map((category) => (
+                {(categories.length
+                  ? categories.map((c) => c.name)
+                  : Object.keys(options)
+                ).map((category) => (
                   <li className="nav-item" key={category}>
                     <button
                       className={`nav-link text-capitalize ${activeTab === category ? "active" : ""}`}
@@ -546,25 +629,35 @@ export default function Avatar() {
               style={{ maxHeight: "600px" }}
             >
               <div className="d-flex flex-wrap justify-content-center">
-                {getDisplayedOptions(activeTab, options[activeTab] || []).map((item) => {
-                  const isNoneOption = (activeTab === "accessory" || activeTab === "title") && item.name === "None";
-                  const isSelected = isNoneOption ? !selections[activeTab] : selections[activeTab]?.id === item.id;
+                {getDisplayedOptions(activeTab, options[activeTab] || []).map(
+                  (item) => {
+                    const isNoneOption =
+                      (activeTab === "accessory" || activeTab === "title") &&
+                      item.name === "None";
+                    const isSelected = isNoneOption
+                      ? !selections[activeTab]
+                      : selections[activeTab]?.id === item.id;
 
-                  return (
-                    <div key={item.id}>
-                      <AvatarButton
-                        imageSrc={getAvatarItemImageSrc(activeTab, item, avatarBaseColor)}
-                        imageAlt={`${item.name} avatar item`}
-                        onClick={() => handleSelect(activeTab, item)}
-                        selected={isSelected}
-                        locked={item.locked}
-                        price={item.price}
-                      >
-                        {item.name}
-                      </AvatarButton>
-                    </div>
-                  );
-                })}
+                    return (
+                      <div key={item.id}>
+                        <AvatarButton
+                          imageSrc={getAvatarItemImageSrc(
+                            activeTab,
+                            item,
+                            avatarBaseColor,
+                          )}
+                          imageAlt={`${item.name} avatar item`}
+                          onClick={() => handleSelect(activeTab, item)}
+                          selected={isSelected}
+                          locked={item.locked}
+                          price={item.price}
+                        >
+                          {item.name}
+                        </AvatarButton>
+                      </div>
+                    );
+                  },
+                )}
               </div>
             </div>
           </div>
@@ -573,7 +666,14 @@ export default function Avatar() {
       <PurchaseModal
         isOpen={isModalOpen}
         item={pendingPurchase?.item}
-        imageSrc={pendingPurchase ? getAvatarItemImageSrc(pendingPurchase.category, pendingPurchase.item) : ""}
+        imageSrc={
+          pendingPurchase
+            ? getAvatarItemImageSrc(
+                pendingPurchase.category,
+                pendingPurchase.item,
+              )
+            : ""
+        }
         onConfirm={handleConfirmPurchase}
         onCancel={handleCloseModal}
       />

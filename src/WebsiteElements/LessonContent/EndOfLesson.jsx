@@ -2,9 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { triggerAchievement } from "../../utils/achievementSystem";
 
-export default function EndOfLesson({ 
-  prevLessonPath, 
-  nextLessonPath, 
+export default function EndOfLesson({
+  prevLessonPath,
+  nextLessonPath,
   dashboardPath = "/",
   achievementEventName = "lesson_completed",
   achievementEventData = {},
@@ -19,41 +19,51 @@ export default function EndOfLesson({
   };
 
   return (
-    <div 
-      className="p-4 mt-4 w-100" 
-      style={{ 
-        backgroundColor: "rgba(255, 255, 255, 0.8)", 
+    <div
+      className="p-4 mt-4 w-100"
+      style={{
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
         borderRadius: "20px",
-        border: "2px solid #e9ecef"
+        border: "2px solid #e9ecef",
       }}
     >
-      <h3 className="text-center mb-4" style={{ color: "#333", fontWeight: "bold" }}>
+      <h3
+        className="text-center mb-4"
+        style={{ color: "#333", fontWeight: "bold" }}
+      >
         Klaar met deze les!
       </h3>
-      
+
       {/* Top Row: Previous and Next / Dashboard Fallbacks */}
       <div className="d-flex flex-column flex-md-row gap-3 justify-content-center w-100">
-        
         {/* Left Slot: Previous Lesson OR Dashboard */}
         {prevLessonPath ? (
-          <button 
+          <button
             className="btn btn-outline-primary py-3 px-4 flex-grow-1"
-            style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-              onClick={() => {
-                handleLessonComplete();
-                navigate(prevLessonPath);
-              }}
+            style={{
+              borderRadius: "15px",
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+            }}
+            onClick={() => {
+              handleLessonComplete();
+              navigate(prevLessonPath);
+            }}
           >
             ⬅️ Vorige Les
           </button>
         ) : (
-          <button 
+          <button
             className="btn btn-outline-secondary py-3 px-4 flex-grow-1"
-            style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-              onClick={() => {
-                handleLessonComplete();
-                navigate(dashboardPath);
-              }}
+            style={{
+              borderRadius: "15px",
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+            }}
+            onClick={() => {
+              handleLessonComplete();
+              navigate(dashboardPath);
+            }}
           >
             🏠 Terug naar Dashboard
           </button>
@@ -61,47 +71,57 @@ export default function EndOfLesson({
 
         {/* Right Slot: Next Lesson OR Dashboard */}
         {nextLessonPath ? (
-          <button 
+          <button
             className="btn btn-primary py-3 px-4 flex-grow-1"
-            style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-              onClick={() => {
-                handleLessonComplete();
-                navigate(nextLessonPath);
-              }}
+            style={{
+              borderRadius: "15px",
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+            }}
+            onClick={() => {
+              handleLessonComplete();
+              navigate(nextLessonPath);
+            }}
           >
             Volgende Les ➡️
           </button>
         ) : (
-          <button 
+          <button
             className="btn btn-success py-3 px-4 flex-grow-1"
-            style={{ borderRadius: "15px", fontSize: "1.1rem", fontWeight: "bold" }}
-              onClick={() => {
-                handleLessonComplete();
-                navigate(dashboardPath);
-              }}
+            style={{
+              borderRadius: "15px",
+              fontSize: "1.1rem",
+              fontWeight: "bold",
+            }}
+            onClick={() => {
+              handleLessonComplete();
+              navigate(dashboardPath);
+            }}
           >
             🏠 Afronden & Naar Dashboard
           </button>
         )}
-
       </div>
 
       {/* Bottom Slot: Dashboard Button (ONLY shows if both Prev and Next buttons exist) */}
       {hasBothLessons && (
         <div className="mt-3 d-flex justify-content-center w-100">
-          <button 
+          <button
             className="btn btn-outline-secondary py-2 px-4 w-100"
-            style={{ borderRadius: "15px", fontSize: "1rem", fontWeight: "bold" }}
-              onClick={() => {
-                handleLessonComplete();
-                navigate(dashboardPath);
-              }}
+            style={{
+              borderRadius: "15px",
+              fontSize: "1rem",
+              fontWeight: "bold",
+            }}
+            onClick={() => {
+              handleLessonComplete();
+              navigate(dashboardPath);
+            }}
           >
             🏠 Terug naar Dashboard
           </button>
         </div>
       )}
-
     </div>
   );
 }

@@ -29,7 +29,7 @@ export default function GIFPlayer({
     boxShadow: "0 8px 40px rgba(0,0,0,0.55)",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   };
 
   const imageStyle = {
@@ -43,11 +43,7 @@ export default function GIFPlayer({
 
   return (
     <div style={containerStyle}>
-      <img 
-        src={src} 
-        alt={alt} 
-        style={imageStyle} 
-      />
+      <img src={src} alt={alt} style={imageStyle} />
     </div>
   );
 }

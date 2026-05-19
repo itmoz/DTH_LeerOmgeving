@@ -1,4 +1,10 @@
-export default function PurchaseModal({ isOpen, item, imageSrc, onConfirm, onCancel }) {
+export default function PurchaseModal({
+  isOpen,
+  item,
+  imageSrc,
+  onConfirm,
+  onCancel,
+}) {
   if (!isOpen || !item) return null; // Added a safety check for 'item' just in case
 
   return (
@@ -9,7 +15,6 @@ export default function PurchaseModal({ isOpen, item, imageSrc, onConfirm, onCan
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content shadow">
-          
           <div className="modal-header">
             <h5 className="modal-title">Confirm Purchase</h5>
             <button
@@ -22,7 +27,11 @@ export default function PurchaseModal({ isOpen, item, imageSrc, onConfirm, onCan
 
           <div className="modal-body text-center py-4">
             <div className="text-center">
-              <img src={imageSrc || item.img || ""} className="w-50" alt={item.name} />
+              <img
+                src={imageSrc || item.img || ""}
+                className="w-50"
+                alt={item.name}
+              />
             </div>
             <p className="fs-5 my-3">
               Are you sure you want to unlock <strong>{item.name}</strong>?
@@ -37,7 +46,7 @@ export default function PurchaseModal({ isOpen, item, imageSrc, onConfirm, onCan
                 <i className="dth-coin"></i>
                 <span>{item.price}</span>
               </button>
-              
+
               <button
                 type="button"
                 className="btn btn-secondary btn-lg px-4"
@@ -47,7 +56,6 @@ export default function PurchaseModal({ isOpen, item, imageSrc, onConfirm, onCan
               </button>
             </div>
           </div>
-          
         </div>
       </div>
     </div>

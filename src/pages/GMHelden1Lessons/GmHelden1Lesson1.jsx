@@ -16,7 +16,7 @@ export default function GmHelden1Lesson1() {
     "⭐ Wat is Roblox?",
     "💻 Hoe speel je Roblox op de computer?",
     "🛠️ Hoe worden spellen gemaakt in Roblox?",
-    "🎮 Hoe kan je je eigen game maken?"
+    "🎮 Hoe kan je je eigen game maken?",
   ];
 
   const quizQuestions = [
@@ -25,15 +25,26 @@ export default function GmHelden1Lesson1() {
       type: "multiple-choice",
       question: "Wat is de tool waarmee we games maken in Roblox?",
       options: ["Roblox Player", "Roblox Studio", "Roblox Creator"],
-      correctAnswer: "Roblox Studio"
+      correctAnswer: "Roblox Studio",
     },
     {
       id: 2,
       type: "text-input",
-      question: "Welk spel gaan we samen maken aan het einde van deze lessenreeks? (Typ het woord)",
+      question:
+        "Welk spel gaan we samen maken aan het einde van deze lessenreeks? (Typ het woord)",
       answerIncludes: ["obby", "platformer"], // We accepteren meerdere antwoorden zolang ze maar een van deze woorden bevatten
-      correctAnswer: ["obby", "obby game", "een obby", "een obby game", "obbygame", "platformer", "een platformer", "platformer game", "een platformer game"]
-    }
+      correctAnswer: [
+        "obby",
+        "obby game",
+        "een obby",
+        "een obby game",
+        "obbygame",
+        "platformer",
+        "een platformer",
+        "platformer game",
+        "een platformer game",
+      ],
+    },
   ];
 
   // DEBUG FUNCTIE: Maakt de opgeslagen voortgang leeg en herlaadt de pagina
@@ -58,12 +69,13 @@ export default function GmHelden1Lesson1() {
       >
         {/* DEBUG KNOP */}
         <div className="d-flex justify-content-end mb-3">
-          <button 
-            onClick={handleResetProgress} 
+          <button
+            onClick={handleResetProgress}
             className="btn btn-sm btn-danger shadow-sm"
             style={{ borderRadius: "10px" }}
           >
-            <i className="bi bi-arrow-clockwise me-1"></i> Debug: Reset Voortgang
+            <i className="bi bi-arrow-clockwise me-1"></i> Debug: Reset
+            Voortgang
           </button>
         </div>
 
@@ -91,83 +103,130 @@ export default function GmHelden1Lesson1() {
 
         <ContentSection title={"Hoe Speel je Roblox?"}>
           <p>
-            Roblox is super makkelijk te spelen! Je hoeft alleen maar een account
-            aan te maken, Roblox Studio te downloaden (dat is de tool waarmee we
-            onze games gaan maken) en je bent klaar om te spelen en te creëren!
+            Roblox is super makkelijk te spelen! Je hoeft alleen maar een
+            account aan te maken, Roblox Studio te downloaden (dat is de tool
+            waarmee we onze games gaan maken) en je bent klaar om te spelen en
+            te creëren!
           </p>
           <p>
-            Je kunt kiezen uit miljoenen spellen gemaakt door andere gebruikers! 
-            Roblox op PC bestaat uit 2 delen: Roblox Studio (waar je spellen maakt) en Roblox Player (waar je spellen speelt).
-
-            Om Roblox Player te installeren moet je op de volgende link klikken: <a href="https://www.roblox.com/download" target="_blank" rel="noopener noreferrer">https://www.roblox.com/download</a>.
+            Je kunt kiezen uit miljoenen spellen gemaakt door andere gebruikers!
+            Roblox op PC bestaat uit 2 delen: Roblox Studio (waar je spellen
+            maakt) en Roblox Player (waar je spellen speelt). Om Roblox Player
+            te installeren moet je op de volgende link klikken:{" "}
+            <a
+              href="https://www.roblox.com/download"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://www.roblox.com/download
+            </a>
+            .
           </p>
         </ContentSection>
 
         <div className="w-100">
-            <ProgressCheckmarkCard
-              cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
-              title="Het installeren van Roblox Player"
-              items={[
-                { id: 1, text: "Naar de pagina van de download gegaan", checked: false },
-                { id: 2, text: "Roblox Player gedownload", checked: false },
-                { id: 3, text: "Genavigeerd naar je downloads map", checked: false },
-                { id: 4, text: "Dubbel geklikt op RobloxPlayerInstaller.exe", checked: false },
-                { id: 5, text: "Instructies op je computer gevolgd", checked: false },
-                { id: 6, text: "Installatie voltooid!", checked: false },
-              ]}
-              iconPosition="end"
-              bgColor="#fff9c4"
-              headingColor="#f57f17"
-              itemPadding="0.75rem 0"
-              completionReward={30} // Voegt 30 valuta toe en toont de eindanimatie
-            />
+          <ProgressCheckmarkCard
+            cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+            title="Het installeren van Roblox Player"
+            items={[
+              {
+                id: 1,
+                text: "Naar de pagina van de download gegaan",
+                checked: false,
+              },
+              { id: 2, text: "Roblox Player gedownload", checked: false },
+              {
+                id: 3,
+                text: "Genavigeerd naar je downloads map",
+                checked: false,
+              },
+              {
+                id: 4,
+                text: "Dubbel geklikt op RobloxPlayerInstaller.exe",
+                checked: false,
+              },
+              {
+                id: 5,
+                text: "Instructies op je computer gevolgd",
+                checked: false,
+              },
+              { id: 6, text: "Installatie voltooid!", checked: false },
+            ]}
+            iconPosition="end"
+            bgColor="#fff9c4"
+            headingColor="#f57f17"
+            itemPadding="0.75rem 0"
+            completionReward={30} // Voegt 30 valuta toe en toont de eindanimatie
+          />
         </div>
 
         <ContentSection>
           <p>
-            Belangrijk is ook nog dat je een account nodig hebt om Roblox te spelen of spellen te maken.
+            Belangrijk is ook nog dat je een account nodig hebt om Roblox te
+            spelen of spellen te maken.
           </p>
           <p>
-            Vraag gerust aan een ouder of verzorger om je te helpen een account aan te maken als je dat nog niet hebt gedaan! (En natuurlijk alleen als je toestemming hebt van een ouder of verzorger!).
+            Vraag gerust aan een ouder of verzorger om je te helpen een account
+            aan te maken als je dat nog niet hebt gedaan! (En natuurlijk alleen
+            als je toestemming hebt van een ouder of verzorger!).
           </p>
           <p>
-            Onthoud je wachtwoord en gebruikersnaam goed, want die heb je nodig om in te loggen op Roblox Studio en Roblox Player!
+            Onthoud je wachtwoord en gebruikersnaam goed, want die heb je nodig
+            om in te loggen op Roblox Studio en Roblox Player!
           </p>
         </ContentSection>
 
-          <ContentSection
-  title="Roblox Player Opstarten en Verkennen"
-  contentBlocks={[
-    {
-      // BLOCK 1
-      textAbove: <p>Nadat de applicatie geïnstalleerd is, zie je dit scherm!</p>,
-      imageSrc: ImageLoggedIn,
-      imageAlt: "Roblox Player Ingelogd",
-      imageCaption: "De Roblox homepagina",
-      textBelow: <p>In de volgende les gaan we samen een Obby maken, dus zorg ervoor dat je Roblox Studio hebt geïnstalleerd en klaar staat om te leren!</p>
-    },
-    {
-      // BLOCK 2
-      textAbove: <p>Nadat we daar klaar mee zijn is het tijd om inspiratie te zoeken door bestaande obbies te bekijken!</p>,
-      imageSrc: EscapeTWO, // Je tweede afbeelding
-      imageAlt: "Escape The World Obby",
-      imageCaption: "Een voorbeeld van een populaire Obby",
-      textBelow: <p>In de volgende les zullen we Roblox Studio opzetten en leren gebruiken!</p>
-    }
-  ]}
-/>
+        <ContentSection
+          title="Roblox Player Opstarten en Verkennen"
+          contentBlocks={[
+            {
+              // BLOCK 1
+              textAbove: (
+                <p>Nadat de applicatie geïnstalleerd is, zie je dit scherm!</p>
+              ),
+              imageSrc: ImageLoggedIn,
+              imageAlt: "Roblox Player Ingelogd",
+              imageCaption: "De Roblox homepagina",
+              textBelow: (
+                <p>
+                  In de volgende les gaan we samen een Obby maken, dus zorg
+                  ervoor dat je Roblox Studio hebt geïnstalleerd en klaar staat
+                  om te leren!
+                </p>
+              ),
+            },
+            {
+              // BLOCK 2
+              textAbove: (
+                <p>
+                  Nadat we daar klaar mee zijn is het tijd om inspiratie te
+                  zoeken door bestaande obbies te bekijken!
+                </p>
+              ),
+              imageSrc: EscapeTWO, // Je tweede afbeelding
+              imageAlt: "Escape The World Obby",
+              imageCaption: "Een voorbeeld van een populaire Obby",
+              textBelow: (
+                <p>
+                  In de volgende les zullen we Roblox Studio opzetten en leren
+                  gebruiken!
+                </p>
+              ),
+            },
+          ]}
+        />
 
-          <LessonQuiz
-            quizId="les1-quiz"
-            questions={quizQuestions}
-            balanceGainAmount={50}
-          />
+        <LessonQuiz
+          quizId="les1-quiz"
+          questions={quizQuestions}
+          balanceGainAmount={50}
+        />
 
-          <EndOfLesson 
+        <EndOfLesson
           nextLessonPath="/GMHelden1/les-2"
-            dashboardPath="/GMHelden1" 
-          />
-       </div>
+          dashboardPath="/GMHelden1"
+        />
+      </div>
     </GradientBackground>
   );
 }

@@ -12,17 +12,17 @@ import GmHelden3LessonLD2 from "../pages/GMHelden3Lessons/GMHelden3LessonLD2";
 const AppRoutesGMHelden3 = () => {
   return (
     <Routes>
-        <Route path="/" element={<DashboardGmHelden3 />} />
-        <Route path="/les-1" element={<GmHelden3Lesson1 />} />
-        <Route path="/les-2" element={<GmHelden3Lesson2 />} />
-        <Route path="/les-gd-1" element={<GmHelden3LessonGD1 />} />
-        <Route path="/les-gd-2" element={<GmHelden3LessonGD2 />} />
-        <Route path="/les-pe-1" element={<GmHelden3LessonPE1 />} />
-        <Route path="/les-pe-2" element={<GmHelden3LessonPE2 />} />
-        <Route path="/les-ld-1" element={<GmHelden3LessonLD1 />} />
-        <Route path="/les-ld-2" element={<GmHelden3LessonLD2 />} />
+      <Route path="/" element={<DashboardGmHelden3 />} />
+      <Route path="/les-1" element={<GmHelden3Lesson1 />} />
+      <Route path="/les-2" element={<GmHelden3Lesson2 />} />
+      <Route path="/les-gd-1" element={<GmHelden3LessonGD1 />} />
+      <Route path="/les-gd-2" element={<GmHelden3LessonGD2 />} />
+      <Route path="/les-pe-1" element={<GmHelden3LessonPE1 />} />
+      <Route path="/les-pe-2" element={<GmHelden3LessonPE2 />} />
+      <Route path="/les-ld-1" element={<GmHelden3LessonLD1 />} />
+      <Route path="/les-ld-2" element={<GmHelden3LessonLD2 />} />
     </Routes>
-    );
-}
+  );
+};
 
 export default AppRoutesGMHelden3;

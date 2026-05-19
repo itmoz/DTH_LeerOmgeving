@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function ContentSection({ 
-  title, 
-  titleColor = "#1e88e5", 
+export default function ContentSection({
+  title,
+  titleColor = "#1e88e5",
   contentBlocks = [], // An array of content objects
   children,
 }) {
@@ -19,7 +19,7 @@ export default function ContentSection({
           {title}
         </h2>
       )}
-      
+
       <div className="text-center">
         {/* Render content passed as children */}
         {children}
@@ -27,27 +27,27 @@ export default function ContentSection({
         {/* Loop through the array of content blocks */}
         {contentBlocks.map((block, index) => (
           <div key={index} className="mb-5">
-            
             {/* 1. Text Above the Image/Video */}
-            {block.textAbove && (
-              <div>{block.textAbove}</div>
-            )}
-            
+            {block.textAbove && <div>{block.textAbove}</div>}
+
             {/* 2. Optional Image Section */}
             {block.imageSrc && (
               <div className="my-4">
-                <img 
-                  src={block.imageSrc} 
-                  alt={block.imageAlt || "Image"} 
-                  style={{ 
-                    maxWidth: "100%", 
-                    height: "auto", 
-                    borderRadius: "10px" 
-                  }} 
+                <img
+                  src={block.imageSrc}
+                  alt={block.imageAlt || "Image"}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    borderRadius: "10px",
+                  }}
                 />
                 {/* Optional Small Italic Caption */}
                 {block.imageCaption && (
-                  <p className="mt-2 text-muted" style={{ fontStyle: "italic", fontSize: "0.85em" }}>
+                  <p
+                    className="mt-2 text-muted"
+                    style={{ fontStyle: "italic", fontSize: "0.85em" }}
+                  >
                     {block.imageCaption}
                   </p>
                 )}
@@ -56,18 +56,11 @@ export default function ContentSection({
 
             {/* 3. Optional Custom Element (like VideoPlayer) */}
             {block.customElement && (
-              <div className="my-4">
-                {block.customElement}
-              </div>
-            )}
-            
-            {/* 4. Text Below the Image/Video */}
-            {block.textBelow && (
-              <div className="mt-3">
-                {block.textBelow}
-              </div>
+              <div className="my-4">{block.customElement}</div>
             )}
 
+            {/* 4. Text Below the Image/Video */}
+            {block.textBelow && <div className="mt-3">{block.textBelow}</div>}
           </div>
         ))}
       </div>
