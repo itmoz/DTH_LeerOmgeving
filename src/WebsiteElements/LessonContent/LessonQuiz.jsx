@@ -22,7 +22,8 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
     const data = await res.json();
 
     if (!res.ok) {
-      if (opts.showError) console.error(data.error || "Could not update balance");
+      if (opts.showError)
+        console.error(data.error || "Could not update balance");
       return { ok: false };
     }
 
@@ -35,8 +36,11 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
   }
 };
 
-export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = "default-quiz" }) {
-  
+export default function LessonQuiz({
+  questions,
+  balanceGainAmount = 0,
+  quizId = "default-quiz",
+}) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
     const savedIndex = localStorage.getItem(`${quizId}-index`);
     return savedIndex ? parseInt(savedIndex, 10) : 0;
@@ -74,16 +78,21 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
     const normalizedUserAnswer = userAnswer.trim().toLowerCase();
     let isCorrect = false;
 
-    if (currentQuestion.answerIncludes && Array.isArray(currentQuestion.answerIncludes)) {
+    if (
+      currentQuestion.answerIncludes &&
+      Array.isArray(currentQuestion.answerIncludes)
+    ) {
       isCorrect = currentQuestion.answerIncludes.some((keyword) =>
-        normalizedUserAnswer.includes(keyword.trim().toLowerCase())
+        normalizedUserAnswer.includes(keyword.trim().toLowerCase()),
       );
     } else if (Array.isArray(currentQuestion.correctAnswer)) {
       isCorrect = currentQuestion.correctAnswer.some(
-        (answer) => answer.trim().toLowerCase() === normalizedUserAnswer
+        (answer) => answer.trim().toLowerCase() === normalizedUserAnswer,
       );
     } else if (currentQuestion.correctAnswer) {
-      isCorrect = normalizedUserAnswer === currentQuestion.correctAnswer.trim().toLowerCase();
+      isCorrect =
+        normalizedUserAnswer ===
+        currentQuestion.correctAnswer.trim().toLowerCase();
     }
 
     if (isCorrect) {
@@ -92,7 +101,7 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
         setTimeout(() => {
           setFeedback(null);
           setUserAnswer("");
-          
+
           const nextIndex = currentQuestionIndex + 1;
           setCurrentQuestionIndex(nextIndex);
           localStorage.setItem(`${quizId}-index`, nextIndex);
@@ -100,12 +109,12 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
       } else {
         setFeedback(null);
         setUserAnswer("");
-        setQuizFinished(true); 
-        setIsQuizActive(false); 
-        
+        setQuizFinished(true);
+        setIsQuizActive(false);
+
         setJustFinished(true);
         localStorage.setItem(`${quizId}-finished`, "true");
-        
+
         if (balanceGainAmount > 0) {
           handleAddBalance(balanceGainAmount);
         }
@@ -119,20 +128,25 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
   if (quizFinished) {
     return (
       // Changed inline #e8f5e9 to Bootstrap's bg-success-subtle so it adapts to dark mode
-      <div className="card shadow-sm p-4 text-center mt-4 bg-success-subtle border-success" style={{ borderRadius: "20px" }}>
+      <div
+        className="card shadow-sm p-4 text-center mt-4 bg-success-subtle border-success"
+        style={{ borderRadius: "20px" }}
+      >
         {justFinished && balanceGainAmount > 0 && <CoinExplosion />}
         <h3 className="text-success">
           <i className="bi bi-trophy-fill me-2"></i>
           Gefeliciteerd!
         </h3>
-        <p className="text-body">Je hebt alle vragen van deze quiz succesvol beantwoord.</p>
-        
+        <p className="text-body">
+          Je hebt alle vragen van deze quiz succesvol beantwoord.
+        </p>
+
         {balanceGainAmount > 0 && (
           // Changed inline bg-white to bg-body
           <div className="mt-3 p-2 bg-body rounded shadow-sm d-inline-block">
             <h5 className="text-warning m-0" style={{ fontWeight: "bold" }}>
-              <i className="dth-coin me-2"></i>
-              +{balanceGainAmount} Munten verdiend!
+              <i className="dth-coin me-2"></i>+{balanceGainAmount} Munten
+              verdiend!
             </h5>
           </div>
         )}
@@ -144,12 +158,17 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
   if (!isQuizActive) {
     return (
       // Replaced inline blue border with border-primary and border-2 classes
-      <div className="card shadow-sm p-4 mt-4 text-center border-primary border-2 bg-body" style={{ borderRadius: "20px" }}>
+      <div
+        className="card shadow-sm p-4 mt-4 text-center border-primary border-2 bg-body"
+        style={{ borderRadius: "20px" }}
+      >
         {/* Replaced inline #1e88e5 color with text-primary */}
         <h4 className="text-primary">Quiz Tijd!</h4>
-        <p className="mb-4 text-body">Test wat je zojuist hebt geleerd om munten te verdienen.</p>
-        <button 
-          className="btn btn-primary fw-bold px-4 py-2" 
+        <p className="mb-4 text-body">
+          Test wat je zojuist hebt geleerd om munten te verdienen.
+        </p>
+        <button
+          className="btn btn-primary fw-bold px-4 py-2"
           style={{ borderRadius: "10px" }}
           onClick={() => setIsQuizActive(true)}
         >
@@ -161,7 +180,7 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
 
   // UI 3: Active Quiz Overlay
   return (
-    <div 
+    <div
       style={{
         position: "fixed",
         top: 0,
@@ -173,15 +192,15 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "20px"
+        padding: "20px",
       }}
     >
-      <div 
+      <div
         // Added bg-body to adapt the card background and border-primary to adapt the border
-        className="card shadow-lg p-4 w-100 bg-body border-primary border-2" 
-        style={{ 
-          maxWidth: "600px", 
-          borderRadius: "20px"
+        className="card shadow-lg p-4 w-100 bg-body border-primary border-2"
+        style={{
+          maxWidth: "600px",
+          borderRadius: "20px",
         }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
@@ -191,9 +210,9 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
             <span className="badge bg-primary rounded-pill text-light">
               Vraag {currentQuestionIndex + 1} van {questions.length}
             </span>
-            <button 
-              className="btn-close" 
-              onClick={() => setIsQuizActive(false)} 
+            <button
+              className="btn-close"
+              onClick={() => setIsQuizActive(false)}
               aria-label="Close"
               title="Annuleer quiz"
             ></button>
@@ -211,7 +230,7 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
                 className={`btn text-start ${userAnswer === option ? "btn-primary" : "btn-outline-primary"}`}
                 onClick={() => {
                   setUserAnswer(option);
-                  setFeedback(null); 
+                  setFeedback(null);
                 }}
                 style={{ borderRadius: "10px" }}
               >
@@ -239,23 +258,29 @@ export default function LessonQuiz({ questions, balanceGainAmount = 0, quizId = 
         )}
 
         {feedback === "correct" && (
-          <div className="alert alert-success d-flex align-items-center" style={{ borderRadius: "10px" }}>
+          <div
+            className="alert alert-success d-flex align-items-center"
+            style={{ borderRadius: "10px" }}
+          >
             <i className="bi bi-check-circle-fill fs-4 me-2"></i>
             <div>Helemaal goed! We gaan door naar de volgende vraag...</div>
           </div>
         )}
 
         {feedback === "incorrect" && (
-          <div className="alert alert-danger d-flex align-items-center" style={{ borderRadius: "10px" }}>
+          <div
+            className="alert alert-danger d-flex align-items-center"
+            style={{ borderRadius: "10px" }}
+          >
             <i className="bi bi-x-circle-fill fs-4 me-2"></i>
             <div>Oeps, dat is niet helemaal juist. Probeer het nog eens!</div>
           </div>
         )}
 
-        <button 
-          className="btn btn-success w-100" 
+        <button
+          className="btn btn-success w-100"
           onClick={handleCheckAnswer}
-          disabled={!userAnswer || feedback === "correct"} 
+          disabled={!userAnswer || feedback === "correct"}
           style={{ borderRadius: "10px", fontWeight: "bold" }}
         >
           Controleer Antwoord
