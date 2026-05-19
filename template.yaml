@@ -1,20 +1,12 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  DTH_AWS
-  SAM Template for Express backend
+Description: DTH Leeromgeving - Event-driven API
 
 Globals:
   Function:
+    Runtime: nodejs20.x
     Timeout: 10
-    LoggingConfig:
-      LogFormat: JSON
-    Environment:
-      Variables:
-        FRONTEND_ORIGIN: "http://127.0.0.1:5173,http://localhost:5173"
-        MONGODB_URI: "mongodb+srv://BrokeMo:boV4QYrwCcwBZOA1@cluster0.jtprcms.mongodb.net/?appName=Cluster0"
-        DB_NAME: "dth"
-        POORT: "3000"
+    MemorySize: 128
 
 Resources:
   ExpressBackendFunction:
@@ -22,28 +14,40 @@ Resources:
     Properties:
       CodeUri: server/
       Handler: handler.lambdaHandler
-      Runtime: nodejs20.x
-      Architectures:
-        - x86_64
       Events:
-        ProxyRoute:
+        Api:
           Type: Api
           Properties:
             Path: /{proxy+}
             Method: ANY
-        RootRoute:
-          Type: Api
+
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - events:PutEvents
+              Resource: arn:aws:events:us-east-1:883218392606:event-bus/default
+      Environment:
+        Variables:
+          MONGODB_URI: mongodb+srv://BrokeMo:boV4QYrwCcwBZOA1@cluster0.jtprcms.mongodb.net/?appName=Cluster0
+          DB_NAME: dth
+
+  UserRegisteredHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: server/
+      Handler: userRegisteredHandler.handler
+      Events:
+        UserRegisteredEvent:
+          Type: EventBridgeRule
           Properties:
-            Path: /
-            Method: ANY
+            Pattern:
+              source:
+                - "dth.leeromgeving.user"
+              detail-type:
+                - "UserRegistered"
 
 Outputs:
-  BackendApi:
-    Description: API Gateway endpoint URL
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
-  ExpressBackendFunction:
-    Description: Lambda Function ARN
-    Value: !GetAtt ExpressBackendFunction.Arn
-  ExpressBackendFunctionIamRole:
-    Description: Implicit IAM Role ARN
-    Value: !GetAtt ExpressBackendFunctionRole.Arn
+  ApiUrl:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

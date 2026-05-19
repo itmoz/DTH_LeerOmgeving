@@ -1,5 +1,6 @@
 import { getDb } from "../db.js";
 import { ObjectId } from "mongodb";
+import { publishDomainEvent } from "../events/publisher.js";
 
 export const register = async (req, res) => {
   try {
@@ -11,7 +12,11 @@ export const register = async (req, res) => {
     const normalizedEmail = email.trim().toLowerCase();
 
     const db = await getDb();
+    console.log("Gebruik database:", db.databaseName);
     const users = db.collection("users");
+
+    const count = await users.countDocuments();
+    console.log("Aantal users in deze DB:", count);
 
     const existing = await users.findOne({ email: normalizedEmail });
     if (existing) {
@@ -23,6 +28,16 @@ export const register = async (req, res) => {
       password,        // LATER: password hashen!
       balance: 0,
       createdAt: new Date(),
+    });
+
+    await publishDomainEvent({
+      source: "dth.leeromgeving.user",
+      detailType: "UserRegistered",
+      detail: {
+        userId: result.insertedId.toString(),
+        email: normalizedEmail,
+        createdAt: new Date().toISOString(),
+      },
     });
 
     return res.json({
@@ -61,6 +76,16 @@ export const login = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24,
     });
 
+    await publishDomainEvent({
+      source: "dth.leeromgeving.user",
+      detailType: "UserLoggedIn",
+      detail: {
+        userId: user._id.toString(),
+        email: user.email,
+        loggedInAt: new Date().toISOString(),
+      },
+    });
+
     return res.json({
       message: "Inloggen geslaagd",
       email: user.email,
@@ -79,11 +104,18 @@ export const getUser = async (req, res) => {
       return res.json({ user: null });
     }
 
+    // extra check: is het een geldige ObjectId?
+    if (!ObjectId.isValid(sessionId)) {
+      res.clearCookie("session");
+      return res.json({ user: null });
+    }
+
     const db = await getDb();
     const users = db.collection("users");
 
     const user = await users.findOne({ _id: new ObjectId(sessionId) });
     if (!user) {
+      res.clearCookie("session");
       return res.json({ user: null });
     }
 
