@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import AppRoutes from './AppRoutes/AppRoutes';
 import Navbar from './WebsiteElements/Navbar/Navbar';
+import AchievementToastHost from './WebsiteElements/Notifications/AchievementToastHost';
 
 function App() {
   // 1. Theme State & LocalStorage
@@ -23,6 +24,7 @@ function App() {
       
       {/* Roep de Navbar aan en geef de props door */}
       <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <AchievementToastHost />
       {/* Main Content Area */}
       <main>
         <AppRoutes />

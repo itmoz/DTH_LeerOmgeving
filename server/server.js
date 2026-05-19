@@ -5,6 +5,7 @@ import http from "http";
 import { connectDB } from "./database.js";
 import { parseBody } from "./utils.js";
 import { login, register, getUser, getBalance, addBalance } from "./controllers/authController.js";
+import { getAchievements, triggerAchievementProgress } from "./controllers/achievementController.js";
 import {
   getCategories,
   getItems,
@@ -93,6 +94,14 @@ const server = http.createServer(async (req, res) => {
   // SAVE AVATAR
   if (req.method === "POST" && req.url === "/save-avatar") {
     return saveAvatar(req, res);
+  }
+  
+  if (req.method === "GET" && req.url.startsWith("/achievements")) {
+    return getAchievements(req, res);
+  }
+
+  if (req.method === "POST" && req.url === "/achievement/trigger") {
+    return triggerAchievementProgress(req, res);
   }
 
   // fallback

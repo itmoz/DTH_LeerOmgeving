@@ -1,6 +1,8 @@
 import Button from '../WebsiteElements/Buttons/Button';
 import Sidebar from '../WebsiteElements/Sidebar/Sidebar';
 import { useNavigate } from 'react-router-dom';
+import { triggerAchievement } from '../utils/achievementSystem';
+
 
 
 export default function Home() {
@@ -13,6 +15,10 @@ export default function Home() {
 
       <Button variant='primary' onClick={() => navigate('/LearningDashboard')}> 
         Start Learning
+      </Button>
+
+      <Button variant='warning' onClick={() => triggerAchievement('lesson_completed', { lessonId: 2 })}>
+        Trigger Lessong Complete
       </Button>
     </div>
   );

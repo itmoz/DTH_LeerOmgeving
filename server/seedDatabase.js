@@ -4,6 +4,7 @@ async function seed() {
   try {
     const db = await connectDB();
 
+    // Seed avatar customization
     const categories = [
       { name: "shape" },
       { name: "color" },
@@ -104,6 +105,50 @@ async function seed() {
         { upsert: true }
       );
     }
+
+    // Seed achievements
+    const achievements = [
+    {
+      name: "Eerste stappen",
+      description: "Voltooi je eerste les.",
+      trigger: "lesson_completed",
+      triggerThreshold: 1,
+      firstTimeReward: 50,
+      createdAt: new Date(),
+    },
+    {
+      name: "Leerling",
+      description: "Voltooi 5 lessen.",
+      trigger: "lesson_completed",
+      triggerThreshold: 5,
+      firstTimeReward: 100,
+      createdAt: new Date(),
+    },
+    {
+      name: "Muntenverzameler",
+      description: "Verdien 500 munten.",
+      trigger: "coins_earned",
+      triggerThreshold: 500,
+      firstTimeReward: 150,
+      createdAt: new Date(),
+    },
+    {
+      name: "Avatar meester",
+      description: "Pas je avatar aan.",
+      trigger: "avatar_customized",
+      triggerThreshold: 1,
+      firstTimeReward: 25,
+      createdAt: new Date(),
+    },
+  ];
+
+  for (const achievement of achievements) {
+    await db.collection("achievements").findOneAndUpdate(
+      { name: achievement.name },
+      { $setOnInsert: achievement },
+      { upsert: true }
+    );
+  }
 
     console.log("Seeding complete.");
     process.exit(0);
