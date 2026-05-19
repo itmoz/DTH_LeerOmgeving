@@ -3,6 +3,7 @@ import AvatarButton from "../WebsiteElements/Buttons/AvatarButton";
 import Button from "../WebsiteElements/Buttons/Button";
 import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
+import { triggerAchievement } from "../utils/achievementSystem";
 
 const avatarImageUrls = import.meta.glob("../Images/Avatar/*.svg", {
   eager: true,
@@ -206,11 +207,14 @@ export default function Avatar() {
           const email = localStorage.getItem("userEmail");
           const categoryObj = categories.find((c) => c.name === category);
           if (email && categoryObj) {
-            await fetch("http://127.0.0.1:3000/equip", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
-            });
+              const equipRes = await fetch("http://127.0.0.1:3000/equip", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
+              });
+              if (equipRes.ok) {
+                void triggerAchievement("avatar_customized", { category: categoryObj.name, itemId: item.id });
+              }
           }
         } catch (err) {
           console.error("Failed to persist equip:", err);
@@ -282,11 +286,14 @@ export default function Avatar() {
       try {
         const categoryObj = categories.find((c) => c.name === category);
         if (categoryObj) {
-          await fetch("http://127.0.0.1:3000/equip", {
+          const eqRes = await fetch("http://127.0.0.1:3000/equip", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
           });
+          if (eqRes.ok) {
+            void triggerAchievement("avatar_customized", { category: categoryObj.name, itemId: item.id });
+          }
         }
       } catch (err) {
         console.error("Failed to equip after purchase:", err);
@@ -335,6 +342,7 @@ export default function Avatar() {
       }
 
       window.dispatchEvent(new Event("balance-updated"));
+      void triggerAchievement("coins_earned", { amount: parsedAmount });
       return { ok: true, balance: data.balance };
     } catch {
       if (opts.showError) console.error("Server not reachable");
@@ -363,6 +371,7 @@ export default function Avatar() {
       }
 
       window.dispatchEvent(new Event("avatar-saved"));
+      void triggerAchievement("avatar_customized", { method: "save", selections });
       alert("Avatar saved");
     } catch (err) {
       console.error(err);
@@ -502,12 +511,12 @@ export default function Avatar() {
               >
                 Save Avatar
               </Button>
-              <Button variant="warning" onClick={() => handleAddBalance(100)}>
+              {/* <Button variant="warning" onClick={() => handleAddBalance(100)}>
                 Add Balance + 100
               </Button>
               <Button variant="danger" onClick={() => handleAddBalance(-100)}>
                 remove Balance - 100
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

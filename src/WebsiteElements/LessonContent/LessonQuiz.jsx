@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // Zorg ervoor dat dit pad klopt naar de map waar je CoinExplosion hebt opgeslagen!
 import CoinExplosion from "../Effects/CoinExplosion";
+import { triggerAchievement } from "../../utils/achievementSystem";
 
 // 1. Functie om saldo toe te voegen
 const handleAddBalance = async (amount, opts = { showError: true }) => {
@@ -27,6 +28,8 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
     }
 
     window.dispatchEvent(new Event("balance-updated"));
+    // Notify achievement system about earned coins
+    void triggerAchievement("coins_earned", { amount: parsedAmount });
     return { ok: true, balance: data.balance };
   } catch {
     if (opts.showError) console.error("Server not reachable");
