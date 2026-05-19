@@ -21,6 +21,7 @@ import DeletingBaseplateMenu from "../../Video/GMHelden1/Les2/DGMH1_Clip8.mp4"; 
 import PlayingGame from "../../Video/GMHelden1/Les2/DGMH1_Clip9.mp4";
 import PausingGame from "../../Video/GMHelden1/Les2/DGMH1_Clip10.mp4";
 import StoppingGameWithFallingBlock from "../../Video/GMHelden1/Les2/DGMH1_Clip11.mp4";
+import AnchoringParts from "../../Video/GMHelden1/Les2/DGMH1_Clip12.mp4";
 
 
 export default function GmHelden1Lesson2() {
@@ -29,8 +30,6 @@ export default function GmHelden1Lesson2() {
   "🎯 Het maken van een werkomgeving in Roblox Studio",
   "🧰 De basis tools in Roblox Studio leren kennen",
   "🧩 Leren hoe je een simpel platform maakt",
-  "✨ Gereedschappen om je platformen leuker te maken ontdekken",
-  "📍 Een spawnpoint toevoegen waar spelers beginnen",
   "🕹️ Het testen van je spel in Roblox Studio!"
 ];
 
@@ -43,13 +42,13 @@ export default function GmHelden1Lesson2() {
       correctAnswer: "Inventory"
     },
     {
-      id: 2,
+      id: 3,
       type: "text-input",
       question: "Wat is de naam van de tool waarmee je objecten in Roblox Studio kunt verplaatsen? (Typ het woord)",
       correctAnswer: ["move tool", "move", "verplaats tool", "verplaats", "moven", "verplaatsen"]
     },
     {
-      id: 3,
+      id: 2,
       type: "text-input",
       question: "Hoe zorgen we ervoor dat blokjes in de lucht blijven in plaats van naar beneden vallen?",
       correctAnswer: ["anchor", "anker", "anchor tool", "anker tool", "het anchored maken", "het anchored maken van de blokjes", "door het te anchoren", "door het te anchoren"]
@@ -347,10 +346,10 @@ export default function GmHelden1Lesson2() {
               {
                 textAbove: (
                   <p>
-                    Als je net scherp oplette zag je dat het platform wat we hadden gemaakt begon te vallen toen we op "Play" klikten. 
+                    Als je net scherp oplette zag je dat het platform wat we hadden gemaakt begon te vallen toen we op 'Play' klikten. 
                     <br />
                     <br />
-                    Dat komt omdat we het platform nog niet "anchored"/ "geankerd"hebben, wat betekent dat het niet vast staat en dus naar beneden valt.
+                    Dat komt omdat we het platform nog niet 'anchored' / 'geankerd' hebben, wat betekent dat het niet vast staat en dus naar beneden valt.
                   </p>
                 )
               }
@@ -358,6 +357,50 @@ export default function GmHelden1Lesson2() {
 
             ]}
           />
+
+          <ContentSection
+            title={"Het ankeren van objecten"}
+            contentBlocks={[
+              {
+                textAbove: (
+                  <p>
+                    Om te voorkomen dat onze platforms naar beneden vallen, moeten we ze 'anchoren'. Dit betekent dat we ze vastzetten zodat ze niet bewegen.
+                    <br />
+                    <br />
+                    Om een object te ankeren selecteren we het in de wereld en kunnen we in de taakbalk bovenin op de "Anchor" knop klikken. Deze knop ziet eruit als een anker en bevindt zich in dezelfde balk als de "Move", "Scale" en "Rotate" knoppen.
+                  </p>
+                ),
+                customElement: (
+                  <VideoPlayer
+                    src={AnchoringParts}
+                    title="Het ankeren van objecten in Roblox Studio"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                )
+              }
+
+            ]}
+          />
+
+          <div>
+            <ProgressCheckmarkCard
+              cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+              title="Het ankeren van objecten"
+              items={[
+                { id: 1, text: "Objecten geankerd", checked: false },
+              ]}
+              iconPosition="end"
+              bgColor="#fff9c4"
+              headingColor="#f57f17"
+              itemPadding="0.75rem 0"
+              completionReward={10}
+            />
+          </div>
+
+          <LessonQuiz 
+          quizId="3"
+          questions={quizQuestions}
+          balanceGainAmount={30} />
 
         <EndOfLesson
           prevLessonPath="/GMHelden1/les-1"
