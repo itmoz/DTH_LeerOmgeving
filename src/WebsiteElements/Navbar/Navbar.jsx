@@ -7,9 +7,11 @@ import DTHLogoSVGWhite from '../../Images/logo-white.svg';
 // they are used to determine the current theme and toggle it when the button is clicked
 function Navbar({ theme, toggleTheme }) {
   const [balance, setBalance] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
+    setIsLoggedIn(!!email);
     if (!email) {
       setBalance(0);
       return;
@@ -18,7 +20,7 @@ function Navbar({ theme, toggleTheme }) {
     const loadBalance = async () => {
       try {
         const res = await fetch(
-          `http://127.0.0.1:3000/balance?email=${encodeURIComponent(email)}`
+          `/balance?email=${encodeURIComponent(email)}`
         );
         if (!res.ok) return;
         const data = await res.json();
@@ -54,8 +56,12 @@ function Navbar({ theme, toggleTheme }) {
           <Link to="/Avatar" className="text-decoration-none ms-2 me-2">Avatar</Link>
           |{" "}
           <Link to="/Achievements" className="text-decoration-none ms-2 me-2">Prestaties</Link>
-          |{" "}
-          <Link to="/LogIn" className="text-decoration-none ms-2">Log In</Link>
+          {!isLoggedIn && (
+            <>
+              |{" "}
+              <Link to="/LogIn" className="text-decoration-none ms-2">Log In</Link>
+            </>
+          )}
           <div className='d-inline ms-4'><i className="dth-coin"></i> {balance}</div>
         </nav>
         

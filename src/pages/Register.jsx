@@ -91,7 +91,7 @@ export default function Register() {
       const salt = randomSalt();
       const passwordHash = await hashPassword(password, salt);
 
-      const res = await fetch("http://127.0.0.1:3000/register", {
+      const res = await fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

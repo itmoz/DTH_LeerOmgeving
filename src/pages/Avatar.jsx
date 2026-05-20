@@ -207,7 +207,7 @@ export default function Avatar() {
           const email = localStorage.getItem("userEmail");
           const categoryObj = categories.find((c) => c.name === category);
           if (email && categoryObj) {
-              const equipRes = await fetch("http://127.0.0.1:3000/equip", {
+              const equipRes = await fetch("/equip", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
@@ -235,7 +235,7 @@ export default function Avatar() {
       const email = localStorage.getItem("userEmail");
       const categoryObj = categories.find((c) => c.name === category);
       if (email && categoryObj) {
-        await fetch("http://127.0.0.1:3000/equip", {
+        await fetch("/equip", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: null }),
@@ -259,7 +259,7 @@ export default function Avatar() {
         return;
       }
 
-      const res = await fetch("http://127.0.0.1:3000/purchase", {
+      const res = await fetch("/purchase", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, itemId: item.id }),
@@ -286,7 +286,7 @@ export default function Avatar() {
       try {
         const categoryObj = categories.find((c) => c.name === category);
         if (categoryObj) {
-          const eqRes = await fetch("http://127.0.0.1:3000/equip", {
+          const eqRes = await fetch("/equip", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, categoryId: categoryObj.id, itemId: item.id }),
@@ -328,7 +328,7 @@ export default function Avatar() {
 
       const parsedAmount = Number(amount);
 
-      const res = await fetch("http://127.0.0.1:3000/add-balance", {
+      const res = await fetch("/add-balance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, amount: parsedAmount }),
@@ -358,7 +358,7 @@ export default function Avatar() {
         return;
       }
 
-      const res = await fetch("http://127.0.0.1:3000/save-avatar", {
+      const res = await fetch("/save-avatar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, selections }),
@@ -385,7 +385,7 @@ export default function Avatar() {
       try {
         const email = localStorage.getItem("userEmail");
 
-        const catRes = await fetch("http://127.0.0.1:3000/categories");
+        const catRes = await fetch("/categories");
         const catData = await catRes.json();
         const cats = catData.categories || [];
         setCategories(cats);
@@ -393,7 +393,7 @@ export default function Avatar() {
         const opts = {};
         // fetch items per category
         for (const c of cats) {
-          const itemsRes = await fetch(`http://127.0.0.1:3000/items?categoryId=${c.id}`);
+          const itemsRes = await fetch(`/items?categoryId=${c.id}`);
           const itemsData = await itemsRes.json();
           opts[c.name] = (itemsData.items || []).map((it) => ({ ...it, locked: it.price > 0 }));
         }
@@ -404,13 +404,13 @@ export default function Avatar() {
 
         let savedAvatar = null;
         if (email) {
-          const userRes = await fetch(`http://127.0.0.1:3000/user?email=${encodeURIComponent(email)}`);
+          const userRes = await fetch(`/user?email=${encodeURIComponent(email)}`);
           if (userRes.ok) {
             const userData = await userRes.json();
             savedAvatar = userData.avatar || null;
           }
 
-          const invRes = await fetch(`http://127.0.0.1:3000/inventory?email=${encodeURIComponent(email)}`);
+          const invRes = await fetch(`/inventory?email=${encodeURIComponent(email)}`);
           const invData = await invRes.json();
           const unlocked = new Set((invData.inventory || []).map((i) => i.item.id));
 
@@ -419,7 +419,7 @@ export default function Avatar() {
           }
 
           if (!savedAvatar) {
-            const eqRes = await fetch(`http://127.0.0.1:3000/equipped?email=${encodeURIComponent(email)}`);
+            const eqRes = await fetch(`/equipped?email=${encodeURIComponent(email)}`);
             const eqData = await eqRes.json();
             const sel = {};
             (eqData.equipped || []).forEach((e) => {

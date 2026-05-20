@@ -57,7 +57,7 @@ export default function GmHelden1Lesson1() {
         }}
       >
         {/* DEBUG KNOP */}
-        <div className="d-flex justify-content-end mb-3">
+        {/* <div className="d-flex justify-content-end mb-3">
           <button 
             onClick={handleResetProgress} 
             className="btn btn-sm btn-danger shadow-sm"
@@ -65,7 +65,7 @@ export default function GmHelden1Lesson1() {
           >
             <i className="bi bi-arrow-clockwise me-1"></i> Debug: Reset Voortgang
           </button>
-        </div>
+        </div> */}
 
         <h1 className="text-center mb-4" style={{ color: "#ff6b6b" }}>
           GmHelden1Lesson1
