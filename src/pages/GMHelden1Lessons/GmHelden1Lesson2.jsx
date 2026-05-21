@@ -86,7 +86,7 @@ export default function GmHelden1Lesson2() {
         }}
       >
         <h1 className="text-center mb-4" style={{ color: "#ff6b6b" }}>
-          GmHelden1Lesson2
+          Introductie Roblox Studio: Jouw Creatieve Speelplaats!
         </h1>
         <MissionBoard goals={lessonGoals} />
         <ContentSection title="Hoe installeer je Roblox Studio?">
