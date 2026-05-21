@@ -11,6 +11,7 @@ import VideoPlayer from "../../WebsiteElements/ImagesAndVideos/VideoPlayer.jsx";
 import GIFPlayer from "../../WebsiteElements/ImagesAndVideos/GIFPlayer.jsx";
 
 import CreatingStudioEnv from "../../Video/GMHelden1/Les2/DGMH1_Clip1.mp4";
+import RobloxStudioImage from "../../Images/LesAfbeeldingen/GMHelden1/Les2/RobloxStudioOverview.png";
 import PlacingPartsGIF from "../../GIFS/GMHelden1Lessons/Les2/DGMH1_Clip2.gif";
 import MovingParts from "../../Video/GMHelden1/Les2/DGMH1_Clip3.mp4";
 import DisplayingZoomAndMoveCamera from "../../GIFS/GMHelden1Lessons/Les2/DGMH1_Clip4.gif";
@@ -87,9 +88,7 @@ export default function GmHelden1Lesson2() {
         <h1 className="text-center mb-4" style={{ color: "#ff6b6b" }}>
           GmHelden1Lesson2
         </h1>
-
         <MissionBoard goals={lessonGoals} />
-
         <ContentSection title="Hoe installeer je Roblox Studio?">
           <p>
             In de vorige les hebben we geleerd wat Roblox is en hoe je het op je
@@ -113,7 +112,6 @@ export default function GmHelden1Lesson2() {
             zien we dit scherm:
           </p>
         </ContentSection>
-
         <ContentSection
           title="Het maken van de werkomgeving!"
           contentBlocks={[
@@ -156,7 +154,57 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
+        
+        <ContentSection
+          title="Wat zien we allemaal in Roblox Studio?"
+          contentBlocks={[
+            {
+              textAbove: (
+                <p>
+                  Laten we even de tijd nemen om te kijken naar wat we allemaal
+                  zien.
+                  <br />
+                  <br />
+                  1. In het midden zien we onze werkomgeving, dit is waar we
+                  onze game gaan bouwen. We kunnen hier objecten plaatsen,
+                  verplaatsen en aanpassen.
+                  <br />
+                  2. Aan de rechterkant hebben we de "Explorer" in het groen op
+                  de afbeelding. Hier kunnen we alle objecten zien die in onze
+                  werkomgeving staan, en we kunnen ze hier ook selecteren.
+                  <br />
+                  3. Onder de "Explorer" hebben we de "Properties" in het geel
+                  op de afbeelding. Hier kunnen we de eigenschappen van het
+                  geselecteerde object aanpassen, zoals de kleur, grootte, en
+                  nog veel meer!
+                  <br />
+                  4. Boven de werkomgeving in het turquoise hebben we de
+                  taakbalk met verschillende tools zoals "Move", "Scale",
+                  "Rotate", en nog veel meer. Deze tools gebruiken we om onze
+                  objecten te manipuleren.
+                  <br />
+                  5. Links in het blauw hebben we de "Toolbox", hier kunnen we
+                  kant-en-klare elementen voor ons spel vinden ( zoals bomen,
+                  gebouwen, voertuigen, en nog veel meer).
+                  <br />
+                  6. Het kan zijn dat je links ook "Terrain Editor" ziet staan (rood in de afbeelding) hier zullen we niet mee werken en kan je weg klikken met het kruisje rechtsboven in dat vakje.
+                  <br />
+                  7. Bovenaan in het oranje zien we de "Play", "Pause", en "Stop" knoppen. Hiermee kunnen we onze game testen door erop te klikken!
+                </p>
 
+              ),
+              imageSrc: RobloxStudioImage,
+              imageAlt: "Roblox Studio Overzicht",
+              imageCaption: "Een overzicht van de Roblox Studio interface",
+
+              textBelow: (
+                <p>
+                                    We zullen in de reeks alles van deze onderdelen bespreken dus maak je geen zorgen als het nu nog een beetje overweldigend lijkt!
+                </p>
+              ),
+            },
+          ]}
+        />
         <ContentSection
           title="Het plaatsen van objecten"
           contentBlocks={[
@@ -211,7 +259,6 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
-
         <ContentSection
           title={"Het manipuleren van platforms"}
           contentBlocks={[
@@ -282,7 +329,6 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
-
         <div className="w-100">
           <ProgressCheckmarkCard
             cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
@@ -301,7 +347,6 @@ export default function GmHelden1Lesson2() {
             completionReward={20}
           />
         </div>
-
         <ContentSection
           title={"Het verwijderen van de baseplate"}
           contentBlocks={[
@@ -347,7 +392,6 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
-
         <div className="w-100">
           <ProgressCheckmarkCard
             cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
@@ -360,7 +404,6 @@ export default function GmHelden1Lesson2() {
             completionReward={5}
           />
         </div>
-
         <ContentSection
           title={"Het testen van je spel!"}
           contentBlocks={[
@@ -430,7 +473,6 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
-
         <ContentSection
           title={"Het ankeren van objecten"}
           contentBlocks={[
@@ -458,7 +500,6 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
-
         <div>
           <ProgressCheckmarkCard
             cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
@@ -471,7 +512,6 @@ export default function GmHelden1Lesson2() {
             completionReward={10}
           />
         </div>
-
         <ContentSection
           title={"Het opslaan van je werk!"}
           contentBlocks={[
@@ -495,13 +535,11 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
-
         <LessonQuiz
-          quizId="3"
+          quizId="2"
           questions={quizQuestions}
           balanceGainAmount={30}
         />
-
         <EndOfLesson
           prevLessonPath="/GMHelden1/les-1"
           nextLessonPath="/GMHelden1/les-3"

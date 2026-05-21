@@ -2,14 +2,18 @@ import React from "react";
 import LessonCard from "../../WebsiteElements/Card/LessonCard.jsx"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 
-import Les1Banner from "../../Images/Les1BannerImage.png";
+import Les1Banner from "../../Images/BannerImages/GMHelden1/Les1BannerImage.png"; // Importeer hier je banner afbeelding voor les 1
+import Les2Banner from "../../Images/BannerImages/GMHelden1/DTH1_Les_2_BannerImage.png";
 
 const DashboardGmHelden1 = () => {
   const navigate = useNavigate();
 
   return (
     <div className="container py-5">
-      <h2 className="text-center mb-5">GMHelden1 Lessen</h2>
+      <h2 className="text-center mb-5">Beginner Roblox Game Maken!</h2>
+      <p className="text-center mb-4">
+        In deze lessenreeks leer je stap voor stap hoe je je eigen Roblox game maakt, met als eindresultaat een coole Obby! Klik op de lessen hieronder om te beginnen.
+      </p>
 
       {/* Vertical Grid Wrapper */}
       <div className="row justify-content-center">
@@ -17,7 +21,7 @@ const DashboardGmHelden1 = () => {
         <div className="col-12 col-lg-8 d-flex flex-column gap-4">
           <LessonCard
             title="Les 1 GMHelden1: Introductie tot Roblox Game Maken!"
-            text="Een introductie tot het maken van je eigen Roblox game met als eind resultaat een Obby!"
+            text="Een introductie tot Roblox en wat we gaan maken aan het einde van deze lessenreeks!"
             imageUrl={Les1Banner}
             completed={true}
             buttonAction={() => navigate("/GMHelden1/les-1")}
@@ -25,15 +29,15 @@ const DashboardGmHelden1 = () => {
 
           <LessonCard
             title="Les 2 GMHelden1: Obby Mechanics!"
-            text="Leer hoe je checkpoints en killbricks maakt voor je Obby."
-            imageUrl="https://picsum.photos/800/300?random=4"
+            text="Leer de basis van werken binnen Roblox Studio en het plaatsen van platforms!"
+            imageUrl={Les2Banner}
             completed={false}
             buttonAction={() => navigate("/GMHelden1/les-2")}
           />
 
           <LessonCard
             title="Les 3 GMHelden1: Obby Design!"
-            text="Leer hoe je je Obby er geweldig uit laat zien met decoraties en thema's."
+            text="Leer hoe je je obby er leuker uit kan laten zien en je eerste obstacles kan maken!"
             imageUrl="https://picsum.photos/800/300?random=5"
             completed={false}
             buttonAction={() => navigate("/GMHelden1/les-3")}

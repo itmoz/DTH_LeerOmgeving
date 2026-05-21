@@ -29,6 +29,17 @@ const LearningDashboard = () => {
           />
         </div>
 
+      <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+          <CurriculumCard
+            title="Game Design Principes met Roblox!"
+            text="Leer de basis van game design en pas het toe in Roblox om je eigen unieke games te maken!"
+            imageUrl={GmHelden1CurriculumCard}
+            progress={0}
+            buttonText={continueLessonButtonText}
+            buttonAction={() => navigate("/GMHelden3")}
+          />
+        </div>
+
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
           <CurriculumCard
             title="De Nieuws Helden!"
