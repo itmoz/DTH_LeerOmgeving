@@ -3,7 +3,7 @@ export async function triggerAchievement(eventName, eventData = {}) {
     const email = localStorage.getItem("userEmail");
     if (!email) return { ok: false };
 
-    const res = await fetch("http://127.0.0.1:3000/achievement/trigger", {
+    const res = await fetch("/achievement/trigger", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, eventName, eventData, timestamp: new Date().toISOString() }),

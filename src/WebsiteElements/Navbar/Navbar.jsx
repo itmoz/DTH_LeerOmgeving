@@ -7,10 +7,25 @@ import DTHLogoSVGWhite from "../../Images/logo-white.svg";
 // they are used to determine the current theme and toggle it when the button is clicked
 function Navbar({ theme, toggleTheme }) {
   const [balance, setBalance] = useState(0);
+  const [userEmail, setUserEmail] = useState(() => localStorage.getItem("userEmail"));
 
   useEffect(() => {
-    const email = localStorage.getItem("userEmail");
-    if (!email) {
+    const syncAuthState = () => {
+      setUserEmail(localStorage.getItem("userEmail"));
+    };
+
+    syncAuthState();
+
+    window.addEventListener("user-auth-changed", syncAuthState);
+    window.addEventListener("storage", syncAuthState);
+    return () => {
+      window.removeEventListener("user-auth-changed", syncAuthState);
+      window.removeEventListener("storage", syncAuthState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!userEmail) {
       setBalance(0);
       return;
     }
@@ -18,7 +33,7 @@ function Navbar({ theme, toggleTheme }) {
     const loadBalance = async () => {
       try {
         const res = await fetch(
-          `http://127.0.0.1:3000/balance?email=${encodeURIComponent(email)}`,
+          `/balance?email=${encodeURIComponent(userEmail)}`,
         );
         if (!res.ok) return;
         const data = await res.json();
@@ -32,7 +47,7 @@ function Navbar({ theme, toggleTheme }) {
 
     window.addEventListener("balance-updated", loadBalance);
     return () => window.removeEventListener("balance-updated", loadBalance);
-  }, []);
+  }, [userEmail]);
 
   return (
     <div className="d-flex justify-content-between align-items-center py-3 px-5 my-3 sticky-top bg-body z-3 shadow-lg rounded-pill mx-2">
@@ -58,10 +73,14 @@ function Navbar({ theme, toggleTheme }) {
           <Link to="/Achievements" className="text-decoration-none ms-2 me-2">
             Prestaties
           </Link>
-          |{" "}
-          <Link to="/LogIn" className="text-decoration-none ms-2">
-            Log In
-          </Link>
+          {!userEmail && (
+            <>
+              |{" "}
+              <Link to="/LogIn" className="text-decoration-none ms-2">
+                Log In
+              </Link>
+            </>
+          )}
           <div className="d-inline ms-4">
             <i className="dth-coin"></i> {balance}
           </div>

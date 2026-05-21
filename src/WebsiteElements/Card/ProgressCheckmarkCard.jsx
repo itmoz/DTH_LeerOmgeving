@@ -16,7 +16,7 @@ const handleAddBalance = async (amount, opts = { showError: true }) => {
 
     const parsedAmount = Number(amount);
 
-    const res = await fetch("http://127.0.0.1:3000/add-balance", {
+    const res = await fetch("/add-balance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, amount: parsedAmount }),

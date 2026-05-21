@@ -12,7 +12,7 @@ export default function Achievements() {
         if (!email) return;
 
         const res = await fetch(
-          `http://127.0.0.1:3000/achievements?email=${encodeURIComponent(email)}`,
+          `/achievements?email=${encodeURIComponent(email)}`,
         );
         const data = await res.json();
 

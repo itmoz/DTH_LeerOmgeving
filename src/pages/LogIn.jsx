@@ -40,7 +40,7 @@ export default function LogIn() {
     try {
       // Fetch salt from DB
       const userRes = await fetch(
-        `http://127.0.0.1:3000/user?email=${encodeURIComponent(normalizedEmail)}`,
+        `/user?email=${encodeURIComponent(normalizedEmail)}`,
       );
       if (!userRes.ok) {
         if (userRes.status === 404) {
@@ -57,7 +57,7 @@ export default function LogIn() {
       const passwordHash = await hashPassword(password, salt);
 
       // Send POST /login with email and computed hash
-      const loginRes = await fetch("http://127.0.0.1:3000/login", {
+      const loginRes = await fetch("/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: normalizedEmail, passwordHash }),
@@ -71,6 +71,7 @@ export default function LogIn() {
       }
 
       localStorage.setItem("userEmail", normalizedEmail);
+      window.dispatchEvent(new Event("user-auth-changed"));
 
       setError("");
       setMessage("Inloggen geslaagd!");
