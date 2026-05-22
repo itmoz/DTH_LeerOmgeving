@@ -46,14 +46,14 @@ const lessonDataGMHelden3 = {
   skillTree: {
     gameDesign: [
       {
-        title: "GD Les 1: Game Design Documentatie",
+        title: "Game Design Les 1: Game Design Documentatie",
         text: "Maak een GDD voor je game.",
         imageUrl: "https://picsum.photos/800/300?random=3",
         completed: false,
         buttonAction: (navigate) => navigate("/GMHelden3/les-gd-1"),
       },
       {
-        title: "GD Les 2: Game Balancing",
+        title: "Game Design Les 2: Game Balancing",
         text: "Maak je game uitdagender.",
         imageUrl: "https://picsum.photos/800/300?random=4",
         completed: false,
@@ -62,14 +62,14 @@ const lessonDataGMHelden3 = {
     ],
     levelDesign: [
       {
-        title: "LD Les 1: Level Structuur",
+        title: "Level Design Les 1: Level Structuur",
         text: "Maak een level dat leuk en logisch is.",
         imageUrl: "https://picsum.photos/800/300?random=5",
         completed: false,
         buttonAction: (navigate) => navigate("/GMHelden3/les-ld-1"),
       },
       {
-        title: "LD Les 2: Level Thema en Sfeer",
+        title: "Level Design Les 2: Level Thema en Sfeer",
         text: "Voeg decoraties toe aan je level.",
         imageUrl: "https://picsum.photos/800/300?random=6",
         completed: false,
@@ -78,14 +78,14 @@ const lessonDataGMHelden3 = {
     ],
     programmingEssentials: [
       {
-        title: "PE Les 1: Variabelen",
+        title: "Player Engineer Les 1: Variabelen",
         text: "Maak een muntensysteem.",
         imageUrl: "https://picsum.photos/800/300?random=7",
         completed: false,
         buttonAction: (navigate) => navigate("/GMHelden3/les-pe-1"),
       },
       {
-        title: "PE Les 2: Functies",
+        title: "Player Engineer Les 2: Functies",
         text: "Maak een winkelsysteem.",
         imageUrl: "https://picsum.photos/800/300?random=8",
         completed: false,

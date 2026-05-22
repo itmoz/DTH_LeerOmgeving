@@ -46,31 +46,15 @@ export default function GmHelden1Lesson2() {
       id: 3,
       type: "text-input",
       question:
-        "Wat is de naam van de tool waarmee je objecten in Roblox Studio kunt verplaatsen? (Typ het woord)",
-      correctAnswer: [
-        "move tool",
-        "move",
-        "verplaats tool",
-        "verplaats",
-        "moven",
-        "verplaatsen",
-      ],
+        "Wat is de naam van de tool waarmee je objecten in Roblox Studio kunt verplaatsen? (Typ het antwoord)",
+      answerIncludes: ["move", "verplaatsen", "moving", "verplaatsing", "beweging"],
     },
     {
       id: 2,
       type: "text-input",
       question:
         "Hoe zorgen we ervoor dat blokjes in de lucht blijven in plaats van naar beneden vallen?",
-      correctAnswer: [
-        "anchor",
-        "anker",
-        "anchor tool",
-        "anker tool",
-        "het anchored maken",
-        "het anchored maken van de blokjes",
-        "door het te anchoren",
-        "door het te anchoren",
-      ],
+        answerIncludes: ["anchoren", "anchor", "geankerd", "ankeren", "geankerd maken"],
     },
   ];
 

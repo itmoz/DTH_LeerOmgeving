@@ -8,6 +8,8 @@ export default function EndOfLesson({
   dashboardPath = "/",
   achievementEventName = "lesson_completed",
   achievementEventData = {},
+  requireQuizCompletion = false, // <-- Nieuwe optional flag
+  isQuizCompleted = false,       // <-- Status van de quiz
 }) {
   const navigate = useNavigate();
 
@@ -17,6 +19,9 @@ export default function EndOfLesson({
   const handleLessonComplete = () => {
     void triggerAchievement(achievementEventName, achievementEventData);
   };
+
+  // Bepaal of de 'Volgende Les' knop geblokkeerd moet worden
+  const isNextBlocked = requireQuizCompletion && !isQuizCompleted;
 
   return (
     <div
@@ -71,20 +76,33 @@ export default function EndOfLesson({
 
         {/* Right Slot: Next Lesson OR Dashboard */}
         {nextLessonPath ? (
-          <button
-            className="btn btn-primary py-3 px-4 flex-grow-1"
-            style={{
-              borderRadius: "15px",
-              fontSize: "1.1rem",
-              fontWeight: "bold",
-            }}
-            onClick={() => {
-              handleLessonComplete();
-              navigate(nextLessonPath);
-            }}
-          >
-            Volgende Les ➡️
-          </button>
+          <div className="flex-grow-1 d-flex flex-column">
+            <button
+              className={`btn ${isNextBlocked ? 'btn-secondary' : 'btn-primary'} py-3 px-4 w-100`}
+              style={{
+                borderRadius: "15px",
+                fontSize: "1.1rem",
+                fontWeight: "bold",
+                cursor: isNextBlocked ? 'not-allowed' : 'pointer',
+                opacity: isNextBlocked ? 0.7 : 1
+              }}
+              disabled={isNextBlocked}
+              onClick={() => {
+                if (isNextBlocked) return;
+                handleLessonComplete();
+                navigate(nextLessonPath);
+              }}
+            >
+              Volgende Les ➡️
+            </button>
+            {/* Communicatie naar de gebruiker als de knop geblokkeerd is */}
+            {isNextBlocked && (
+              <small className="text-danger mt-2 text-center fw-bold">
+                <i className="bi bi-exclamation-circle me-1"></i>
+                Maak eerst de quiz af om verder te gaan.
+              </small>
+            )}
+          </div>
         ) : (
           <button
             className="btn btn-success py-3 px-4 flex-grow-1"

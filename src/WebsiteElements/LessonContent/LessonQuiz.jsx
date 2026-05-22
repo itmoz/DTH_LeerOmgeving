@@ -138,7 +138,7 @@ export default function LessonQuiz({
           Gefeliciteerd!
         </h3>
         <p className="text-body">
-          Je hebt alle vragen van deze quiz succesvol beantwoord.
+          Je hebt alle vragen van deze quiz succesvol beantwoord!!!
         </p>
 
         {balanceGainAmount > 0 && (
