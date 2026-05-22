@@ -3,7 +3,7 @@
 version = 0.1
 
 [default.global.parameters]
-stack_name = "DTH_AWS"
+stack_name = "DTH-AWS"
 
 [default.build.parameters]
 cached = true

@@ -4,12 +4,14 @@ import { useWindowSize } from "react-use";
 // Zorg ervoor dat dit pad klopt!
 import CoinExplosion from "../Effects/CoinExplosion";
 
+const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+
 // De functie om het saldo bij te werken
 const handleAddBalance = async (amount, opts = { showError: true }) => {
   try {
     const parsedAmount = Number(amount);
 
-    const res = await fetch("http://localhost:3000/add-balance", {
+    const res = await fetch(`${API_BASE}/add-balance`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import AppRoutes from './AppRoutes/AppRoutes';
 import Navbar from './WebsiteElements/Navbar/Navbar';
 
-const API_BASE = "http://localhost:3000";
+
+const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');

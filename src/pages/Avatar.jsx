@@ -5,6 +5,9 @@ import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
 import ReactImage from "../assets/react.svg";
 
+const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+
+
 export default function Avatar() {
   // 1. State to keep track of the currently selected options
   const [selections, setSelections] = useState({
@@ -135,7 +138,7 @@ export default function Avatar() {
     try {
       const parsedAmount = Number(amount);
 
-      const res = await fetch("http://localhost:3000/add-balance", {
+      const res = await fetch(`${API_BASE}/add-balance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

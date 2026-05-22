@@ -4,7 +4,7 @@ Description: DTH Leeromgeving - Event-driven API
 Globals:
   Function:
     Runtime: nodejs20.x
-    Timeout: 10
+    Timeout: 30
     MemorySize: 128
 Resources:
   ExpressBackendFunction:
@@ -23,7 +23,8 @@ Resources:
         - Effect: Allow
           Action:
           - events:PutEvents
-          Resource: arn:aws:events:us-east-1:883218392606:event-bus/default
+          Resource:
+            Fn::Sub: arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/default
       Environment:
         Variables:
           MONGODB_URI: mongodb+srv://BrokeMo:boV4QYrwCcwBZOA1@cluster0.jtprcms.mongodb.net/?appName=Cluster0
