@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 // Zorg ervoor dat dit pad klopt naar de map waar je CoinExplosion hebt opgeslagen!
 import CoinExplosion from "../Effects/CoinExplosion";
 import Confetti from "react-confetti";
+import { useWindowSize } from "react-use"; // NEW: Import useWindowSize hook
 import { triggerAchievement } from "../../utils/achievementSystem";
 
 const handleAddBalance = async (amount, opts = { showError: true }) => {
@@ -57,6 +58,10 @@ export default function LessonQuiz({
   const [userAnswer, setUserAnswer] = useState("");
   const [feedback, setFeedback] = useState(null);
   const [isQuizActive, setIsQuizActive] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false); // NEW: State for confetti
+
+  // NEW: Hook to get window size for confetti
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
 
   useEffect(() => {
     if (isQuizActive) {
@@ -117,6 +122,15 @@ export default function LessonQuiz({
         setJustFinished(true);
         localStorage.setItem(`${quizId}-finished`, "true");
 
+        // NEW: Show confetti on quiz completion
+        setShowConfetti(true);
+        // Hide confetti after 5 seconds
+        setTimeout(() => {
+          setShowConfetti(false);
+          // NEW: Also set justFinished to false, so CoinExplosion doesn't keep running on re-renders
+          setJustFinished(false);
+        }, 5000);
+
         if (onQuizComplete) {
           onQuizComplete();
         }
@@ -133,42 +147,64 @@ export default function LessonQuiz({
   // UI 1: Quiz completely finished
   if (quizFinished) {
     return (
-      // Changed inline #e8f5e9 to Bootstrap's bg-success-subtle so it adapts to dark mode
-      <div
-        className="card shadow-sm p-4 text-center mt-4 bg-success-subtle border-success"
-        style={{ borderRadius: "20px" }}
-      >
-        {justFinished && balanceGainAmount > 0 && <CoinExplosion />}
-        <h3 className="text-success">
-          <i className="bi bi-trophy-fill me-2"></i>
-          Gefeliciteerd!
-        </h3>
-        <p className="text-body">
-          Je hebt alle vragen van deze quiz succesvol beantwoord!!!
-        </p>
-
-        {balanceGainAmount > 0 && (
-          // Changed inline bg-white to bg-body
-          <div className="mt-3 p-2 bg-body rounded shadow-sm d-inline-block">
-            <h5 className="text-warning m-0" style={{ fontWeight: "bold" }}>
-              <i className="dth-coin me-2"></i>+{balanceGainAmount} Munten
-              verdiend!
-            </h5>
+      // Using fragment to hold both confetti and the congratulatory card
+      <>
+        {/* NEW: Confetti Overlay */}
+        {showConfetti && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: 9999,
+              pointerEvents: "none", // Prevent confetti from blocking clicks
+            }}
+          >
+            <Confetti
+              width={windowWidth}
+              height={windowHeight}
+              recycle={false} // Only one burst
+              numberOfPieces={400}
+            />
           </div>
         )}
-      </div>
+
+        {/* Congratulatory Card */}
+        <div
+          className="card shadow-sm p-4 text-center mt-4 bg-success-subtle border-success"
+          style={{ borderRadius: "20px" }}
+        >
+          {justFinished && balanceGainAmount > 0 && <CoinExplosion />}
+          <h3 className="text-success">
+            <i className="bi bi-trophy-fill me-2"></i>
+            Gefeliciteerd!
+          </h3>
+          <p className="text-body">
+            Je hebt alle vragen van deze quiz succesvol beantwoord!!!
+          </p>
+
+          {balanceGainAmount > 0 && (
+            <div className="mt-3 p-2 bg-body rounded shadow-sm d-inline-block">
+              <h5 className="text-warning m-0" style={{ fontWeight: "bold" }}>
+                <i className="dth-coin me-2"></i>+{balanceGainAmount} Munten
+                verdiend!
+              </h5>
+            </div>
+          )}
+        </div>
+      </>
     );
   }
 
   // UI 2: Start Quiz prompt
   if (!isQuizActive) {
     return (
-      // Replaced inline blue border with border-primary and border-2 classes
       <div
         className="card shadow-sm p-4 mt-4 text-center border-primary border-2 bg-body"
         style={{ borderRadius: "20px" }}
       >
-        {/* Replaced inline #1e88e5 color with text-primary */}
         <h4 className="text-primary">Quiz Tijd!</h4>
         <p className="mb-4 text-body">
           Test wat je zojuist hebt geleerd om munten te verdienen.
@@ -193,7 +229,7 @@ export default function LessonQuiz({
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(0, 0, 0, 0.8)", // Slight opacity tweak for dark mode comfort
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
         zIndex: 9999,
         display: "flex",
         justifyContent: "center",
@@ -202,7 +238,6 @@ export default function LessonQuiz({
       }}
     >
       <div
-        // Added bg-body to adapt the card background and border-primary to adapt the border
         className="card shadow-lg p-4 w-100 bg-body border-primary border-2"
         style={{
           maxWidth: "600px",
@@ -210,7 +245,6 @@ export default function LessonQuiz({
         }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
-          {/* Changed inline color to text-primary */}
           <h4 className="text-primary m-0">Quiz Tijd!</h4>
           <div className="d-flex align-items-center gap-3">
             <span className="badge bg-primary rounded-pill text-light">
@@ -225,7 +259,6 @@ export default function LessonQuiz({
           </div>
         </div>
 
-        {/* Ensure text uses text-body so it changes from black to white in dark mode */}
         <h5 className="mb-4 text-body">{currentQuestion.question}</h5>
 
         {currentQuestion.type === "multiple-choice" && (
@@ -250,7 +283,6 @@ export default function LessonQuiz({
           <div className="mb-4">
             <input
               type="text"
-              // Input fields automatically adapt in BS 5.3+, form-control handles it
               className="form-control"
               placeholder="Typ je antwoord hier..."
               value={userAnswer}

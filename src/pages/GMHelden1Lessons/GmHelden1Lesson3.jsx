@@ -16,12 +16,16 @@ import ColoringPlatforms1 from "../../Video/GMHelden1/Les3/DGMH1_Clip14.mp4";
 import ColoringPlatforms2 from "../../Video/GMHelden1/Les3/DGMH1_Clip15.mp4";
 
 export default function GmHelden1Lesson3() {
+  // const lessonGoals = [
+  //   "🎨 Hoe geef je kleur aan je platforms?",
+  //   "🧰 Wat is de toolbox en hoe gebruik je die?",
+  //   "🧱 Hoe maak je een kill block (lava blok)?",
+  //   "✅ Hoe maak je een checkpoint?",
+  // ];
+
   const lessonGoals = [
-    "🎨 Hoe geef je kleur aan je platforms?",
-    "🧰 Wat is de toolbox en hoe gebruik je die?",
-    "🧱 Hoe maak je een kill block (lava blok)?",
-    "✅ Hoe maak je een checkpoint?",
-  ];
+    "🎨 Kleur geven aan je platforms",
+    "💨 Sneller platformen dupliceren"]
 
   const quizQuestions = [
     {
@@ -181,15 +185,8 @@ export default function GmHelden1Lesson3() {
 
         {/* -------------------------------------- */}
 
-        <LessonQuiz
-          quizId="3"
-          questions={quizQuestions}
-          balanceGainAmount={30}
-        />
-
         <EndOfLesson
           prevLessonPath="/GMHelden1/les-2"
-          nextLessonPath="/GMHelden1/les-4"
           dashboardPath="/GMHelden1"
         />
       </div>
