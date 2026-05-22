@@ -4,6 +4,7 @@ import Button from "../WebsiteElements/Buttons/Button";
 import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
 import { triggerAchievement } from "../utils/achievementSystem";
+import { apiFetch } from "../utils/api";
 
 const avatarImageUrls = import.meta.glob("../Images/Avatar/*.svg", {
   eager: true,
@@ -246,7 +247,7 @@ export default function Avatar() {
           const email = localStorage.getItem("userEmail");
           const categoryObj = categories.find((c) => c.name === category);
           if (email && categoryObj) {
-            const equipRes = await fetch("/equip", {
+            const equipRes = await apiFetch("/equip", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -254,6 +255,7 @@ export default function Avatar() {
                 categoryId: categoryObj.id,
                 itemId: item.id,
               }),
+              keepalive: true,
             });
             if (equipRes.ok) {
               void triggerAchievement("avatar_customized", {
@@ -281,7 +283,7 @@ export default function Avatar() {
       const email = localStorage.getItem("userEmail");
       const categoryObj = categories.find((c) => c.name === category);
       if (email && categoryObj) {
-        await fetch("/equip", {
+        await apiFetch("/equip", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -289,6 +291,7 @@ export default function Avatar() {
             categoryId: categoryObj.id,
             itemId: null,
           }),
+          keepalive: true,
         });
       }
     } catch (err) {
@@ -309,10 +312,11 @@ export default function Avatar() {
         return;
       }
 
-      const res = await fetch("/purchase", {
+      const res = await apiFetch("/purchase", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, itemId: item.id }),
+        keepalive: true,
       });
 
       const data = await res.json();
@@ -341,7 +345,7 @@ export default function Avatar() {
       try {
         const categoryObj = categories.find((c) => c.name === category);
         if (categoryObj) {
-          const eqRes = await fetch("/equip", {
+          const eqRes = await apiFetch("/equip", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -349,6 +353,7 @@ export default function Avatar() {
               categoryId: categoryObj.id,
               itemId: item.id,
             }),
+            keepalive: true,
           });
           if (eqRes.ok) {
             void triggerAchievement("avatar_customized", {
@@ -390,10 +395,11 @@ export default function Avatar() {
 
       const parsedAmount = Number(amount);
 
-      const res = await fetch("/add-balance", {
+      const res = await apiFetch("/add-balance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, amount: parsedAmount }),
+        keepalive: true,
       });
 
       const data = await res.json();
@@ -421,10 +427,11 @@ export default function Avatar() {
         return;
       }
 
-      const res = await fetch("/save-avatar", {
+      const res = await apiFetch("/save-avatar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, selections }),
+        keepalive: true,
       });
 
       const data = await res.json();
@@ -451,7 +458,7 @@ export default function Avatar() {
       try {
         const email = localStorage.getItem("userEmail");
 
-        const catRes = await fetch("/categories");
+        const catRes = await apiFetch("/categories");
         const catData = await catRes.json();
         const cats = catData.categories || [];
         setCategories(cats);
@@ -459,7 +466,7 @@ export default function Avatar() {
         const opts = {};
         // fetch items per category
         for (const c of cats) {
-          const itemsRes = await fetch(`/items?categoryId=${c.id}`);
+          const itemsRes = await apiFetch(`/items?categoryId=${c.id}`);
           const itemsData = await itemsRes.json();
           opts[c.name] = (itemsData.items || []).map((it) => ({
             ...it,
@@ -473,7 +480,7 @@ export default function Avatar() {
 
         let savedAvatar = null;
         if (email) {
-          const userRes = await fetch(
+          const userRes = await apiFetch(
             `/user?email=${encodeURIComponent(email)}`,
           );
           if (userRes.ok) {
@@ -481,7 +488,7 @@ export default function Avatar() {
             savedAvatar = userData.avatar || null;
           }
 
-          const invRes = await fetch(
+          const invRes = await apiFetch(
             `/inventory?email=${encodeURIComponent(email)}`,
           );
           const invData = await invRes.json();
@@ -496,7 +503,7 @@ export default function Avatar() {
           }
 
           if (!savedAvatar) {
-            const eqRes = await fetch(
+            const eqRes = await apiFetch(
               `/equipped?email=${encodeURIComponent(email)}`,
             );
             const eqData = await eqRes.json();
