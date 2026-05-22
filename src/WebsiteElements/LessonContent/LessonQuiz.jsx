@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 // Zorg ervoor dat dit pad klopt naar de map waar je CoinExplosion hebt opgeslagen!
 import CoinExplosion from "../Effects/CoinExplosion";
+import Confetti from "react-confetti";
 import { triggerAchievement } from "../../utils/achievementSystem";
 
 const handleAddBalance = async (amount, opts = { showError: true }) => {
@@ -40,6 +41,7 @@ export default function LessonQuiz({
   questions,
   balanceGainAmount = 0,
   quizId = "default-quiz",
+  onQuizComplete,
 }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
     const savedIndex = localStorage.getItem(`${quizId}-index`);
@@ -114,6 +116,10 @@ export default function LessonQuiz({
 
         setJustFinished(true);
         localStorage.setItem(`${quizId}-finished`, "true");
+
+        if (onQuizComplete) {
+          onQuizComplete();
+        }
 
         if (balanceGainAmount > 0) {
           handleAddBalance(balanceGainAmount);

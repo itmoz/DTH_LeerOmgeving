@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ProgressCheckmarkCard from "../../WebsiteElements/Card/ProgressCheckmarkCard.jsx";
 import MissionBoard from "../../WebsiteElements/LessonContent/MissionBoard.jsx";
 import ContentSection from "../../WebsiteElements/LessonContent/ContentSection.jsx";
@@ -26,6 +26,11 @@ import AnchoringParts from "../../Video/GMHelden1/Les2/DGMH1_Clip12.mp4";
 import SavingObby from "../../Video/GMHelden1/Les2/ObbyOpslaan.mp4";
 
 export default function GmHelden1Lesson2() {
+  // Controleer of de quiz in het verleden al succesvol is afgerond op basis van het quizId ("2")
+  const [quizVoltooid, setQuizVoltooid] = useState(() => {
+    return localStorage.getItem("2-finished") === "true";
+  });
+
   const lessonGoals = [
     "🎯 Het maken van een werkomgeving in Roblox Studio",
     "🧰 De basis tools in Roblox Studio leren kennen",
@@ -183,7 +188,7 @@ export default function GmHelden1Lesson2() {
 
               textBelow: (
                 <p>
-                                    We zullen in de reeks alles van deze onderdelen bespreken dus maak je geen zorgen als het nu nog een beetje overweldigend lijkt!
+                  We zullen in de reeks alles van deze onderdelen bespreken dus maak je geen zorgen als het nu nog een beetje overweldigend lijkt!
                 </p>
               ),
             },
@@ -315,7 +320,7 @@ export default function GmHelden1Lesson2() {
         />
         <div className="w-100">
           <ProgressCheckmarkCard
-            cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+            cardId="les2-manipulate-card" // Let op: ik heb de IDs hier uniek gemaakt voor deze checkmark kaarten
             title="De eerste stapjes in Roblox Studio"
             items={[
               { id: 1, text: "Roblox Studio opgezet", checked: false },
@@ -378,7 +383,7 @@ export default function GmHelden1Lesson2() {
         />
         <div className="w-100">
           <ProgressCheckmarkCard
-            cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+            cardId="les2-baseplate-card"
             title="Het verwijderen van de baseplate"
             items={[{ id: 1, text: "Baseplate verwijderd", checked: false }]}
             iconPosition="end"
@@ -486,7 +491,7 @@ export default function GmHelden1Lesson2() {
         />
         <div>
           <ProgressCheckmarkCard
-            cardId="les1-install-card" // Toegevoegd zodat we de juiste resetten
+            cardId="les2-anchor-card" 
             title="Het ankeren van objecten"
             items={[{ id: 1, text: "Objecten geankerd", checked: false }]}
             iconPosition="end"
@@ -519,15 +524,20 @@ export default function GmHelden1Lesson2() {
             },
           ]}
         />
+        
+        {/* ----- GEÜPDATETE QUIZ EN EINDE-COMPONENT ----- */}
         <LessonQuiz
           quizId="2"
           questions={quizQuestions}
           balanceGainAmount={30}
+          onQuizComplete={() => setQuizVoltooid(true)}
         />
         <EndOfLesson
           prevLessonPath="/GMHelden1/les-1"
           nextLessonPath="/GMHelden1/les-3"
           dashboardPath="/GMHelden1"
+          requireQuizCompletion={true} 
+          isQuizCompleted={quizVoltooid}
         />
       </div>
     </GradientBackground>
