@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import LogIn from "../pages/LogIn";
 import Avatar from "../pages/Avatar";
 import Register from "../pages/Register";
+import LessonPage from "../pages/Lessons";
 import LearningDashboard from "../pages/LearningDashboard";
 import AppRoutesGMHelden1 from "./AppRoutesGMHelden1";
 import AppRoutesGMHelden2 from "./AppRoutesGMHelden2";
@@ -15,6 +16,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/LogIn" element={<LogIn />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/lessons/:id" element={<LessonPage />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/LearningDashboard" element={<LearningDashboard />} />
         <Route path="/GMHelden1/*" element={<AppRoutesGMHelden1 />} />

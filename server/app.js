@@ -9,6 +9,10 @@ import {
   logout,
   getBalance,
 } from "./controllers/authController.js";
+import{
+  getAllLessons,
+  getLessonById,
+} from "./controllers/lessoncontentController.js";
 
 const app = express();
 
@@ -50,6 +54,8 @@ app.post("/register", register);
 app.get("/user", getUser);
 app.post("/logout", logout);
 app.get("/balance", getBalance);
+app.get("/lessons", getAllLessons);
+app.get("/lessons/:id", getLessonById);
 
 
 // Global error handler (always last)

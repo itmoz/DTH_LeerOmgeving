@@ -13,7 +13,7 @@ export default function LogIn() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";  
 
   useEffect(() => {
     let cancelled = false;

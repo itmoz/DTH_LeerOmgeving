@@ -10,8 +10,6 @@ const validateEmail = (email) => {
 
 const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
 
-console.log("API:", API_BASE);
-
 const computeStrength = (password) => {
   let score = 0;
   if (password.length >= 8) score += 25;
