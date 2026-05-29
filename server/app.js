@@ -13,6 +13,9 @@ import{
   getAllLessons,
   getLessonById,
 } from "./controllers/lessoncontentController.js";
+import{
+  completeLesson,
+} from "./controllers/completionController.js";
 
 const app = express();
 
@@ -56,7 +59,7 @@ app.post("/logout", logout);
 app.get("/balance", getBalance);
 app.get("/lessons", getAllLessons);
 app.get("/lessons/:id", getLessonById);
-
+app.post("/completeLesson", completeLesson);
 
 // Global error handler (always last)
 app.use((err, req, res, next) => {

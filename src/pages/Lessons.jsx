@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const API_BASE =
   "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
@@ -7,6 +7,8 @@ const API_BASE =
 const LessonPage = () => {
 
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   const [lesson, setLesson] = useState(null);
 
@@ -30,6 +32,35 @@ const LessonPage = () => {
 
   }, [id]);
 
+  const completeLesson = async () => {
+    try {
+
+      const res = await fetch(`${API_BASE}/completeLesson`, {
+        method: "POST",
+        credentials: "include",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          lesson_id: lesson.lesson_id,
+        }),
+      });
+
+      const data = await res.json();
+
+      console.log(data);
+
+      alert("Lesson completed!");
+
+      navigate("/learningdashboard");
+
+    } catch (err) {
+      console.error("Error completing lesson:", err);
+    }
+  };
+
   if (!lesson) {
     return <div className="container py-5">Loading lesson...</div>;
   }
@@ -37,13 +68,21 @@ const LessonPage = () => {
   return (
     <div className="container py-5">
 
+      {/* Back button */}
+      <button
+        className="btn btn-secondary mb-4"
+        onClick={() => navigate("/learningdashboard")}
+      >
+        ← Back
+      </button>
+
       <h1 className="mb-4">{lesson.title}</h1>
 
       <p className="mb-4">{lesson.text}</p>
 
       {/* Video lesson */}
       {lesson.contentType === "video" && (
-        <div className="ratio ratio-16x9">
+        <div className="ratio ratio-16x9 mb-4">
 
           <iframe
             src={`https://www.youtube.com/embed/${
@@ -68,6 +107,18 @@ const LessonPage = () => {
           }}
         />
       )}
+
+      {/* Complete lesson button */}
+      <div className="mt-5 text-center">
+
+        <button
+          className="btn btn-success btn-lg"
+          onClick={completeLesson}
+        >
+          Complete Lesson
+        </button>
+
+      </div>
 
     </div>
   );

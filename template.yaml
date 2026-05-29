@@ -47,6 +47,7 @@ Resources:
                 - "dth.leeromgeving.user"
               detail-type:
                 - "UserRegistered"
+                - "LessonCompleted"
 
 Outputs:
   ApiUrl:

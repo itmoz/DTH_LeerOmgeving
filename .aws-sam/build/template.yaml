@@ -45,6 +45,7 @@ Resources:
               - dth.leeromgeving.user
               detail-type:
               - UserRegistered
+              - LessonCompleted
     Metadata:
       SamResourceId: UserRegisteredHandlerFunction
 Outputs:
