@@ -86,8 +86,8 @@ export const login = async (req, res) => {
     // session cookie
     res.cookie("session", user._id.toString(), {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       maxAge: 1000 * 60 * 60 * 24,
     });
 
@@ -113,47 +113,13 @@ export const login = async (req, res) => {
   }
 };
 
-export const getUser = async (req, res) => {
-  try {
-    const sessionId = req.cookies?.session;
-
-    if (!sessionId) {
-      return res.json({ user: null });
-    }
-
-    if (!ObjectId.isValid(sessionId)) {
-      res.clearCookie("session");
-      return res.json({ user: null });
-    }
-
-    const db = await getDb();
-    const users = db.collection("users");
-
-    const user = await users.findOne({ _id: new ObjectId(sessionId) });
-
-    if (!user) {
-      res.clearCookie("session");
-      return res.json({ user: null });
-    }
-
-    return res.json({
-      user: {
-        id: user._id.toString(),
-        email: user.email,
-        balance: user.balance ?? 0,
-        progression: user.progression ?? [],
-      },
-    });
-
-  } catch (err) {
-    console.error("GetUser error:", err);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
-
 export const logout = (req, res) => {
   res.clearCookie("session");
   return res.json({ message: "Uitgelogd" });
+};
+export const getUser = async (req, res) => {
+
+
 };
 
 export const getBalance = async (req, res) => {

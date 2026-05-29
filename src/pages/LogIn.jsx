@@ -1,35 +1,43 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
 const validateEmail = (email) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
 
-export default function LogIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+const API_BASE =
+  "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
 
-const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";  
+export default function LogIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
+
     const checkSession = async () => {
       try {
         const res = await fetch(`${API_BASE}/user`, {
-          credentials: 'include',
+          credentials: "include",
         });
-        if (!cancelled && res.ok) {
-          navigate('/LearningDashboard', { replace: true });
+
+        const data = await res.json();
+
+        if (!cancelled && data?.user) {
+          navigate("/LearningDashboard", { replace: true });
         }
-      } catch {
-        // blijf op login
+      } catch (err) {
+        // ignore silently
       }
     };
+
     checkSession();
+
     return () => {
       cancelled = true;
     };
@@ -37,22 +45,27 @@ const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    setError('');
-    setMessage('');
+    setError("");
+    setMessage("");
 
     const normalizedEmail = normalizeEmail(email);
 
     if (!validateEmail(email)) {
-      setError('Voer een geldig e-mailadres in.');
+      setError("Voer een geldig e-mailadres in.");
       return;
     }
 
     try {
       const loginRes = await fetch(`${API_BASE}/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email: normalizedEmail, password })
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // ✅ IMPORTANT (sets/receives cookie)
+        body: JSON.stringify({
+          email: normalizedEmail,
+          password,
+        }),
       });
 
       const loginData = await loginRes.json();
@@ -62,21 +75,21 @@ const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
         return;
       }
 
-      localStorage.setItem("userEmail", loginData.email || normalizedEmail);
-      window.dispatchEvent(new Event('auth-changed'));
+      setMessage("Inloggen geslaagd!");
 
-      setError('');
-      setMessage('Inloggen geslaagd!');
-      navigate('/LearningDashboard');
-
+      navigate("/LearningDashboard", { replace: true });
     } catch (err) {
-      setError('Server niet bereikbaar');
+      setError("Server niet bereikbaar");
     }
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <form onSubmit={handleSignIn} className="w-100" style={{ maxWidth: '500px' }}>
+      <form
+        onSubmit={handleSignIn}
+        className="w-100"
+        style={{ maxWidth: "500px" }}
+      >
         <h2 className="mb-4">Inloggen</h2>
 
         {message && <div className="alert alert-info">{message}</div>}
@@ -110,17 +123,18 @@ const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
           </label>
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary btn-block mb-4 w-100"
-        >
+        <button type="submit" className="btn btn-primary w-100 mb-4">
           Log in
         </button>
 
         <div className="text-center">
           <p>
-            Nog geen lid?{' '}
-            <button type="button" className="btn btn-link p-0" onClick={() => navigate('/register')}>
+            Nog geen lid?{" "}
+            <button
+              type="button"
+              className="btn btn-link p-0"
+              onClick={() => navigate("/register")}
+            >
               Registreer hier
             </button>
           </p>

@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import {
   login,
   register,
-  getUser,
   logout,
   getBalance,
 } from "./controllers/authController.js";
@@ -15,6 +14,7 @@ import{
 } from "./controllers/lessoncontentController.js";
 import{
   completeLesson,
+  getUserCompletions,
 } from "./controllers/completionController.js";
 
 const app = express();
@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
 // Auth routes
 app.post("/login", login);
 app.post("/register", register);
-app.get("/user", getUser);
+app.get("/user", getUserCompletions);
 app.post("/logout", logout);
 app.get("/balance", getBalance);
 app.get("/lessons", getAllLessons);
