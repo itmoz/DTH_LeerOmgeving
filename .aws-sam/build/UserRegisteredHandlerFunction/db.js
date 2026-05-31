@@ -1,7 +1,7 @@
 // server/db.js
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
+const uri = "mongodb+srv://BrokeMo:boV4QYrwCcwBZOA1@cluster0.jtprcms.mongodb.net/?appName=Cluster0";
 const dbName = process.env.DB_NAME;
 
 let client;

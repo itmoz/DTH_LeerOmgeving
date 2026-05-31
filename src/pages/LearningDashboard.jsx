@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import DataMiniGameBanner from "../Images/DataMinigameBanner.png";
 import GmHelden1CurriculumCard from "../Images/CurriculumcardGMhelden1.png";
 
-const API_BASE =
-  "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
+
 
 const LearningDashboard = () => {
   const navigate = useNavigate();

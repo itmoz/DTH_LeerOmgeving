@@ -45,9 +45,27 @@ Resources:
               - dth.leeromgeving.user
               detail-type:
               - UserRegistered
-              - LessonCompleted
     Metadata:
       SamResourceId: UserRegisteredHandlerFunction
+  LessonCompletedHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: LessonCompletedHandlerFunction
+      Handler: lessonCompletedHandler.handler
+      Runtime: nodejs20.x
+      Timeout: 30
+      MemorySize: 128
+      Events:
+        LessonCompletedEvent:
+          Type: EventBridgeRule
+          Properties:
+            Pattern:
+              source:
+              - dth.leeromgeving.lesson
+              detail-type:
+              - LessonCompleted
+    Metadata:
+      SamResourceId: LessonCompletedHandlerFunction
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL

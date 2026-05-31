@@ -8,7 +8,8 @@ const validateEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized);
 };
 
-const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
+
 
 const computeStrength = (password) => {
   let score = 0;

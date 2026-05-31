@@ -1,31 +1,22 @@
 import { MongoClient, ObjectId } from "mongodb";
 
-const client = new MongoClient(process.env.MONGO_URI);
+const client = new MongoClient("mongodb+srv://BrokeMo:boV4QYrwCcwBZOA1@cluster0.jtprcms.mongodb.net/?appName=Cluster0");
 
 export const handler = async (event) => {
   console.log("EVENT:", JSON.stringify(event));
 
   const { userId } = event.detail;
 
-  if (!client.topology?.isConnected()) {
-    await client.connect();
-  }
+  await client.connect();
 
   const db = client.db("your-db");
   const users = db.collection("users");
-  const lessons = db.collection("lessons");
 
-  const allLessons = await lessons.find().toArray();
+  const user = await users.findOne({
+    _id: new ObjectId(userId),
+  });
 
-  const progression = allLessons.map((l) => ({
-    lesson_id: l.lesson_id,
-    completed: false,
-  }));
-
-  await users.updateOne(
-    { _id: new ObjectId(userId) },
-    { $set: { progression } }
-  );
+  console.log("Found user:", user);
 
   return { statusCode: 200 };
 };

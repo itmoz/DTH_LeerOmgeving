@@ -61,24 +61,22 @@ export const getUserCompletions = async (req, res) => {
 
     const allLessons = await lessons.find().toArray();
 
-    let progression = user.progression || [];
+    const existingProgression = user.progression || [];
 
-    const existingIds = new Set(progression.map(p => p.lesson_id));
+    const progressionMap = new Map(
+      existingProgression.map((p) => [p.lesson_id, p])
+    );
 
-    for (const lesson of allLessons) {
-      if (!existingIds.has(lesson.lesson_id)) {
-        progression.push({
+    const progression = allLessons.map((lesson) => {
+      const existing = progressionMap.get(lesson.lesson_id);
+
+      return (
+        existing || {
           lesson_id: lesson.lesson_id,
           completed: false,
-        });
-      }
-    }
-
-    // (optional) persist fix back to DB
-    await users.updateOne(
-      { _id: user._id },
-      { $set: { progression } }
-    );
+        }
+      );
+    });
 
     return res.json({
       user: {
@@ -88,7 +86,6 @@ export const getUserCompletions = async (req, res) => {
         progression,
       },
     });
-
   } catch (err) {
     console.error("GetUser error:", err);
     return res.status(500).json({ message: "Internal server error" });

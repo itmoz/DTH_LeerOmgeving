@@ -9,7 +9,7 @@ function Navbar({ theme, toggleTheme, userData }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
   
-  const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
 
   const handleLogout = async () => {
     try {

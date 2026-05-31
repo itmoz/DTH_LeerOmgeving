@@ -5,7 +5,7 @@ import React, { useState } from "react";
 // Zorg ervoor dat dit pad klopt naar de map waar je CoinExplosion hebt opgeslagen!
 import CoinExplosion from "../Effects/CoinExplosion";
 
-const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
 
 // 1. Functie om saldo toe te voegen
 const handleAddBalance = async (amount, opts = { showError: true }) => {

@@ -6,8 +6,8 @@ const normalizeEmail = (email) => email.trim().toLowerCase();
 const validateEmail = (email) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
 
-const API_BASE =
-  "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
+
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
@@ -16,32 +16,6 @@ export default function LogIn() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const checkSession = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/user`, {
-          credentials: "include",
-        });
-
-        const data = await res.json();
-
-        if (!cancelled && data?.user) {
-          navigate("/LearningDashboard", { replace: true });
-        }
-      } catch (err) {
-        // ignore silently
-      }
-    };
-
-    checkSession();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [navigate]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();

@@ -5,7 +5,7 @@ import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
 import ReactImage from "../assets/react.svg";
 
-const API_BASE = "https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
 
 
 export default function Avatar() {

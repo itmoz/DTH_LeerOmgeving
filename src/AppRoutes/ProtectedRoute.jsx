@@ -10,7 +10,7 @@ const ProtectedRoute = () => {
 
     const verifySession = async () => {
       try {
-        const res = await fetch("https://cisf9p7hpa.execute-api.us-east-1.amazonaws.com/Prod/user", {
+        const res = await fetch(" https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod/user", {
           credentials: "include"
         });
 
