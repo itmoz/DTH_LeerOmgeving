@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CurriculumCard from "../WebsiteElements/Card/CurriculumCard.jsx";
 import { useNavigate } from "react-router-dom";
 
 import DataMiniGameBanner from "../Images/DataMinigameBanner.png";
 import GmHelden1CurriculumCard from "../Images/CurriculumcardGMhelden1.png";
 
-const API_BASE = "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
-
+const API_BASE =
+  "https://f2nrinvnh9.execute-api.us-east-1.amazonaws.com/Prod";
 
 const LearningDashboard = () => {
   const navigate = useNavigate();
@@ -16,7 +16,13 @@ const LearningDashboard = () => {
 
   const continueLessonButtonText = "Continue Lesson";
 
+  const hasFetchedUser = useRef(false);
+  const hasFetchedLessons = useRef(false);
+
   useEffect(() => {
+    if (hasFetchedLessons.current) return;
+    hasFetchedLessons.current = true;
+
     const fetchLessons = async () => {
       try {
         const res = await fetch(`${API_BASE}/lessons`);
@@ -31,6 +37,9 @@ const LearningDashboard = () => {
   }, []);
 
   useEffect(() => {
+    if (hasFetchedUser.current) return;
+    hasFetchedUser.current = true;
+
     const fetchUser = async () => {
       try {
         const res = await fetch(`${API_BASE}/user`, {
@@ -51,10 +60,10 @@ const LearningDashboard = () => {
   }, []);
 
   const getProgress = (lessonId) => {
-    if (!user?.progression) return 0;
+    if (!user?.progression || !lessonId) return 0;
 
     const lesson = user.progression.find(
-      (p) => p.lesson_id === lessonId
+      (p) => String(p.lesson_id) === String(lessonId)
     );
 
     return lesson?.completed ? 100 : 0;

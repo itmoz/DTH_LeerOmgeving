@@ -52,7 +52,9 @@ export const getUserCompletions = async (req, res) => {
     const users = db.collection("users");
     const lessons = db.collection("lessons");
 
-    const user = await users.findOne({ _id: new ObjectId(sessionId) });
+    const user = await users.findOne({
+      _id: new ObjectId(sessionId),
+    });
 
     if (!user) {
       res.clearCookie("session");
@@ -64,15 +66,35 @@ export const getUserCompletions = async (req, res) => {
     const existingProgression = user.progression || [];
 
     const progressionMap = new Map(
-      existingProgression.map((p) => [p.lesson_id, p])
+      existingProgression.map((p) => [String(p.lesson_id), true])
     );
 
+    const missingProgressions = allLessons
+      .filter((lesson) => !progressionMap.has(String(lesson.lesson_id)))
+      .map((lesson) => ({
+        lesson_id: String(lesson.lesson_id),
+        completed: false,
+      }));
+
+    // ✅ Publish event only if needed
+    if (missingProgressions.length > 0) {
+      await publishDomainEvent({
+        source: "dth.leeromgeving.progression",
+        detailType: "UserProgressionMissingLessons",
+        detail: {
+          userId: user._id.toString(),
+          missingProgressions,
+          createdAt: new Date().toISOString(),
+        },
+      });
+    }
+
     const progression = allLessons.map((lesson) => {
-      const existing = progressionMap.get(lesson.lesson_id);
+      const existing = progressionMap.get(String(lesson.lesson_id));
 
       return (
         existing || {
-          lesson_id: lesson.lesson_id,
+          lesson_id: String(lesson.lesson_id),
           completed: false,
         }
       );

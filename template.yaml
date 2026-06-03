@@ -66,6 +66,26 @@ Resources:
               detail-type:
                 - "LessonCompleted"
 
+  ProgressionMissingLessonsHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: server/
+      Handler: progressionMissingLessonsHandler.handler
+      Runtime: nodejs20.x
+      Timeout: 30
+      MemorySize: 128
+
+      Events:
+        ProgressionMissingLessonsEvent:
+          Type: EventBridgeRule
+          Properties:
+            EventBusName: default
+            Pattern:
+              source:
+                - "dth.leeromgeving.progression"
+              detail-type:
+                - "UserProgressionMissingLessons"
+
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL

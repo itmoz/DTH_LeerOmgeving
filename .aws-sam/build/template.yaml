@@ -66,6 +66,26 @@ Resources:
               - LessonCompleted
     Metadata:
       SamResourceId: LessonCompletedHandlerFunction
+  ProgressionMissingLessonsHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ProgressionMissingLessonsHandlerFunction
+      Handler: progressionMissingLessonsHandler.handler
+      Runtime: nodejs20.x
+      Timeout: 30
+      MemorySize: 128
+      Events:
+        ProgressionMissingLessonsEvent:
+          Type: EventBridgeRule
+          Properties:
+            EventBusName: default
+            Pattern:
+              source:
+              - dth.leeromgeving.progression
+              detail-type:
+              - UserProgressionMissingLessons
+    Metadata:
+      SamResourceId: ProgressionMissingLessonsHandlerFunction
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL
