@@ -76,7 +76,6 @@ export const getUserCompletions = async (req, res) => {
         completed: false,
       }));
 
-    // ✅ Publish event only if needed
     if (missingProgressions.length > 0) {
       await publishDomainEvent({
         source: "dth.leeromgeving.progression",

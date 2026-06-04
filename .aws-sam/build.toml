@@ -7,6 +7,6 @@ architecture = "x86_64"
 handler = "handler.lambdaHandler"
 manifest_hash = "66f92091b6f343c933ca559a3cbbf00c"
 packagetype = "Zip"
-functions = ["ExpressBackendFunction", "UserRegisteredHandlerFunction", "LessonCompletedHandlerFunction", "ProgressionMissingLessonsHandlerFunction"]
+functions = ["ExpressBackendFunction", "UserRegisteredHandlerFunction", "LessonCompletedHandlerFunction", "ProgressionMissingLessonsHandlerFunction", "BalanceGainHandlerFunction"]
 
 [layer_build_definitions]

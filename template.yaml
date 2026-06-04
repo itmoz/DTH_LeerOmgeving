@@ -86,6 +86,26 @@ Resources:
               detail-type:
                 - "UserProgressionMissingLessons"
 
+  BalanceGainHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: server/
+      Handler: balanceGainHandler.handler
+      Runtime: nodejs20.x
+      Timeout: 30
+      MemorySize: 128
+
+      Events:
+        BalanceGainEvent:
+          Type: EventBridgeRule
+          Properties:
+            EventBusName: default
+            Pattern:
+              source:
+                - "dth.leeromgeving.lesson"
+              detail-type:
+                - "LessonCompleted"
+
 Outputs:
   ApiUrl:
     Description: API Gateway endpoint URL
