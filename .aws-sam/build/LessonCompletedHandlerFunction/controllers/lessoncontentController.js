@@ -20,37 +20,37 @@ export const getAllLessons = async (req, res) => {
   }
 };
 
-// export const getLessonById = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+ export const getLessonById = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-//     const numericId = Number(id);
+    const numericId = Number(id);
 
-//     if (isNaN(numericId)) {
-//       return res.status(400).json({
-//         message: "Lesson id must be a number",
-//       });
-//     }
+    if (isNaN(numericId)) {
+      return res.status(400).json({
+        message: "Lesson id must be a number",
+      });
+    }
 
-//     const db = await getDb();
-//     const lessons = db.collection("lessons");
+    const db = await getDb();
+    const lessons = db.collection("lessons");
 
-//     const lesson = await lessons.findOne({
-//       lesson_id: numericId,
-//     });
+    const lesson = await lessons.findOne({
+      lesson_id: numericId,
+    });
 
-//     if (!lesson) {
-//       return res.status(404).json({
-//         message: "Lesson not found",
-//       });
-//     }
+    if (!lesson) {
+      return res.status(404).json({
+        message: "Lesson not found",
+      });
+    }
 
-//     return res.json(lesson);
+    return res.json(lesson);
 
-//   } catch (err) {
-//     console.error("GetLessonById error:", err);
-//     return res.status(500).json({
-//       message: "Internal server error",
-//     });
-//   }
-// };
+  } catch (err) {
+    console.error("GetLessonById error:", err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
