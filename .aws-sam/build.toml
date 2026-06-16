@@ -5,7 +5,7 @@ codeuri = "C:\\Users\\win11\\DTH_LeerOmgeving\\server"
 runtime = "nodejs20.x"
 architecture = "x86_64"
 handler = "handler.lambdaHandler"
-manifest_hash = "66f92091b6f343c933ca559a3cbbf00c"
+manifest_hash = "cd8c3c2679c0130d2ec7e9facd0e7af0"
 packagetype = "Zip"
 functions = ["ExpressBackendFunction", "UserRegisteredHandlerFunction", "LessonCompletedHandlerFunction", "ProgressionMissingLessonsHandlerFunction", "BalanceGainHandlerFunction"]
 

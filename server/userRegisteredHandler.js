@@ -8,7 +8,7 @@ export const handler = async (event) => {
 
   await client.connect();
 
-  const db = client.db("your-db");
+  const db = client.db("dth");
   const users = db.collection("users");
 
   const user = await users.findOne({

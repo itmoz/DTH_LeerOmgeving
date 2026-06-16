@@ -62,11 +62,13 @@ const LearningDashboard = () => {
   const getProgress = (lessonId) => {
     if (!user?.progression || !lessonId) return 0;
 
-    const lesson = user.progression.find(
-      (p) => String(p.lesson_id) === String(lessonId)
-    );
+    const lesson = user.progression.find((p) => {
+      if (p == null) return false;
+      if (typeof p === "boolean") return false;
+      return Number(p.lesson_id) === Number(lessonId);
+    });
 
-    return lesson?.completed ? 100 : 0;
+    return lesson?.completed || lesson === true ? 100 : 0;
   };
 
   const lesson1 = lessons[0];

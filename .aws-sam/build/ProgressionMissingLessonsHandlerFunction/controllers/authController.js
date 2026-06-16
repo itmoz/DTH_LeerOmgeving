@@ -30,6 +30,7 @@ export const register = async (req, res) => {
       email: normalizedEmail,
       password,
       balance: 0,
+      createdAt: new Date(),
     });
 
     const userId = result.insertedId.toString();
@@ -41,6 +42,7 @@ export const register = async (req, res) => {
       detail: {
         userId,
         email: normalizedEmail,
+        createdAt: new Date().toISOString(),
       },
     });
 

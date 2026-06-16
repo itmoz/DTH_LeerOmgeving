@@ -9,7 +9,7 @@ export const handler = async (event) => {
   try {
     const { userId, lesson_id } = event.detail || {};
 
-    const lessonIdNum = Number(lesson_id);
+    const lessonId = Number(lesson_id);
 
     await client.connect();
 
@@ -20,10 +20,14 @@ export const handler = async (event) => {
     const result = await users.updateOne(
       {
         _id: new ObjectId(userId),
-        "progression.lesson_id": lessonIdNum,
+        $or: [
+          { "progression.lesson_id": lessonId },
+          { "progression.lesson_id": String(lessonId) },
+        ],
       },
       {
         $set: {
+          "progression.$.lesson_id": lessonId,
           "progression.$.completed": true,
           "progression.$.completedAt": new Date(),
         },

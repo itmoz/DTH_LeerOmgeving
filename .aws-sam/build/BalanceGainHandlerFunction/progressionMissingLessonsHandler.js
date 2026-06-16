@@ -25,11 +25,12 @@ export const handler = async (event) => {
     const uniqueLessons = new Map();
 
     for (const item of missingProgressions) {
-      const key = String(item.lesson_id);
+      const lessonId = Number(item.lesson_id);
+      if (!Number.isFinite(lessonId)) continue;
 
-      if (!uniqueLessons.has(key)) {
-        uniqueLessons.set(key, {
-          lesson_id: key,
+      if (!uniqueLessons.has(lessonId)) {
+        uniqueLessons.set(lessonId, {
+          lesson_id: lessonId,
           completed: false,
         });
       }
@@ -45,11 +46,11 @@ export const handler = async (event) => {
     );
 
     const existing = new Set(
-      (user?.progression || []).map((p) => String(p.lesson_id))
+      (user?.progression || []).map((p) => Number(p.lesson_id))
     );
 
     const trulyMissing = lessonsToInsert.filter(
-      (l) => !existing.has(String(l.lesson_id))
+      (l) => !existing.has(Number(l.lesson_id))
     );
 
     if (trulyMissing.length === 0) {
@@ -57,10 +58,10 @@ export const handler = async (event) => {
       return;
     }
 
-    await users.updateOne(
+    const result = await users.updateOne(
       { _id: new ObjectId(userId) },
       {
-        $push: {
+        $addToSet: {
           progression: {
             $each: trulyMissing,
           },
@@ -68,7 +69,7 @@ export const handler = async (event) => {
       }
     );
 
-    console.log("[handler] Inserted safely:", trulyMissing.length);
+    console.log("[handler] Inserted safely (modifiedCount):", result.modifiedCount);
   } catch (error) {
     console.error("[handler] Error:", error);
   }
