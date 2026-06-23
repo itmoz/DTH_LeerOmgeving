@@ -1,5 +1,6 @@
 import { connectDB } from "../database.js";
 import { parseBody } from "../utils.js";
+import { validateRegistration, validateLogin, validateBalance } from "../validation.js";
 import bcrypt from "bcrypt";
 import { randomUUID } from "crypto";
 
@@ -73,7 +74,8 @@ function parseCookies(req) {
 }
 
 function serializeSessionCookie(sessionId, maxAgeSeconds = SESSION_TIMEOUT_MS / 1000) {
-  const isProduction = process.env.NODE_ENV === "production";
+  const useSecureCookie =
+    process.env.COOKIE_SECURE === "true" || process.env.USE_TLS === "true";
   const attributes = [
     `${SESSION_COOKIE_NAME}=${encodeURIComponent(sessionId)}`,
     "Path=/",
@@ -82,7 +84,7 @@ function serializeSessionCookie(sessionId, maxAgeSeconds = SESSION_TIMEOUT_MS / 
     `Max-Age=${Math.floor(maxAgeSeconds)}`
   ];
 
-  if (isProduction) {
+  if (useSecureCookie) {
     attributes.push("Secure");
   }
 
@@ -147,12 +149,17 @@ function registerFailedAttempt(key) {
 // REGISTER
 export async function register(req, res) {
   try {
-    const { email, password } = await parseBody(req);
+    const input = await parseBody(req);
 
-    if (!email || !password) {
+    // Validate and sanitize input
+    const validation = validateRegistration(input);
+    if (!validation.valid) {
+      logSecurityEvent("register_validation_failed", { error: validation.error });
       res.writeHead(400, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ error: "Missing fields" }));
+      return res.end(JSON.stringify({ error: validation.error }));
     }
+
+    const { email, password } = validation.data;
 
     const db = await connectDB();
     const users = db.collection("users");
@@ -161,6 +168,7 @@ export async function register(req, res) {
     const existingUser = await users.findOne({ email });
 
     if (existingUser) {
+      logSecurityEvent("register_user_already_exists", { email });
       res.writeHead(400, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "User already exists" }));
     }
@@ -175,6 +183,7 @@ export async function register(req, res) {
       createdAt: new Date()
     });
 
+    logSecurityEvent("register_success", { email });
     res.writeHead(201, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({
       success: true,
@@ -191,13 +200,17 @@ export async function register(req, res) {
 // LOGIN
 export async function login(req, res) {
   try {
-    const { email, password } = await parseBody(req);
+    const input = await parseBody(req);
 
-    if (!email || !password) {
+    // Validate and sanitize input
+    const validation = validateLogin(input);
+    if (!validation.valid) {
+      logSecurityEvent("login_validation_failed", { error: validation.error });
       res.writeHead(400, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify({ error: "Missing fields" }));
+      return res.end(JSON.stringify({ error: validation.error }));
     }
 
+    const { email, password } = validation.data;
     const ip = getClientIp(req);
     const attemptKey = getAttemptKey(email, ip);
     const attemptState = loginAttempts.get(attemptKey);
@@ -326,7 +339,18 @@ export async function addBalance(req, res) {
       return res.end(JSON.stringify({ error: "Amount required" }));
     }
 
-    const numericAmount = Number(amount);
+    // Validate balance value
+    const balanceValidation = validateBalance(amount);
+    if (!balanceValidation.valid) {
+      logSecurityEvent("add_balance_validation_failed", {
+        email: session.email,
+        error: balanceValidation.error
+      });
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: balanceValidation.error }));
+    }
+
+    const numericAmount = balanceValidation.value;
     const db = await connectDB();
     const users = db.collection("users");
 
@@ -342,6 +366,11 @@ export async function addBalance(req, res) {
 
     // 2. Check if a subtraction pushes the balance below zero
     if (numericAmount < 0 && currentBalance + numericAmount < 0) {
+      logSecurityEvent("add_balance_insufficient_funds", {
+        email: session.email,
+        currentBalance,
+        attemptedAmount: numericAmount
+      });
       res.writeHead(400, { "Content-Type": "application/json" });
       return res.end(JSON.stringify({ error: "You do not have enough balance" }));
     }
@@ -351,6 +380,12 @@ export async function addBalance(req, res) {
       { email: session.email },
       { $inc: { balance: numericAmount } }
     );
+
+    logSecurityEvent("add_balance_success", {
+      email: session.email,
+      amount: numericAmount,
+      newBalance: currentBalance + numericAmount
+    });
 
     res.writeHead(200, { "Content-Type": "application/json" });
     return res.end(JSON.stringify({

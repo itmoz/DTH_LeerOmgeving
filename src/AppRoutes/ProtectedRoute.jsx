@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { apiUrl } from "../config/api.js";
 
 const ProtectedRoute = () => {
   const [status, setStatus] = useState("checking");
@@ -10,7 +11,7 @@ const ProtectedRoute = () => {
 
     const verifySession = async () => {
       try {
-        const res = await fetch("http://localhost:3000/user", {
+        const res = await fetch(apiUrl("/user"), {
           credentials: "include"
         });
 

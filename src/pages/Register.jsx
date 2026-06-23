@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiUrl } from '../config/api.js';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -68,7 +69,7 @@ export default function Register() {
     setSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:3000/register", {
+      const res = await fetch(apiUrl("/register"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -3,6 +3,7 @@ import AvatarButton from "../WebsiteElements/Buttons/AvatarButton";
 import Button from "../WebsiteElements/Buttons/Button";
 import PurchaseModal from "../WebsiteElements/Modals/PurchaseModal";
 import CoinExplosion from "../WebsiteElements/Effects/CoinExplosion";
+import { apiUrl } from "../config/api.js";
 import ReactImage from "../assets/react.svg";
 
 export default function Avatar() {
@@ -135,7 +136,7 @@ export default function Avatar() {
     try {
       const parsedAmount = Number(amount);
 
-      const res = await fetch("http://localhost:3000/add-balance", {
+      const res = await fetch(apiUrl("/add-balance"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

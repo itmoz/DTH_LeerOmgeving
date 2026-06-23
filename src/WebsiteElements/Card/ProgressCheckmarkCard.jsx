@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
-// Zorg ervoor dat dit pad klopt!
 import CoinExplosion from "../Effects/CoinExplosion";
+import { apiUrl } from "../../config/api.js";
 
 // De functie om het saldo bij te werken
 const handleAddBalance = async (amount, opts = { showError: true }) => {
   try {
     const parsedAmount = Number(amount);
 
-    const res = await fetch("http://localhost:3000/add-balance", {
+    const res = await fetch(apiUrl("/add-balance"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

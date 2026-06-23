@@ -1,0 +1,2 @@
+# Development TLS certificates (generated via npm run certs:generate)
+# Do not commit *.pem files.

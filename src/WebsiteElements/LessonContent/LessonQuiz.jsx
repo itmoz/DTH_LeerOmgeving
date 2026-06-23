@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-// Zorg ervoor dat dit pad klopt naar de map waar je CoinExplosion hebt opgeslagen!
 import CoinExplosion from "../Effects/CoinExplosion";
+import { apiUrl } from "../../config/api.js";
 
 // 1. Functie om saldo toe te voegen
 const handleAddBalance = async (amount, opts = { showError: true }) => {
   try {
     const parsedAmount = Number(amount);
 
-    const res = await fetch("http://localhost:3000/add-balance", {
+    const res = await fetch(apiUrl("/add-balance"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

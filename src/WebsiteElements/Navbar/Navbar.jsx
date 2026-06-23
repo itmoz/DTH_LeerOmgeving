@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { apiUrl } from "../../config/api.js";
 import DTHLogoSVGBlue from "../../Images/logo-blue.svg";
 import DTHLogoSVGWhite from "../../Images/logo-white.svg";
 
@@ -13,7 +14,7 @@ function Navbar({ theme, toggleTheme }) {
 
   const refreshAuth = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:3000/user", {
+      const res = await fetch(apiUrl("/user"), {
         credentials: "include",
       });
       if (!res.ok) {
@@ -57,7 +58,7 @@ function Navbar({ theme, toggleTheme }) {
   useEffect(() => {
     const loadBalance = async () => {
       try {
-        const res = await fetch("http://localhost:3000/balance", {
+        const res = await fetch(apiUrl("/balance"), {
           credentials: "include",
         });
         if (!res.ok) {
@@ -79,7 +80,7 @@ function Navbar({ theme, toggleTheme }) {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3000/logout", {
+      await fetch(apiUrl("/logout"), {
         method: "POST",
         credentials: "include",
       });

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiUrl } from '../config/api.js';
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -17,7 +18,7 @@ export default function LogIn() {
     let cancelled = false;
     const checkSession = async () => {
       try {
-        const res = await fetch('http://localhost:3000/user', {
+        const res = await fetch(apiUrl('/user'), {
           credentials: 'include',
         });
         if (!cancelled && res.ok) {
@@ -46,7 +47,7 @@ export default function LogIn() {
     }
 
     try {
-      const loginRes = await fetch("http://localhost:3000/login", {
+      const loginRes = await fetch(apiUrl("/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
